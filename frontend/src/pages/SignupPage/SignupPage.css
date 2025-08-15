@@ -1,0 +1,32 @@
+#signupPage {
+    width: 50%;
+    margin: 10% 10%;
+    display: flexbox;
+    flex-direction: column;
+    
+}
+
+#signupPage Form input {
+    width: 100%;
+   
+}
+
+#signupPage button {
+    margin: 10px 0px;
+    
+}
+
+#signupPage h1 {
+    text-align: center;
+    margin: 25px 0;
+}
+
+#signupPage label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+#signupPage span {
+    color: red;
+    display: block;
+}
