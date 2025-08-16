@@ -1,7 +1,6 @@
 import "dotenv/config";
 const sessionSecret = process.env.SECRET;
 
-
 //Express app:
 
 import express, { json, urlencoded } from "express";
@@ -10,7 +9,13 @@ import session from "express-session";
 
 //Import & apply cors:
 import cors from "cors";
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    credentials: true,
+  })
+);
 
 //Middleware:
 app.use(json());

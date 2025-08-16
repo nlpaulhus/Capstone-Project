@@ -54,9 +54,13 @@ const SignupPage = () => {
             };
 
             let result = axios
-              .post("http://localhost:3000/signup", newUser)
+              .post("http://localhost:3000/signup", newUser, {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true
+              })
               .then((result) => {
                 console.log(result);
+                setServerError("Success");
               })
               .catch((error) => {
                 let responseMessage = error.response.data;
