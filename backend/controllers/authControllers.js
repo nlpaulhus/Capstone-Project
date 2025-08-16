@@ -8,6 +8,8 @@ const createToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET, { expiresIn: maxAge });
 };
 
+const handleErrors = (err) => {};
+
 export async function signup_post(req, res) {
   const { firstName, lastName, email, password, IMDBName } = req.body;
   const userid = uuidv4();
@@ -19,8 +21,6 @@ export async function signup_post(req, res) {
     console.log("Data inserted successfuly:", result);
     res.send(result);
   } catch (error) {
-    console.log("Error inserting data", error);
-    res.send(error);
-    throw error;
+    res.status(400).json(error.detail);
   }
 }
