@@ -1,6 +1,6 @@
 import "dotenv/config";
 const sessionSecret = process.env.SECRET;
-const dbURI = process.env.dbURI;
+
 
 //Express app:
 
@@ -24,23 +24,13 @@ app.use(
   })
 );
 
+import signup from "./routes/signup.js";
+
+app.use("/signup", signup);
+
 app.get("/api/welcome", (req, res) => {
   res.status(200).send({ message: "Welcome" });
 });
-
-//sql database setup
-
-import pgPromise from "pg-promise";
-const pgp = pgPromise();
-const db = pgp(dbURI);
-
-db.one("SELECT $1 AS value", 123)
-  .then((data) => {
-    console.log(data.value);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
 
 app.listen(3000, () => {
   console.log("Listening on port 3000");

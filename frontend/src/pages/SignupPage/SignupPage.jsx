@@ -1,6 +1,7 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import "./SignupPage.css";
+import axios from "axios";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -32,12 +33,25 @@ const SignupPage = () => (
           lastName: "",
           email: "",
           password: "",
+          confirmPassword: "",
           IMDBLink: "",
         }}
         validationSchema={SignupSchema}
         onSubmit={(values) => {
-          // same shape as initial values
-          console.log(values);
+          const { firstName, lastName, email, password, IMDBLink } = values;
+          const IMDBFirstSplit = IMDBLink.split("name/", 2);
+          const IMDBName = IMDBFirstSplit[1].split("/?ref", 1);
+          const newUser = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            IMDBName: IMDBName,
+          };
+
+          let result = axios
+            .post("http://localhost:3000/signup", newUser)
+            .then((result) => console.log(result));
         }}
       >
         {({ errors, touched }) => (
