@@ -51,7 +51,7 @@ const SignupPage = () => (
 
           let result = axios
             .post("http://localhost:3000/signup", newUser)
-            .then((result) => console.log(result));
+            .then((result) => console.log(result.data));
         }}
       >
         {({ errors, touched }) => (

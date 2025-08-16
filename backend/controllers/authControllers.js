@@ -2,6 +2,7 @@ import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 const maxAge = 24 * 60 * 60;
 import db from "../db.js";
+import { v4 as uuidv4 } from "uuid";
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET, { expiresIn: maxAge });
@@ -9,19 +10,17 @@ const createToken = (id) => {
 
 export async function signup_post(req, res) {
   const { firstName, lastName, email, password, IMDBName } = req.body;
+  const userid = uuidv4();
 
   try {
-    const query = `INSERT INTO users (firstName, lastName, email, password, IMDBName)
-    VALUES(${firstName}, ${lastName}, ${email}, ${password}, ${IMDBName})`;
-
-    const result = await db.query(query);
+    const result = await db.query(
+      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}');`
+    );
     console.log("Data inserted successfuly:", result);
-    res.send(result.rows[0]);
+    res.send(result);
   } catch (error) {
     console.log("Error inserting data", error);
     res.send(error);
     throw error;
-  } finally {
-    await db.end();
   }
 }
