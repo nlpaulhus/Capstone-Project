@@ -10,6 +10,7 @@ import LandingPage from "../pages/LandingPage/LandingPage";
 import LoginLandingPage from "../pages/LoginLandingPage/LoginLandingPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import SignupPage from "../pages/SignupPage/SignupPage";
+import { NetworkPage, networkLoader } from "../pages/NetworkPage/NetworkPage";
 
 const Layout = () => {
   const navigation = useNavigation();
@@ -28,6 +29,11 @@ const routes = createRoutesFromElements(
     <Route path="/login" element={<LoginLandingPage />} />
     <Route path="/login/email" element={<LoginPage />} />
     <Route path="/signup" element={<SignupPage />} />
+    <Route
+      path="/network/:imdbname"
+      element={<NetworkPage />}
+      loader={networkLoader}
+    />
   </Route>
 );
 
