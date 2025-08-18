@@ -1,0 +1,20 @@
+#networkPageCards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#networkPageInstructions {
+    text-align: center;
+    margin: 5rem;
+}
+
+#networkPage {
+    height: 100vh;
+}
+
+#credits {
+     height: 70vh;
+     width: 30vw;
+     overflow-y: auto;
+}
