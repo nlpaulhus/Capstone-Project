@@ -30,8 +30,10 @@ app.use(
 );
 
 import signup from "./routes/signup.js";
+import imdbNetwork from "./routes/imdbNetwork.js";
 
 app.use("/signup", signup);
+app.use("/imdbNetwork", imdbNetwork);
 
 app.get("/api/welcome", (req, res) => {
   res.status(200).send({ message: "Welcome" });

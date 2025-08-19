@@ -1,11 +1,13 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import CreditBox from "../../components/CreditBox/CreditBox";
 import NetworkBox from "../../components/NetworkBox/NetworkBox";
 import "./NetworkPage.css";
+import Button from "react-bootstrap/Button";
 
 export const NetworkPage = () => {
+  const { imdbname } = useParams();
   const credits = useLoaderData();
   const [network, setNetwork] = useState([]);
   const [creditOptions, setCreditOptions] = useState(credits);
@@ -30,12 +32,27 @@ export const NetworkPage = () => {
     setCreditOptions(newCreditOptions);
   };
 
+  const nextButtonHandler = () => {
+    let result = axios.post(
+      "http://localhost:3000/imdbnetwork",
+      { imdbname, network },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+
+    console.log(result);
+  };
+
   return (
     <div id="networkPage">
       <div id="networkPageInstructions">
         <p>
           Select the projects from your IMDB Page that you'd like added to your
-          network.
+          network.<br></br>If there's a project missing from your IMDB page that
+          you'd like to add to your network, please contact{" "}
+          <a href="temp">temp@gmail.com</a>
         </p>
       </div>
       <div id="networkPageCards">
@@ -54,6 +71,11 @@ export const NetworkPage = () => {
             network={network}
             buttonHandler={removeFromNetworkHandler}
           />
+          <div className="d-flex">
+            <Button onClick={nextButtonHandler} className="ms-auto">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

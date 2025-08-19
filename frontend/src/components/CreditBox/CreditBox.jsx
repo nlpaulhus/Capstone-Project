@@ -6,6 +6,7 @@ const CreditBox = ({ credit, addOrRemove, buttonHandler }) => {
   let cardClass;
   let cardStyle;
   let cardBodyClass;
+  let cardTitle;
 
   if (addOrRemove === "add") {
     buttonText = "Add To Network";
@@ -17,9 +18,11 @@ const CreditBox = ({ credit, addOrRemove, buttonHandler }) => {
     cardBodyClass = "d-flex justify-content-between align-items-center";
   }
 
-  let cardTitle = `${credit.title} (${credit.startDate}-${
-    credit.endDate || "present"
-  })`;
+  if (credit.endDate) {
+    cardTitle = `${credit.title} (${credit.startDate}-${credit.endDate})`;
+  } else {
+    cardTitle = `${credit.title} (${credit.startDate})`;
+  }
 
   return (
     <div>

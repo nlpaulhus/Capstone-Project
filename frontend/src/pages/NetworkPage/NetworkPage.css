@@ -18,3 +18,7 @@
      width: 30vw;
      overflow-y: auto;
 }
+
+#network Button {
+    margin: 20px;
+}

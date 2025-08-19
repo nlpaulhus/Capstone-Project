@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import "./SignupPage.css";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -24,6 +25,7 @@ const SignupSchema = Yup.object().shape({
 
 const SignupPage = () => {
   const [serverError, setServerError] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div id="signupPage">
@@ -56,11 +58,11 @@ const SignupPage = () => {
             let result = axios
               .post("http://localhost:3000/signup", newUser, {
                 headers: { "Content-Type": "application/json" },
-                withCredentials: true
+                withCredentials: true,
               })
               .then((result) => {
                 console.log(result);
-                setServerError("Success");
+                navigate(`/network/${IMDBName}`);
               })
               .catch((error) => {
                 let responseMessage = error.response.data;
