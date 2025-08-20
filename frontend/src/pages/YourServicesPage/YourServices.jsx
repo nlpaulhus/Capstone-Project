@@ -5,7 +5,11 @@ import "./YourServicesPage.css";
 import YourServicesForm from "../../components/YourServicesForm/YourServicesForm";
 
 export const YourServicesPage = () => {
-  const allServices = useLoaderData();
+  const loaderData = useLoaderData();
+  const allServices = loaderData.allServices;
+  const yourServices = loaderData.yourServices;
+  console.log(yourServices);
+
   const [formData, setFormData] = useState({
     serviceName: "",
     description: "",
@@ -35,6 +39,9 @@ export const YourServicesPage = () => {
         </div>
         <div id="yourServices">
           <h1>your services will be here</h1>
+          {yourServices.map((service) => (
+            <p>{service.serviceName}</p>
+          ))}
         </div>
       </div>
     </div>
@@ -45,12 +52,24 @@ export async function yourServicesLoader({ params }) {
   const userId = params.userId;
 
   try {
-    const allServices = await axios.get(`http://localhost:3000/services`, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    const [response1, response2] = await Promise.all([
+      axios.get(`http://localhost:3000/services`, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }),
+      axios.get(`http://localhost:3000/userServices/${userId}`, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }),
+    ]);
 
-    return allServices.data.serviceNames;
+    const allServices = response1.data.serviceNames;
+    const yourServices = response2.data.yourServices;
+
+    return {
+      allServices: allServices,
+      yourServices: yourServices,
+    };
   } catch (err) {
     console.log(err);
   }

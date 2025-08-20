@@ -21,7 +21,7 @@ app.use(
 //Middleware:
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.use(
   session({
@@ -34,10 +34,12 @@ app.use(
 import signup from "./routes/signup.js";
 import imdbNetwork from "./routes/imdbNetwork.js";
 import services from "./routes/services.js";
+import userServices from "./routes/userServices.js";
 
 app.use("/signup", signup);
 app.use("/imdbNetwork", imdbNetwork);
 app.use("/services", services);
+app.use("/userServices", userServices);
 
 app.get("/api/welcome", (req, res) => {
   res.status(200).send({ message: "Welcome" });
