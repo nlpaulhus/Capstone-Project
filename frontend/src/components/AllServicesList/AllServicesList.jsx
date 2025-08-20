@@ -1,12 +1,12 @@
 import Form from "react-bootstrap/Form";
 
-const AllServicesList = ({ serviceNames, onChangeHandler }) => {
+const AllServicesList = ({ serviceNames, onChangeHandler, formData }) => {
   return (
-    <Form.Group className="mb-3">
-      <Form.Select onChange={onChangeHandler}>
-        <option>Select A Service</option>
-        {serviceNames.map((service) => (
-          <option key={service.index} value={service}>
+    <Form.Group className="mb-3" controlId="serviceName">
+      <Form.Select onChange={onChangeHandler} value={formData.serviceName}>
+        <option key="x">Select A Service</option>
+        {serviceNames.map((service, index) => (
+          <option key={index} value={service}>
             {service}
           </option>
         ))}

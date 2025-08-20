@@ -2,18 +2,24 @@ import { useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import "./YourServicesPage.css";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/esm/Button";
-import InputGroup from "react-bootstrap/InputGroup";
-
-import AllServicesList from "../../components/AllServicesList/AllServicesList";
+import YourServicesForm from "../../components/YourServicesForm/YourServicesForm";
 
 export const YourServicesPage = () => {
   const allServices = useLoaderData();
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({
+    serviceName: "",
+    description: "",
+    price: 0,
+    paymentType: "",
+  });
 
-  const selectService = (e) => {
-    console.log(e.target.value);
+  const onChangeHandler = (e) => {
+    if (e.target.id === "hourly" || e.target.id === "perProject") {
+      setFormData({ ...formData, paymentType: e.target.id });
+    } else {
+      setFormData({ ...formData, [e.target.id]: e.target.value });
+    }
+    console.log(formData);
   };
 
   return (
@@ -21,41 +27,11 @@ export const YourServicesPage = () => {
       <p>Select, add and edit your services.</p>
       <div id="yourServicesActiveArea">
         <div id="yourServicesForm">
-          <Form>
-            <AllServicesList
-              serviceNames={allServices}
-              onChangeHandler={selectService}
-            />
-            <Form.Group className="mb-3" controlId="serviceDescription">
-              <Form.Label>
-                Add a Personalized Description of Your Service
-              </Form.Label>
-              <Form.Control as="textarea" rows="5"></Form.Control>
-            </Form.Group>
-
-            <Form.Label>Your Price</Form.Label>
-            <InputGroup className="mb-3">
-              <InputGroup.Text>$</InputGroup.Text>
-              <Form.Control
-                aria-label="Amount (to the nearest dollar)"
-                type="number"
-              />
-              <InputGroup.Text>.00</InputGroup.Text>
-            </InputGroup>
-
-            <div className="mb-3">
-              <Form.Check className="mb-3" inline>
-                <Form.Check.Input />
-                <Form.Check.Label>Hourly</Form.Check.Label>
-              </Form.Check>
-
-              <Form.Check className="mb-3" inline>
-                <Form.Check.Input />
-                <Form.Check.Label>Per Project</Form.Check.Label>
-              </Form.Check>
-            </div>
-            <Button>ADD</Button>
-          </Form>
+          <YourServicesForm
+            allServices={allServices}
+            formData={formData}
+            onChangeHandler={onChangeHandler}
+          />
         </div>
         <div id="yourServices">
           <h1>your services will be here</h1>
