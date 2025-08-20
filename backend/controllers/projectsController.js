@@ -29,12 +29,15 @@ export async function imdbNetwork_post(req, res) {
     for (let project of projectIds) {
       const id = uuidv4();
       await db.query(
-        `INSERT INTO users_projects (id, userIMDB, projectIMDB) VALUES ('${id}', '${imdbname}', '${project}');`
+        `INSERT INTO users_projects (id, userIMDB, projectIMDB) VALUES ('${id}', '${imdbname}', '${project}') ON CONFLICT DO NOTHING;`
       );
     }
   } catch (err) {
     res.status(400).json({ error: err });
   }
 
-  res.status(200).json("Success");
+  const userId = await db.query(
+    `SELECT userId FROM users WHERE IMDBname = '${imdbname}'`
+  ).then((userId) => res.status(200).json({ userId }))
+  
 }

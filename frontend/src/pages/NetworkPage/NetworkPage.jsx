@@ -1,4 +1,4 @@
-import { useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import CreditBox from "../../components/CreditBox/CreditBox";
@@ -7,6 +7,7 @@ import "./NetworkPage.css";
 import Button from "react-bootstrap/Button";
 
 export const NetworkPage = () => {
+  const navigate = useNavigate();
   const { imdbname } = useParams();
   const credits = useLoaderData();
   const [network, setNetwork] = useState([]);
@@ -32,17 +33,23 @@ export const NetworkPage = () => {
     setCreditOptions(newCreditOptions);
   };
 
-  const nextButtonHandler = () => {
-    let result = axios.post(
-      "http://localhost:3000/imdbnetwork",
-      { imdbname, network },
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      }
-    );
-
-    console.log(result);
+  const nextButtonHandler = async () => {
+    try {
+      let result = await axios
+        .post(
+          "http://localhost:3000/imdbnetwork",
+          { imdbname, network },
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        )
+        .then((result) => {
+          navigate(`/yourservices/${result.data.userId[0].userid}`);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

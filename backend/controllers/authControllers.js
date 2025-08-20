@@ -1,10 +1,10 @@
-import { compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 const maxAge = 24 * 60 * 60;
 import db from "../db.js";
 import { v4 as uuidv4 } from "uuid";
 import "dotenv/config";
 const sessionSecret = process.env.SECRET;
+
 
 const createToken = (id) => {
   return jwt.sign({ id }, sessionSecret, { expiresIn: maxAge });

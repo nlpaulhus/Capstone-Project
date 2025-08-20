@@ -1,5 +1,6 @@
 import "dotenv/config";
 const sessionSecret = process.env.SECRET;
+import cookieParser from "cookie-parser";
 
 //Express app:
 
@@ -20,6 +21,7 @@ app.use(
 //Middleware:
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(cookieParser())
 
 app.use(
   session({
@@ -31,9 +33,11 @@ app.use(
 
 import signup from "./routes/signup.js";
 import imdbNetwork from "./routes/imdbNetwork.js";
+import services from "./routes/services.js";
 
 app.use("/signup", signup);
 app.use("/imdbNetwork", imdbNetwork);
+app.use("/services", services);
 
 app.get("/api/welcome", (req, res) => {
   res.status(200).send({ message: "Welcome" });

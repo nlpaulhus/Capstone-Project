@@ -1,0 +1,25 @@
+#yourServicesPage {
+    text-align: center;
+    margin: 3%;
+
+}
+
+#yourServicesActiveArea {
+    padding: 0 5%;
+    margin: 2.5% 5%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 2%;
+}
+
+#yourServicesForm {
+    border: 1px solid grey;
+    padding: 2%;
+    width: 100%;
+}
+
+#yourServices {
+    border: 1px solid grey;
+}

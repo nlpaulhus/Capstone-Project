@@ -11,6 +11,10 @@ import LoginLandingPage from "../pages/LoginLandingPage/LoginLandingPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import SignupPage from "../pages/SignupPage/SignupPage";
 import { NetworkPage, networkLoader } from "../pages/NetworkPage/NetworkPage";
+import {
+  YourServicesPage,
+  yourServicesLoader,
+} from "../pages/YourServicesPage/YourServices";
 
 const Layout = () => {
   const navigation = useNavigation();
@@ -33,6 +37,11 @@ const routes = createRoutesFromElements(
       path="/network/:imdbname"
       element={<NetworkPage />}
       loader={networkLoader}
+    />
+    <Route
+      path="/yourServices/:userId"
+      element={<YourServicesPage />}
+      loader={yourServicesLoader}
     />
   </Route>
 );

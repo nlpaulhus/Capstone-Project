@@ -22,3 +22,7 @@
 #network Button {
     margin: 20px;
 }
+
+#network {
+    text-align: left;
+}
