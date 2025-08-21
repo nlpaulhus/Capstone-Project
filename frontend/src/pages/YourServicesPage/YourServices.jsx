@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from "uuid";
 export const YourServicesPage = () => {
   const loaderData = useLoaderData();
   const allServices = loaderData.allServices;
-  let yourServices = loaderData.yourServices;
   const originalServices = loaderData.yourServices;
   const params = useParams();
   const userId = params.userId;
@@ -33,6 +32,9 @@ export const YourServicesPage = () => {
 
   const [formData, setFormData] = useState(INITIALSTATE);
   const [formErrors, setFormErrors] = useState(ERRORSINITIAL);
+  const [yourServices, setYourServices] = useState(originalServices);
+
+  console.log(yourServices);
 
   const onChangeHandler = (e) => {
     const inputId = e.target.id;
@@ -75,11 +77,13 @@ export const YourServicesPage = () => {
         form: "Please complete all fields.",
       });
     } else {
-      yourServices.push({
+      const newService = {
         ...formData,
         price: parseInt(formData.price),
         id: formData.id === "" ? uuidv4() : formData.id,
-      });
+      };
+
+      setYourServices([...yourServices, newService]);
       setFormData(INITIALSTATE);
       setFormErrors(ERRORSINITIAL);
     }
@@ -118,8 +122,10 @@ export const YourServicesPage = () => {
       }
     }
 
-    yourServices = yourServices.filter((service) => service.id !== serviceId);
-    return yourServices;
+    const newYourServices = yourServices.filter(
+      (service) => service.id !== serviceId
+    );
+    setYourServices(newYourServices);
   };
 
   useEffect(() => {}, [yourServices]);
