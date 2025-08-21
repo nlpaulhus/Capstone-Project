@@ -1,5 +1,5 @@
 import { useLoaderData, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./YourServicesPage.css";
 import YourServicesForm from "../../components/YourServicesForm/YourServicesForm";
@@ -10,7 +10,8 @@ import { v4 as uuidv4 } from "uuid";
 export const YourServicesPage = () => {
   const loaderData = useLoaderData();
   const allServices = loaderData.allServices;
-  const yourServices = loaderData.yourServices;
+  let yourServices = loaderData.yourServices;
+  const originalServices = loaderData.yourServices;
   const params = useParams();
   const userId = params.userId;
 
@@ -96,7 +97,32 @@ export const YourServicesPage = () => {
     console.log(result);
   };
 
-  const RemoveButtonHandler = async () => {};
+  const removeButtonHandler = async (e) => {
+    const serviceId = e.target.id;
+
+    const isInDatabase = originalServices.filter(
+      (service) => service.id === serviceId
+    );
+
+    if (isInDatabase) {
+      try {
+        const result = await axios.get(
+          `http://localhost:3000/userServices/delete/${serviceId}`,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    yourServices = yourServices.filter((service) => service.id !== serviceId);
+    return yourServices;
+  };
+
+  useEffect(() => {}, [yourServices]);
 
   return (
     <div id="yourServicesPage">
@@ -120,7 +146,11 @@ export const YourServicesPage = () => {
           <h3>Your Services</h3>
           <div id="yourServicesList">
             {yourServices.map((service, index) => (
-              <ServiceBox key={index} service={service} />
+              <ServiceBox
+                key={index}
+                service={service}
+                removeButtonHandler={removeButtonHandler}
+              />
             ))}
           </div>
           <Button onClick={nextButtonHandler}>Next</Button>

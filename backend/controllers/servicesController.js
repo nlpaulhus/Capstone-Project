@@ -50,3 +50,16 @@ export async function userservices_post(req, res) {
     res.status(400).json(err);
   }
 }
+
+export async function userservice_delete(req, res) {
+  const serviceId = req.params.serviceId;
+
+  try {
+    const result = await db.query(
+      `DELETE from userservices WHERE id = '${serviceId}'`
+    );
+    res.status(200).json("deleted");
+  } catch (err) {
+    res.status(400).json(err);
+  }
+}
