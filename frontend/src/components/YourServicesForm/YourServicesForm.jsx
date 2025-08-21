@@ -3,7 +3,12 @@ import Button from "react-bootstrap/esm/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import AllServicesList from "../../components/AllServicesList/AllServicesList";
 
-const YourServicesForm = ({ allServices, formData, onChangeHandler }) => {
+const YourServicesForm = ({
+  allServices,
+  formData,
+  onChangeHandler,
+  onSubmit,
+}) => {
   return (
     <Form>
       <AllServicesList
@@ -17,7 +22,13 @@ const YourServicesForm = ({ allServices, formData, onChangeHandler }) => {
         onChange={onChangeHandler}
       >
         <Form.Label>Add a Personalized Description of Your Service</Form.Label>
-        <Form.Control as="textarea" rows="5"></Form.Control>
+        <Form.Control
+          as="textarea"
+          rows="5"
+          required
+          value={formData.description}
+          onChange={onChangeHandler}
+        ></Form.Control>
       </Form.Group>
 
       <Form.Label>Your Price</Form.Label>
@@ -26,7 +37,11 @@ const YourServicesForm = ({ allServices, formData, onChangeHandler }) => {
         <Form.Control
           aria-label="Amount (to the nearest dollar)"
           type="number"
+          step="1"
           id="price"
+          min="0"
+          value={formData.price}
+          onChange={onChangeHandler}
         />
         <InputGroup.Text>.00</InputGroup.Text>
       </InputGroup>
@@ -49,7 +64,7 @@ const YourServicesForm = ({ allServices, formData, onChangeHandler }) => {
           onChange={onChangeHandler}
         />
       </div>
-      <Button>ADD</Button>
+      <Button onClick={onSubmit}>ADD</Button>
     </Form>
   );
 };

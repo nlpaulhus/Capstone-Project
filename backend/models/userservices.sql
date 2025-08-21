@@ -1,5 +1,5 @@
-CREATE TABLE usersservices (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE userservices (
+    id TEXT PRIMARY KEY,
     userId TEXT NOT NULL,
     serviceName TEXT NOT NULL,
     description TEXT NOT NULL,
