@@ -52,7 +52,7 @@ export async function login_post(req, res) {
 
     const auth = await compare(password, user.password);
     if (auth === false) {
-      return res.status(401).json({ error: "Incorrect password" });
+      return res.status(401).json({ error: "Incorrect password." });
     } else {
       const token = createToken(user.id);
       res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
@@ -61,6 +61,6 @@ export async function login_post(req, res) {
 
     console.log(auth);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json({ error: "Unknown server error." });
   }
 }

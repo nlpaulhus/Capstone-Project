@@ -1,10 +1,13 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [formError, setFormError] = useState("");
 
   const onChangeHandler = (e) => {
     setLoginData({ ...loginData, [e.target.id]: e.target.value });
@@ -13,11 +16,19 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const result = await axios.post("http://localhost:3000/login", loginData, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-    console.log(result);
+    try {
+      const result = await axios.post(
+        "http://localhost:3000/login",
+        loginData,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      navigate("/");
+    } catch (err) {
+      setFormError(err.response.data.error);
+    }
   };
 
   return (
@@ -42,10 +53,14 @@ function LoginPage() {
             value={loginData.password}
           />
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={handleSubmit}>
-          Submit
+        <Button type="submit" onClick={handleSubmit}>
+          Login
+        </Button>
+        <Button type="button" onClick={() => navigate("/signup")}>
+          Signup
         </Button>
       </Form>
+      <span style={{ color: "red" }}>{formError}</span>
     </div>
   );
 }
