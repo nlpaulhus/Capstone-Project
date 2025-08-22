@@ -104,12 +104,12 @@ const SignupPage = () => {
                 <span>{errors.email}</span>
               ) : null}
               <label htmlFor="password">Password:</label>
-              <Field name="password" />
+              <Field name="password" type="password" />
               {errors.password && touched.password ? (
                 <span>{errors.password}</span>
               ) : null}
               <label htmlFor="confirmPassword">Re-Enter Password:</label>
-              <Field name="confirmPassword" />
+              <Field name="confirmPassword" type="password" />
               {errors.confirmPassword && touched.confirmPassword ? (
                 <span>{errors.confirmPassword}</span>
               ) : null}

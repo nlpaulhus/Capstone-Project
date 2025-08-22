@@ -1,5 +1,5 @@
-import { useLoaderData, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useLoaderData, useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
 import "./YourServicesPage.css";
 import YourServicesForm from "../../components/YourServicesForm/YourServicesForm";
@@ -13,6 +13,7 @@ export const YourServicesPage = () => {
   const originalServices = loaderData.yourServices;
   const params = useParams();
   const userId = params.userId;
+  const navigate = useNavigate();
 
   const INITIALSTATE = {
     id: "",
@@ -33,8 +34,6 @@ export const YourServicesPage = () => {
   const [formData, setFormData] = useState(INITIALSTATE);
   const [formErrors, setFormErrors] = useState(ERRORSINITIAL);
   const [yourServices, setYourServices] = useState(originalServices);
-
-  console.log(yourServices);
 
   const onChangeHandler = (e) => {
     const inputId = e.target.id;
@@ -98,7 +97,7 @@ export const YourServicesPage = () => {
         withCredentials: true,
       }
     );
-    console.log(result);
+    navigate("/");
   };
 
   const removeButtonHandler = async (e) => {
@@ -127,8 +126,6 @@ export const YourServicesPage = () => {
     );
     setYourServices(newYourServices);
   };
-
-  useEffect(() => {}, [yourServices]);
 
   return (
     <div id="yourServicesPage">

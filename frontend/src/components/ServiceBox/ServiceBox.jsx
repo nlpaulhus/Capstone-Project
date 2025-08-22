@@ -6,8 +6,10 @@ const ServiceBox = ({ service, removeButtonHandler }) => {
     <div>
       <Card>
         <Card.Body>
-          <Card.Text> {service.servicename}</Card.Text>
-          <Button variant="link">Edit</Button>
+          <Card.Title> {service.servicename}</Card.Title>
+          <Card.Text>
+            ${service.price}/{service.paymentType}
+          </Card.Text>
           <Button id={service.id} variant="link" onClick={removeButtonHandler}>
             Remove
           </Button>
