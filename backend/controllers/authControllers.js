@@ -27,7 +27,7 @@ export async function signup_post(req, res) {
     );
     const token = createToken(userid);
     res.cookie("jwt", token, {
-      httpOnly: false,
+      httpOnly: true,
       sameSite: "none",
       secure: true,
       maxAge: maxAge * 1000,
@@ -58,7 +58,7 @@ export async function login_post(req, res) {
       return res.status(401).json({ error: "Incorrect password." });
     } else {
       const token = createToken(user.userid);
-      res.cookie("jwt", token, { httpOnly: false, maxAge: maxAge * 1000 });
+      res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
       res.status(200).json("success");
     }
   } catch (err) {

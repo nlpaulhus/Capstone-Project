@@ -55,7 +55,7 @@ export const NetworkPage = () => {
           }
         )
         .then((result) => {
-          navigate(`/yourservices/`);
+          navigate(`/yourservices`);
         });
     } catch (err) {
       console.log(err);

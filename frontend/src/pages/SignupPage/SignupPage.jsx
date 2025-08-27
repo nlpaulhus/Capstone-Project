@@ -50,7 +50,7 @@ function SignupPage() {
         withCredentials: true,
       });
 
-      navigate(`/network/${IMDBName}`);
+      navigate(`/yournetwork`);
     } catch (error) {
       let responseMessage = error.response.data;
       if (
