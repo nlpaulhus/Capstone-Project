@@ -1,4 +1,4 @@
-import { useLoaderData, useParams, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, redirect } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import CreditBox from "../../components/CreditBox/CreditBox";
@@ -8,7 +8,6 @@ import Button from "react-bootstrap/Button";
 
 export const NetworkPage = () => {
   const navigate = useNavigate();
-  const { imdbname } = useParams();
   const credits = useLoaderData();
   const [network, setNetwork] = useState([]);
   const [creditOptions, setCreditOptions] = useState(credits);
@@ -89,10 +88,15 @@ export const NetworkPage = () => {
   );
 };
 
-export async function networkLoader({ params }) {
-  const imdbname = params.imdbname;
-
+export async function networkLoader() {
   try {
+    const user = await axios.get("http://localhost:3000/user", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+
+    const imdbname = user.data.imdbname;
+
     let credits = await axios
       .get(`https://api.imdbapi.dev/names/${imdbname}/filmography`)
       .then((credits) => credits.data.credits);
@@ -114,6 +118,6 @@ export async function networkLoader({ params }) {
 
     return filteredCredits;
   } catch (error) {
-    return error;
+    return redirect("/login");
   }
 }

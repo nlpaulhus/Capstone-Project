@@ -7,7 +7,11 @@ const sessionSecret = process.env.SECRET;
 import { genSalt, hash, compare } from "bcrypt";
 
 const createToken = (id) => {
-  return jwt.sign({ id }, sessionSecret, { expiresIn: maxAge });
+  let payload = { id: `${id}` };
+  return jwt.sign(payload, sessionSecret, {
+    noTimestamp: true,
+    expiresIn: maxAge,
+  });
 };
 
 export async function signup_post(req, res) {
@@ -22,9 +26,8 @@ export async function signup_post(req, res) {
       `INSERT INTO users (userid, firstname, lastname, email, password, imdbname) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}');`
     );
     const token = createToken(userid);
-    console.log(token);
     res.cookie("jwt", token, {
-      httpOnly: true,
+      httpOnly: false,
       sameSite: "none",
       secure: true,
       maxAge: maxAge * 1000,
@@ -54,13 +57,34 @@ export async function login_post(req, res) {
     if (auth === false) {
       return res.status(401).json({ error: "Incorrect password." });
     } else {
-      const token = createToken(user.id);
-      res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+      const token = createToken(user.userid);
+      res.cookie("jwt", token, { httpOnly: false, maxAge: maxAge * 1000 });
       res.status(200).json("success");
     }
-
-    console.log(auth);
   } catch (err) {
     res.status(400).json({ error: "Unknown server error." });
+  }
+}
+
+export async function user_get(req, res) {
+  const token = req.cookies.jwt;
+  let userId;
+
+  if (!token) {
+    res.status(401).json("Need to login first");
+  } else {
+    jwt.verify(token, sessionSecret, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json("Need to login first");
+      } else {
+        userId = decodedToken.id;
+      }
+    });
+
+    const user = await db.query(
+      `SELECT * FROM users WHERE userId = '${userId}'`
+    );
+
+    res.status(200).json(user[0]);
   }
 }

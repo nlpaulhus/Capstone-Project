@@ -25,7 +25,8 @@ function LoginPage() {
           withCredentials: true,
         }
       );
-      navigate("/");
+
+      navigate("/dashboard");
     } catch (err) {
       setFormError(err.response.data.error);
     }

@@ -4,6 +4,7 @@ import {
   Outlet,
   useNavigation,
 } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import NavBar from "../components/NavBar/NavBar";
 import LandingPage from "../pages/LandingPage/LandingPage";
@@ -15,6 +16,7 @@ import {
   YourServicesPage,
   yourServicesLoader,
 } from "../pages/YourServicesPage/YourServices";
+import DashboardPage from "../pages/DashboardPage/DashboardPage";
 
 const Layout = () => {
   const navigation = useNavigation();
@@ -27,22 +29,23 @@ const Layout = () => {
   );
 };
 
+const ProtectedRoute = () => {
+  const jwt = Cookies.get("jwt");
+};
+
 const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<LandingPage />} />
     <Route path="/login" element={<LoginLandingPage />} />
     <Route path="/login/email" element={<LoginPage />} />
     <Route path="/signup" element={<SignupPage />} />
-    <Route
-      path="/network/:imdbname"
-      element={<NetworkPage />}
-      loader={networkLoader}
-    />
+    <Route path="/network" element={<NetworkPage />} loader={networkLoader} />
     <Route
       path="/yourServices/:userId"
       element={<YourServicesPage />}
       loader={yourServicesLoader}
     />
+    <Route path="/dashboard" element={<DashboardPage />} />
   </Route>
 );
 
