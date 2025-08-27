@@ -2,12 +2,12 @@ import db from "../db.js";
 import { v4 as uuidv4 } from "uuid";
 
 export async function imdbNetwork_post(req, res) {
-  const { userId, network } = req.body;
+  const { userId, newCredits } = req.body;
   const projectIds = [];
   console.log(userId);
 
   try {
-    const promises = network.map(async (project) => {
+    const promises = newCredits.map(async (project) => {
       projectIds.push(project.id);
 
       if (project.endDate !== undefined) {
@@ -31,6 +31,11 @@ export async function imdbNetwork_post(req, res) {
   }
 
   try {
+    const deleteQuery = await db.query(
+      `DELETE FROM users_projects WHERE userId = '${userId}'`
+    );
+    console.log(deleteQuery);
+
     for (let project of projectIds) {
       const id = uuidv4();
       await db.query(
