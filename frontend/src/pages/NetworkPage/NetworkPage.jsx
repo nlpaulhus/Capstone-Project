@@ -8,9 +8,10 @@ import Button from "react-bootstrap/Button";
 
 export const NetworkPage = () => {
   const navigate = useNavigate();
-  const credits = useLoaderData();
-  const [network, setNetwork] = useState([]);
-  const [creditOptions, setCreditOptions] = useState(credits);
+  const { allCredits, networkCredits, userId } = useLoaderData();
+
+  const [network, setNetwork] = useState(networkCredits);
+  const [creditOptions, setCreditOptions] = useState(allCredits);
 
   const addToNetworkHandler = (e) => {
     const creditId = e.target.id;
@@ -27,7 +28,7 @@ export const NetworkPage = () => {
     const creditId = e.target.id;
     const newNetwork = network.filter((credit) => credit.id !== creditId);
     setNetwork(newNetwork);
-    const addedOption = credits.filter((credit) => credit.id === creditId);
+    const addedOption = allCredits.filter((credit) => credit.id === creditId);
     const newCreditOptions = [...creditOptions, addedOption[0]];
     setCreditOptions(newCreditOptions);
   };
@@ -37,14 +38,14 @@ export const NetworkPage = () => {
       let result = await axios
         .post(
           "http://localhost:3000/imdbnetwork",
-          { imdbname, network },
+          { userId, network },
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
           }
         )
         .then((result) => {
-          navigate(`/yourservices/${result.data.userId[0].userid}`);
+          navigate(`/yourservices/`);
         });
     } catch (err) {
       console.log(err);
@@ -62,7 +63,7 @@ export const NetworkPage = () => {
         </p>
       </div>
       <div id="networkPageCards">
-        <div id="credits" className="overflow-auto">
+        <div id="allCredits" className="overflow-auto">
           {creditOptions.map((credit) => (
             <CreditBox
               key={credit.id}
@@ -96,12 +97,13 @@ export async function networkLoader() {
     });
 
     const imdbname = user.data.imdbname;
+    const userId = user.data.userid;
 
-    let credits = await axios
+    let allCredits = await axios
       .get(`https://api.imdbapi.dev/names/${imdbname}/filmography`)
-      .then((credits) => credits.data.credits);
+      .then((allCredits) => allCredits.data.credits);
 
-    const editedCredits = credits.map((credit) => {
+    const editedallCredits = allCredits.map((credit) => {
       return {
         id: credit.title.id,
         title: credit.title.primaryTitle,
@@ -111,12 +113,45 @@ export async function networkLoader() {
       };
     });
 
-    const filteredCredits = editedCredits.filter(
-      (credits, index, self) =>
-        index === self.findIndex((credit) => credit.title === credits.title)
+    const filteredallCredits = editedallCredits.filter(
+      (allCredits, index, self) =>
+        index === self.findIndex((credit) => credit.title === allCredits.title)
     );
 
-    return filteredCredits;
+    const currentNetworkImdbIds = await axios
+      .get("http://localhost:3000/user/network", {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      .then((currentNetworkImdbIds) => currentNetworkImdbIds.data.networkArray);
+
+    let titleIds = ":batchGet?";
+
+    currentNetworkImdbIds.map((id) => (titleIds += `titleIds=${id}&`));
+
+    if (titleIds.charAt(titleIds.length - 1) == "&") {
+      titleIds = titleIds.substr(0, titleIds.length - 1);
+    }
+
+    let allNetworkCredits = await axios
+      .get(`https://api.imdbapi.dev/titles${titleIds}`)
+      .then((allNetworkCredits) => allNetworkCredits.data.titles);
+
+    const allCreditsFiltered = allNetworkCredits.map((credit) => {
+      return {
+        id: credit.id,
+        title: credit.primaryTitle,
+        image: credit.primaryImage.url,
+        startDate: credit.startYear,
+        endDate: credit.endYear,
+      };
+    });
+
+    return {
+      allCredits: filteredallCredits,
+      networkCredits: allCreditsFiltered,
+      userId: userId,
+    };
   } catch (error) {
     return redirect("/login");
   }

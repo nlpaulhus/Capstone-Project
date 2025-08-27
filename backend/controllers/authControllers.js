@@ -88,3 +88,34 @@ export async function user_get(req, res) {
     res.status(200).json(user[0]);
   }
 }
+
+export async function network_get(req, res) {
+  const token = req.cookies.jwt;
+  let userId;
+
+  if (!token) {
+    res.status(401).json("Need to login first");
+  } else {
+    jwt.verify(token, sessionSecret, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json("Need to login first");
+      } else {
+        userId = decodedToken.id;
+      }
+    });
+
+    try {
+      const currentNetwork = await db.query(
+        `SELECT projectIMDB FROM users_projects WHERE userId = '${userId}'`
+      );
+
+      const networkArray = [];
+
+      currentNetwork.map((credit) => networkArray.push(credit.projectimdb));
+
+      res.status(200).json({ networkArray });
+    } catch {
+      res.status(400).json("error");
+    }
+  }
+}

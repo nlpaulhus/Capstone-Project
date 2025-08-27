@@ -1,5 +1,5 @@
 CREATE TABLE users_projects (
    id TEXT PRIMARY KEY,
-   userIMDB TEXT references users(IMDBname),
+   userId uuid references users(userId),
     projectIMDB TEXT references projects(id)
 );

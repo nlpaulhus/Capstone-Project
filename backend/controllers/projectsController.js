@@ -2,9 +2,9 @@ import db from "../db.js";
 import { v4 as uuidv4 } from "uuid";
 
 export async function imdbNetwork_post(req, res) {
-  const { imdbname, network } = req.body;
+  const { userId, network } = req.body;
   const projectIds = [];
-  console.log(network);
+  console.log(userId);
 
   try {
     const promises = network.map(async (project) => {
@@ -34,14 +34,12 @@ export async function imdbNetwork_post(req, res) {
     for (let project of projectIds) {
       const id = uuidv4();
       await db.query(
-        `INSERT INTO users_projects (id, userIMDB, projectIMDB) VALUES ('${id}', '${imdbname}', '${project}') ON CONFLICT DO NOTHING;`
+        `INSERT INTO users_projects (id, userId, projectIMDB) VALUES ('${id}'::uuid, '${userId}', '${project}') ON CONFLICT DO NOTHING;`
       );
     }
   } catch (err) {
     res.status(400).json({ error: err });
   }
 
-  const userId = await db
-    .query(`SELECT userId FROM users WHERE IMDBname = '${imdbname}'`)
-    .then((userId) => res.status(200).json({ userId }));
+  res.status(200).json("success");
 }
