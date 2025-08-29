@@ -13,7 +13,10 @@ function NavBar() {
 
   const logoutHandler = async () => {
     try {
-      const result = await axios.get("http://localhost:3000/logout");
+      const result = await axios.get("http://localhost:3000/logout", {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
       setIsLoggedIn(false);
       navigate("/");
     } catch (err) {

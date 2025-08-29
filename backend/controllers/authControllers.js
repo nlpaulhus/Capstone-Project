@@ -30,7 +30,7 @@ export async function signup_post(req, res) {
     res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "none",
-      secure: true,
+      secure: false,
       maxAge: maxAge * 1000,
     });
     res.status(201).json({ success: "Success" });
@@ -59,7 +59,12 @@ export async function login_post(req, res) {
       return res.status(401).json({ error: "Incorrect password." });
     } else {
       const token = createToken(user.userid);
-      res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: maxAge * 1000,
+      });
       res.status(200).json("success");
     }
   } catch (err) {
@@ -122,6 +127,23 @@ export async function network_get(req, res) {
 }
 
 export function logout_get(req, res) {
-  res.cookie("jwt", "", { httpOnly: true, maxAge: 2 });
-  res.status(200).json("logged out");
-};
+  console.log("hit");
+
+  req.session.destroy((err) => {
+    // Destroy the server-side session
+    if (err) {
+      return res.status(500).send("Error logging out");
+    }
+    // Clear the session cookie on the client by setting its expiration
+  });
+
+  res.clearCookie("jwt"); // Replace 'session_id' with your actual cookie name
+  res.end();
+
+  // res.cookie("jwt", "loggedout", {
+  //   httpOnly: true,
+  //   sameSite: "none",
+  //   secure: true,
+  //   maxAge: 0,
+  // });
+}
