@@ -4,7 +4,11 @@ import axios from "axios";
 export const DashboardPage = () => {
   const { user } = useLoaderData();
 
-  return <h1>Welcome back, {user.firstname}!</h1>;
+  return (
+    <div>
+      <h1>Welcome back, {user.firstname}!</h1>
+    </div>
+  );
 };
 
 export async function dashboardLoader() {

@@ -4,6 +4,7 @@ import "./SignupPage.css";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+const reader = new FileReader();
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -31,8 +32,15 @@ const SignupSchema = Yup.object().shape({
 function SignupPage() {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
+  const [file, setFile] = useState(null);
 
-  const onSubmit = (values) => {
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const onSubmit = async (values) => {
     const { firstName, lastName, email, password, IMDBLink } = values;
     const IMDBFirstSplit = IMDBLink.split("name/", 2);
     const IMDBName = IMDBFirstSplit[1].split("/?ref", 1);
@@ -41,32 +49,47 @@ function SignupPage() {
       lastName: lastName,
       email: email,
       password: password,
-      IMDBName: IMDBName,
+      IMDBName: IMDBName[0],
     };
 
-    try {
-      let result = axios.post("http://localhost:3000/signup", newUser, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+    const data = new FormData();
+    data.set("sample_file", file);
 
-      navigate(`/yournetwork`);
+    try {
+      if (file) {
+        const res = await axios.post("http://localhost:3000/api/upload", data);
+        newUser.profilePhoto = res.data.imageUrl;
+      }
+
+      console.log(newUser);
+
+      const resultTwo = await axios
+        .post("http://localhost:3000/signup", newUser, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((resultTwo) => navigate(`/yournetwork`));
     } catch (error) {
-      let responseMessage = error.response.data;
-      if (
-        responseMessage.includes("email") &&
-        responseMessage.includes("already exists")
-      ) {
-        setServerError(
-          "An account is already registered with that email address"
-        );
-      } else if (
-        responseMessage.includes("imdbname") &&
-        responseMessage.includes("already exists")
-      ) {
-        setServerError("An account is already registered with that IMDB Page");
-      } else {
-        console.log(error);
+      console.log(error);
+      if (error.response.data) {
+        let responseMessage = error.response.data;
+        if (
+          responseMessage.includes("email") &&
+          responseMessage.includes("already exists")
+        ) {
+          setServerError(
+            "An account is already registered with that email address"
+          );
+        } else if (
+          responseMessage.includes("imdbname") &&
+          responseMessage.includes("already exists")
+        ) {
+          setServerError(
+            "An account is already registered with that IMDB Page"
+          );
+        } else {
+          console.log(error);
+        }
       }
     }
   };
@@ -121,6 +144,8 @@ function SignupPage() {
               {errors.IMDBLink && touched.IMDBLink ? (
                 <span>{errors.IMDBLink}</span>
               ) : null}
+              <input id="file" type="file" onChange={handleFileChange} />
+
               <button type="submit">Submit</button>
             </Form>
           )}

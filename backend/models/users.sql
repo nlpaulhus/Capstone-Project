@@ -4,5 +4,6 @@ CREATE TABLE users (
     lastNAme TEXT NOT NULL,
     email TEXT UNIQUE,
     password TEXT NOT NULL,
-    IMDBname TEXT UNIQUE
+    IMDBname TEXT UNIQUE,
+    profilePhoto TEXT
 );

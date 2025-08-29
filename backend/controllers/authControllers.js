@@ -15,7 +15,8 @@ const createToken = (id) => {
 };
 
 export async function signup_post(req, res) {
-  let { firstName, lastName, email, password, IMDBName } = req.body;
+  let { firstName, lastName, email, password, IMDBName, profilePhoto } =
+    req.body;
   const userid = uuidv4();
   const salt = await genSalt();
   password = await hash(password, salt);
@@ -23,7 +24,7 @@ export async function signup_post(req, res) {
 
   try {
     const result = await db.query(
-      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}');`
+      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${profilePhoto}')`
     );
     const token = createToken(userid);
     res.cookie("jwt", token, {
