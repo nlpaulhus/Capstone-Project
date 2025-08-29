@@ -63,3 +63,7 @@ export async function userservice_delete(req, res) {
     res.status(400).json(err);
   }
 }
+
+export async function search_get(req, res) {
+  const servicename = req.params.servicename;
+}
