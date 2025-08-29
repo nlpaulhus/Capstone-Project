@@ -101,6 +101,7 @@ export const NetworkPage = () => {
 
 export async function networkLoader() {
   try {
+    //get user from jwt token on backend
     const user = await axios.get("http://localhost:3000/user", {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
@@ -109,10 +110,12 @@ export async function networkLoader() {
     const imdbname = user.data.imdbname;
     const userId = user.data.userid;
 
+    //get user's imdb credits from their imdbname
     let allCredits = await axios
       .get(`https://api.imdbapi.dev/names/${imdbname}/filmography`)
       .then((allCredits) => allCredits.data.credits);
 
+    //filter down to only the data needed
     const editedallCredits = allCredits.map((credit) => {
       return {
         id: credit.title.id,
@@ -123,11 +126,13 @@ export async function networkLoader() {
       };
     });
 
+    //remove duplicates
     const filteredallCredits = editedallCredits.filter(
       (allCredits, index, self) =>
         index === self.findIndex((credit) => credit.title === allCredits.title)
     );
 
+    //obtain array of the user's current network based on jwt on backend
     const currentNetworkImdbIds = await axios
       .get("http://localhost:3000/user/network", {
         headers: { "Content-Type": "application/json" },
@@ -135,32 +140,22 @@ export async function networkLoader() {
       })
       .then((currentNetworkImdbIds) => currentNetworkImdbIds.data.networkArray);
 
-    let allCreditsFiltered;
+    //loop over each imdbId and get the project's data and add to array
 
-    if (currentNetworkImdbIds.length > 0) {
-      let titleIds = ":batchGet?";
+    let allCreditsFiltered = [];
 
-      currentNetworkImdbIds.map((id) => (titleIds += `titleIds=${id}&`));
+    for (let imdbId of currentNetworkImdbIds) {
+      const titleData = await axios
+        .get(`https://api.imdbapi.dev/titles/${imdbId}`)
+        .then((titleData) => titleData.data);
 
-      if (titleIds.charAt(titleIds.length - 1) == "&") {
-        titleIds = titleIds.substr(0, titleIds.length - 1);
-      }
-
-      let allNetworkCredits = await axios
-        .get(`https://api.imdbapi.dev/titles${titleIds}`)
-        .then((allNetworkCredits) => allNetworkCredits.data.titles);
-
-      allCreditsFiltered = allNetworkCredits.map((credit) => {
-        return {
-          id: credit.id,
-          title: credit.primaryTitle,
-          image: credit.primaryImage.url,
-          startDate: credit.startYear,
-          endDate: credit.endYear,
-        };
+      allCreditsFiltered.push({
+        id: titleData.id,
+        title: titleData.primaryTitle,
+        image: titleData.primaryImage.url,
+        startDate: titleData.startYear,
+        endDate: titleData.endYear,
       });
-    } else {
-      allCreditsFiltered = [];
     }
 
     return {
@@ -168,7 +163,8 @@ export async function networkLoader() {
       networkCredits: allCreditsFiltered,
       userId: userId,
     };
-  } catch (error) {
-    return redirect("/login");
+  } catch (err) {
+    console.log(err);
+    redirect("/login");
   }
 }

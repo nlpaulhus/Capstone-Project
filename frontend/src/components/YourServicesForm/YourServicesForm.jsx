@@ -52,7 +52,7 @@ const YourServicesForm = ({
           label="Hourly"
           name="group1"
           id="hourly"
-          checked={formData.paymentType.includes("hourly")}
+          checked={formData.paymenttype.includes("hourly")}
           onChange={onChangeHandler}
         />
         <Form.Check
@@ -60,7 +60,7 @@ const YourServicesForm = ({
           label="Per Project"
           name="group1"
           id="perProject"
-          checked={formData.paymentType.includes("perProject")}
+          checked={formData.paymenttype.includes("perProject")}
           onChange={onChangeHandler}
         />
       </div>

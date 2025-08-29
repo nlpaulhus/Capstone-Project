@@ -19,9 +19,9 @@ import {
   DashboardPage,
   dashboardLoader,
 } from "../pages/DashboardPage/DashboardPage";
+import { SearchPage, searchPageLoader } from "../pages/SearchPage/SearchPage";
 
 const Layout = () => {
-
   return (
     <>
       <NavBar />
@@ -50,6 +50,11 @@ const routes = createRoutesFromElements(
       path="/dashboard"
       element={<DashboardPage />}
       loader={dashboardLoader}
+    />
+    <Route
+      path="/search/:servicename"
+      element={<SearchPage />}
+      loader={searchPageLoader}
     />
   </Route>
 );

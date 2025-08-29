@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import "./SignupPage.css";
 import axios from "axios";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthenticationContext } from "../../context/AuthenticationContext";
 
 const SignupSchema = Yup.object().shape({
@@ -34,6 +34,8 @@ function SignupPage() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
+  const location = useLocation();
+  location.state("/signup")
 
   const handleFileChange = (e) => {
     if (e.target.files) {

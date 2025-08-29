@@ -19,14 +19,14 @@ export const YourServicesPage = () => {
     servicename: "",
     description: "",
     price: 0,
-    paymentType: "",
+    paymenttype: "",
   };
 
   const ERRORSINITIAL = {
     serviceName: "",
     description: "",
     price: "",
-    paymentType: "",
+    paymenttype: "",
     form: "",
   };
 
@@ -57,7 +57,7 @@ export const YourServicesPage = () => {
     }
 
     if (inputId === "hourly" || inputId === "perProject") {
-      setFormData({ ...formData, paymentType: inputId });
+      setFormData({ ...formData, paymenttype: inputId });
     } else {
       setFormData({ ...formData, [inputId]: inputValue });
     }
@@ -68,7 +68,7 @@ export const YourServicesPage = () => {
       formData.servicename === "" ||
       formData.description === "" ||
       !formData.price > 0 ||
-      formData.paymentType == ""
+      formData.paymenttype == ""
     ) {
       return setFormErrors({
         ...formErrors,
@@ -184,7 +184,7 @@ export async function yourServicesLoader() {
 
     const allServices = response1.data.serviceNames;
     const yourServices = response2.data.yourServices;
-    console.log(allServices);
+ 
 
     return {
       allServices: allServices,
