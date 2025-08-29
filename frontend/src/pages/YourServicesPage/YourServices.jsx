@@ -1,4 +1,4 @@
-import { useLoaderData, useParams, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, redirect } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import "./YourServicesPage.css";
@@ -11,8 +11,7 @@ export const YourServicesPage = () => {
   const loaderData = useLoaderData();
   const allServices = loaderData.allServices;
   const originalServices = loaderData.yourServices;
-  const params = useParams();
-  const userId = params.userId;
+  const userId = loaderData.userId;
   const navigate = useNavigate();
 
   const INITIALSTATE = {
@@ -163,10 +162,15 @@ export const YourServicesPage = () => {
   );
 };
 
-export async function yourServicesLoader({ params }) {
-  const userId = params.userId;
-
+export async function yourServicesLoader() {
   try {
+    const user = await axios.get("http://localhost:3000/user", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+
+    const userId = user.data.userid;
+
     const [response1, response2] = await Promise.all([
       axios.get(`http://localhost:3000/services`, {
         headers: { "Content-Type": "application/json" },
@@ -180,12 +184,15 @@ export async function yourServicesLoader({ params }) {
 
     const allServices = response1.data.serviceNames;
     const yourServices = response2.data.yourServices;
+    console.log(allServices);
 
     return {
       allServices: allServices,
       yourServices: yourServices,
+      userId: userId,
     };
   } catch (err) {
     console.log(err);
+    return redirect("/login");
   }
 }
