@@ -4,7 +4,6 @@ import {
   Outlet,
   useNavigation,
 } from "react-router-dom";
-import Cookies from "js-cookie";
 
 import NavBar from "../components/NavBar/NavBar";
 import LandingPage from "../pages/LandingPage/LandingPage";
@@ -22,7 +21,6 @@ import {
 } from "../pages/DashboardPage/DashboardPage";
 
 const Layout = () => {
-  const navigation = useNavigation();
 
   return (
     <>

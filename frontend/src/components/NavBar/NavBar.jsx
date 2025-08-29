@@ -2,8 +2,25 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { useContext } from "react";
+import { AuthenticationContext } from "../../context/AuthenticationContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    try {
+      const result = await axios.get("http://localhost:3000/logout");
+      setIsLoggedIn(false);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -23,7 +40,11 @@ function NavBar() {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/login">Signup/Login</Nav.Link>
+            {isLoggedIn ? (
+              <Nav.Link onClick={logoutHandler}>Logout</Nav.Link>
+            ) : (
+              <Nav.Link href="/login">Signup/Login</Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -2,9 +2,9 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import "./SignupPage.css";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-const reader = new FileReader();
+import { AuthenticationContext } from "../../context/AuthenticationContext";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -33,6 +33,7 @@ function SignupPage() {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -63,12 +64,17 @@ function SignupPage() {
 
       console.log(newUser);
 
-      const resultTwo = await axios
-        .post("http://localhost:3000/signup", newUser, {
+      const resultTwo = await axios.post(
+        "http://localhost:3000/signup",
+        newUser,
+        {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
-        })
-        .then((resultTwo) => navigate(`/yournetwork`));
+        }
+      );
+
+      setIsLoggedIn(true);
+      navigate(`/yournetwork`);
     } catch (error) {
       console.log(error);
       if (error.response.data) {

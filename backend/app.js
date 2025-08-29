@@ -45,6 +45,7 @@ import userServices from "./routes/userServices.js";
 import login from "./routes/login.js";
 import user from "./routes/user.js";
 import handler from "./controllers/upload.js";
+import logout from "./routes/logout.js";
 
 app.use("/signup", signup);
 app.use("/imdbNetwork", imdbNetwork);
@@ -52,6 +53,7 @@ app.use("/services", services);
 app.use("/userServices", userServices);
 app.use("/login", login);
 app.use("/user", user);
+app.use("/logout", logout);
 
 app.get("/api/welcome", (req, res) => {
   res.status(200).send({ message: "Welcome" });

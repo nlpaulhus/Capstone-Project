@@ -7,6 +7,7 @@ export const DashboardPage = () => {
   return (
     <div>
       <h1>Welcome back, {user.firstname}!</h1>
+      <img src={user.profilephoto}></img>
     </div>
   );
 };

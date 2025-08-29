@@ -120,3 +120,8 @@ export async function network_get(req, res) {
     }
   }
 }
+
+export function logout_get(req, res) {
+  res.cookie("jwt", "", { httpOnly: true, maxAge: 2 });
+  res.status(200).json("logged out");
+};
