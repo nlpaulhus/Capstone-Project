@@ -1,6 +1,6 @@
-import { useLoaderData, useNavigate, redirect } from "react-router-dom";
+import { useLoaderData, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreditBox from "../../components/CreditBox/CreditBox";
 import NetworkBox from "../../components/NetworkBox/NetworkBox";
 import "./NetworkPage.css";
@@ -8,7 +8,16 @@ import Button from "react-bootstrap/Button";
 
 export const NetworkPage = () => {
   const navigate = useNavigate();
-  const { allCredits, networkCredits, userId } = useLoaderData();
+  const location = useLocation();
+
+  const { userId, allCredits, networkCredits } = useLoaderData();
+
+  useEffect(() => {
+    if (userId === null) {
+      navigate("/login/email", { state: { from: location } });
+      return null;
+    }
+  }, []);
 
   let networkCreditIds = networkCredits.map((credit) => credit.id);
 
@@ -116,8 +125,6 @@ export async function networkLoader() {
         .get(`https://api.imdbapi.dev/names/${imdbname}/filmography`)
         .then((allCredits) => allCredits.data.credits);
 
-  
-
       //filter down to only the data needed
       const editedallCredits = allCredits.map((credit) => {
         return {
@@ -170,10 +177,10 @@ export async function networkLoader() {
         userId: userId,
       };
     } else {
-      return redirect("/login");
+      return { allCredits: [], networkCredits: [], userId: null };
     }
   } catch (err) {
     console.log(err);
-    return redirect("/login");
+    return { allCredits: [], networkCredits: [], userId: null };
   }
 }

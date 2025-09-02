@@ -1,5 +1,5 @@
-import { useLoaderData, useNavigate, redirect } from "react-router-dom";
-import { useState } from "react";
+import { useLoaderData, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./YourServicesPage.css";
 import YourServicesForm from "../../components/YourServicesForm/YourServicesForm";
@@ -13,6 +13,14 @@ export const YourServicesPage = () => {
   const originalServices = loaderData.yourServices;
   const userId = loaderData.userId;
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (userId === null) {
+      navigate("/login/email", { state: { from: location } });
+      return null;
+    }
+  }, []);
 
   const INITIALSTATE = {
     id: "",
@@ -95,7 +103,7 @@ export const YourServicesPage = () => {
         servicename: service.servicename.replaceAll(" ", ""),
       });
     }
-    
+
     const result = await axios.post(
       `http://localhost:3000/userServices/${userId}`,
       { servicesToAdd },
@@ -200,6 +208,10 @@ export async function yourServicesLoader() {
     };
   } catch (err) {
     console.log(err);
-    return redirect("/login");
+    return {
+      allServices: [],
+      yourServices: [],
+      userId: null,
+    };
   }
 }

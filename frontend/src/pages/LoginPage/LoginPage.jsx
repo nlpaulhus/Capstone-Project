@@ -1,12 +1,13 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { AuthenticationContext } from "../../context/AuthenticationContext";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [formError, setFormError] = useState("");
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
@@ -28,7 +29,8 @@ function LoginPage() {
         }
       );
       setIsLoggedIn(true);
-      navigate("/dashboard");
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
     } catch (err) {
       setFormError(err.response.data.error);
     }
