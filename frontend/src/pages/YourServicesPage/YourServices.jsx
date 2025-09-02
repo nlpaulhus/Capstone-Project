@@ -88,9 +88,17 @@ export const YourServicesPage = () => {
   };
 
   const nextButtonHandler = async () => {
+    const servicesToAdd = [];
+    for (let service of yourServices) {
+      servicesToAdd.push({
+        ...service,
+        servicename: service.servicename.replaceAll(" ", ""),
+      });
+    }
+    
     const result = await axios.post(
       `http://localhost:3000/userServices/${userId}`,
-      { yourServices },
+      { servicesToAdd },
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
@@ -184,7 +192,6 @@ export async function yourServicesLoader() {
 
     const allServices = response1.data.serviceNames;
     const yourServices = response2.data.yourServices;
- 
 
     return {
       allServices: allServices,

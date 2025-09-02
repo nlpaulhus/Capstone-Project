@@ -140,10 +140,5 @@ export function logout_get(req, res) {
   res.clearCookie("jwt"); // Replace 'session_id' with your actual cookie name
   res.end();
 
-  // res.cookie("jwt", "loggedout", {
-  //   httpOnly: true,
-  //   sameSite: "none",
-  //   secure: true,
-  //   maxAge: 0,
-  // });
+
 }

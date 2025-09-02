@@ -10,8 +10,15 @@ export const SearchPage = () => {
 export async function searchPageLoader({ params }) {
   const servicename = params.servicename;
 
+  const user =  await axios.get("http://localhost:3000/user", {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+
+    const userId = user.data.userid;
+
   const listings = await axios.get(
-    `http://localhost:3000/search/${servicename}`
+    `http://localhost:3000/search/${servicename}/${userId}`
   );
 
   return listings.data;

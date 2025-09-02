@@ -27,16 +27,16 @@ export async function userservices_get(req, res) {
 }
 
 export async function userservices_post(req, res) {
-  const { yourServices } = req.body;
+  const { servicesToAdd } = req.body;
   const userId = req.params.userId;
 
   try {
-    const promises = yourServices.map(async (service) => {
+    const promises = servicesToAdd.map(async (service) => {
       const query = `INSERT INTO userservices (id, userId, serviceName, description, price, paymentType)`;
       const values = `VALUES('${service.id}', '${userId}', '${
         service.servicename
       }', '${service.description}', ${parseInt(service.price)}, '${
-        service.paymentType
+        service.paymenttype
       }')`;
       const onConflict = `ON CONFLICT(id) DO UPDATE SET serviceName = EXCLUDED.serviceName, description = EXCLUDED.description, price = EXCLUDED.price, paymentType = EXCLUDED.paymentType`;
       const newService = await db.query(`${query} ${values} ${onConflict}`);
@@ -66,4 +66,7 @@ export async function userservice_delete(req, res) {
 
 export async function search_get(req, res) {
   const servicename = req.params.servicename;
+  const userId = req.params.userId;
+  console.log(userId);
+  console.log(servicename);
 }
