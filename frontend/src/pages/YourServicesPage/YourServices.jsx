@@ -100,19 +100,19 @@ export const YourServicesPage = () => {
     for (let service of yourServices) {
       servicesToAdd.push({
         ...service,
-        servicename: service.servicename.replaceAll(" ", ""),
+        servicename: service.servicename,
       });
     }
 
     const result = await axios.post(
-      `http://localhost:3000/userServices/${userId}`,
-      { servicesToAdd },
+      `http://localhost:3000/userServices`,
+      { servicesToAdd, userId },
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }
     );
-    navigate("/dashboard");
+    return navigate(`/dashboard`);
   };
 
   const removeButtonHandler = async (e) => {

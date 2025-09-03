@@ -27,18 +27,22 @@ export async function userservices_get(req, res) {
 }
 
 export async function userservices_post(req, res) {
-  const { servicesToAdd } = req.body;
-  const userId = req.params.userId;
+  const { servicesToAdd, userId } = req.body;
+  console.log(servicesToAdd);
+  console.log(userId);
 
   try {
     const promises = servicesToAdd.map(async (service) => {
+      const description = service.description.replace("'", "''");
+
       const query = `INSERT INTO userservices (id, userId, serviceName, description, price, paymentType)`;
-      const values = `VALUES('${service.id}', '${userId}', '${
+      const values = `VALUES ('${service.id}', '${userId}', '${
         service.servicename
-      }', '${service.description}', ${parseInt(service.price)}, '${
+      }', '${description}', ${parseInt(service.price)}, '${
         service.paymenttype
       }')`;
-      const onConflict = `ON CONFLICT(id) DO UPDATE SET serviceName = EXCLUDED.serviceName, description = EXCLUDED.description, price = EXCLUDED.price, paymentType = EXCLUDED.paymentType`;
+      const onConflict = `ON CONFLICT(id) DO UPDATE SET serviceName = EXCLUDED.serviceName, description = EXCLUDED.description, price = EXCLUDED.price, paymentType = EXCLUDED.paymentType;`;
+      console.log(`${query} ${values} ${onConflict}`);
       const newService = await db.query(`${query} ${values} ${onConflict}`);
       return newService;
     });
@@ -47,7 +51,7 @@ export async function userservices_post(req, res) {
 
     res.status(200).json("success");
   } catch (err) {
-    res.status(400).json(err);
+    res.status(401).json({ err });
   }
 }
 
@@ -65,8 +69,15 @@ export async function userservice_delete(req, res) {
 }
 
 export async function search_get(req, res) {
-  const servicename = req.params.servicename;
-  const userId = req.params.userId;
-  console.log(userId);
-  console.log(servicename);
+  try {
+    const servicename = req.params.servicename;
+    const userId = req.params.userId;
+    const listings = await db.query(
+      `SELECT * FROM userservices WHERE serviceName = '${servicename}' AND userId != '${userId}'`
+    );
+    console.log(listings);
+    res.status(200).json({ listings });
+  } catch (err) {
+    res.status(401).json(err);
+  }
 }

@@ -16,15 +16,14 @@ export const DashboardPage = () => {
   const navigate = useNavigate();
 
   const onChangeHandler = (e) => {
-    console.log(e.target.value);
     setFormData({ servicename: e.target.value });
   };
 
   const onSearchHandler = () => {
     if (formData.servicename !== "") {
-      const service = formData.servicename;
-      const serviceNoSpaces = service.replaceAll(" ", "");
-      return navigate(`/search/${serviceNoSpaces}`);
+      console.log(formData.servicename);
+      const servicename = formData.servicename;
+      navigate(`/search/${servicename}`);
     }
   };
 

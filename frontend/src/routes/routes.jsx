@@ -1,9 +1,4 @@
-import {
-  Route,
-  createRoutesFromElements,
-  Outlet,
-  useNavigation,
-} from "react-router-dom";
+import { Route, createRoutesFromElements, Outlet } from "react-router-dom";
 
 import NavBar from "../components/NavBar/NavBar";
 import LandingPage from "../pages/LandingPage/LandingPage";

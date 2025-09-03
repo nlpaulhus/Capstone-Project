@@ -2,24 +2,30 @@ import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 
 export const SearchPage = () => {
-  const listings = useLoaderData;
+  const { servicename, listings } = useLoaderData();
+  console.log(listings);
 
-  return <h1>{listings}</h1>;
+  return (
+    <div>
+      <h1>{servicename}</h1>
+      <ul>
+        {listings.map((listing) => (
+          <li key={listing.id}>{listing.price}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export async function searchPageLoader({ params }) {
   const servicename = params.servicename;
-
-  const user =  await axios.get("http://localhost:3000/user", {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-
-    const userId = user.data.userid;
-
+  const user = await axios.get("http://localhost:3000/user", {
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+  });
+  const userId = user.data.userid;
   const listings = await axios.get(
     `http://localhost:3000/search/${servicename}/${userId}`
   );
-
-  return listings.data;
+  return { servicename: servicename, listings: listings.data.listings };
 }

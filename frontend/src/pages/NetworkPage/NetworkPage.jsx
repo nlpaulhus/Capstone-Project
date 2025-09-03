@@ -1,6 +1,11 @@
-import { useLoaderData, useNavigate, useLocation } from "react-router-dom";
+import {
+  useLoaderData,
+  useNavigate,
+  useLocation,
+  redirect,
+} from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreditBox from "../../components/CreditBox/CreditBox";
 import NetworkBox from "../../components/NetworkBox/NetworkBox";
 import "./NetworkPage.css";
@@ -11,13 +16,7 @@ export const NetworkPage = () => {
   const location = useLocation();
 
   const { userId, allCredits, networkCredits } = useLoaderData();
-
-  useEffect(() => {
-    if (userId === null) {
-      navigate("/login/email", { state: { from: location } });
-      return null;
-    }
-  }, []);
+  console.log(userId);
 
   let networkCreditIds = networkCredits.map((credit) => credit.id);
 
@@ -54,18 +53,16 @@ export const NetworkPage = () => {
     );
 
     try {
-      let result = await axios
-        .post(
-          "http://localhost:3000/imdbnetwork",
-          { userId, newCredits },
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        )
-        .then((result) => {
-          navigate(`/yourservices`);
-        });
+      let result = await axios.post(
+        "http://localhost:3000/imdbnetwork",
+        { userId, newCredits },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      navigate(`/yourservices`);
     } catch (err) {
       console.log(err);
     }
@@ -116,14 +113,18 @@ export async function networkLoader() {
       withCredentials: true,
     });
 
+    console.log(user);
+
     if (user.data.imdbname) {
       const imdbname = user.data.imdbname;
       const userId = user.data.userid;
 
       //get user's imdb credits from their imdbname
-      const allCredits = await axios
-        .get(`https://api.imdbapi.dev/names/${imdbname}/filmography`)
-        .then((allCredits) => allCredits.data.credits);
+      let allCredits = await axios.get(
+        `https://api.imdbapi.dev/names/${imdbname}/filmography`
+      );
+
+      allCredits = allCredits.data.credits;
 
       //filter down to only the data needed
       const editedallCredits = allCredits.map((credit) => {
@@ -137,30 +138,38 @@ export async function networkLoader() {
       });
 
       //remove duplicates
-      const filteredallCredits = editedallCredits.filter(
+      let filteredallCredits = [];
+
+      const filtered = editedallCredits.filter(
         (allCredits, index, self) =>
           index ===
           self.findIndex((credit) => credit.title === allCredits.title)
       );
 
+      if (filtered) {
+        filteredallCredits = filtered;
+      }
+
       //obtain array of the user's current network based on jwt on backend
-      const currentNetworkImdbIds = await axios
-        .get("http://localhost:3000/user/network", {
+      let currentNetworkImdbIds = await axios.get(
+        "http://localhost:3000/user/network",
+        {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
-        })
-        .then(
-          (currentNetworkImdbIds) => currentNetworkImdbIds.data.networkArray
-        );
+        }
+      );
+
+      currentNetworkImdbIds = currentNetworkImdbIds.data.networkArray;
 
       //loop over each imdbId and get the project's data and add to array
 
       let networkCreditsFiltered = [];
 
       for (let imdbId of currentNetworkImdbIds) {
-        const titleData = await axios
-          .get(`https://api.imdbapi.dev/titles/${imdbId}`)
-          .then((titleData) => titleData.data);
+        let titleData = await axios.get(
+          `https://api.imdbapi.dev/titles/${imdbId}`
+        );
+        titleData = titleData.data;
 
         networkCreditsFiltered.push({
           id: titleData.id,
@@ -172,15 +181,13 @@ export async function networkLoader() {
       }
 
       return {
+        userId: userId,
         allCredits: filteredallCredits,
         networkCredits: networkCreditsFiltered,
-        userId: userId,
       };
-    } else {
-      return { allCredits: [], networkCredits: [], userId: null };
     }
   } catch (err) {
     console.log(err);
-    return { allCredits: [], networkCredits: [], userId: null };
+    return redirect("/login/email");
   }
 }

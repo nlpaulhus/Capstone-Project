@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import "./SignupPage.css";
 import axios from "axios";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthenticationContext } from "../../context/AuthenticationContext";
 
 const SignupSchema = Yup.object().shape({
@@ -32,8 +32,11 @@ const SignupSchema = Yup.object().shape({
 function SignupPage() {
   const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const [file, setFile] = useState(null);
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
+
+  setIsLoggedIn(false);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -62,8 +65,6 @@ function SignupPage() {
         newUser.profilePhoto = res.data.imageUrl;
       }
 
-      console.log(newUser);
-
       const resultTwo = await axios.post(
         "http://localhost:3000/signup",
         newUser,
@@ -72,9 +73,6 @@ function SignupPage() {
           withCredentials: true,
         }
       );
-
-      setIsLoggedIn(true);
-      navigate(`/yournetwork`);
     } catch (error) {
       console.log(error);
       if (error.response.data) {
@@ -97,6 +95,9 @@ function SignupPage() {
           console.log(error);
         }
       }
+    } finally {
+      setIsLoggedIn(true);
+      navigate(`/yournetwork`);
     }
   };
 
