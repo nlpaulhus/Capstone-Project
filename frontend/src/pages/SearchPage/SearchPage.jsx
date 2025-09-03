@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useLoaderData } from "react-router-dom";
+import ListingBox from "../../components/ListingBox/ListingBox";
 
 export const SearchPage = () => {
   const { servicename, listings } = useLoaderData();
@@ -10,7 +11,7 @@ export const SearchPage = () => {
       <h1>{servicename}</h1>
       <ul>
         {listings.map((listing) => (
-          <li key={listing.id}>{listing.price}</li>
+          <ListingBox key={listing.id} listing={listing} />
         ))}
       </ul>
     </div>

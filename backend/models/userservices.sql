@@ -1,6 +1,6 @@
 CREATE TABLE userservices (
     id TEXT PRIMARY KEY,
-    userId TEXT NOT NULL,
+    userId uuid references users(userId),
     serviceName TEXT NOT NULL,
     description TEXT NOT NULL,
     price INT NOT NULL,
