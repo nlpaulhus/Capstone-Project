@@ -2,9 +2,8 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import "./SignupPage.css";
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AuthenticationContext } from "../../context/AuthenticationContext";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -34,9 +33,6 @@ function SignupPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [file, setFile] = useState(null);
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
-
-  setIsLoggedIn(false);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -96,7 +92,7 @@ function SignupPage() {
         }
       }
     } finally {
-      setIsLoggedIn(true);
+      localStorage.setItem("loggedIn", true);
       navigate(`/yournetwork`);
     }
   };

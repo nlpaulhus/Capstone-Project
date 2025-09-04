@@ -75,7 +75,7 @@ export async function search_get(req, res) {
     console.log(servicename);
     console.log(userId);
     const listings = await db.query(
-      `SELECT * FROM userservices INNER JOIN users ON users.userid=userservices.userid AND userservices.serviceName = '${servicename}' AND userservices.userId != '${userId}'::uuid;`
+      `SELECT userservices.description, userservices.price, userservices.paymenttype, userservices.servicename, users.firstname, users.lastname, users.userid, users.profilephoto FROM userservices INNER JOIN users ON users.userid=userservices.userid AND userservices.serviceName = '${servicename}' AND userservices.userId != '${userId}'::uuid;`
     );
     console.log(listings);
     res.status(200).json({ listings });

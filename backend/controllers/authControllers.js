@@ -130,8 +130,6 @@ export async function network_get(req, res) {
 }
 
 export function logout_get(req, res) {
-  console.log("hit");
-
   req.session.destroy((err) => {
     // Destroy the server-side session
     if (err) {

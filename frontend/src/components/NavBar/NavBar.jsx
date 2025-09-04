@@ -2,14 +2,16 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { useContext } from "react";
-import { AuthenticationContext } from "../../context/AuthenticationContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function NavBar() {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthenticationContext);
   const navigate = useNavigate();
+
+  const isLoggedIn = localStorage.getItem("loggedIn");
+
+  useEffect(() => console.log(isLoggedIn), []);
 
   const logoutHandler = async () => {
     try {
@@ -17,7 +19,7 @@ function NavBar() {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      setIsLoggedIn(false);
+      localStorage.removeItem("loggedIn");
       navigate("/");
     } catch (err) {
       console.log(err);

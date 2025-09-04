@@ -2,19 +2,29 @@ import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 import ListingBox from "../../components/ListingBox/ListingBox";
 
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/esm/Col";
+import Row from "react-bootstrap/esm/Row";
+
 export const SearchPage = () => {
   const { servicename, listings } = useLoaderData();
   console.log(listings);
 
   return (
-    <div>
-      <h1>{servicename}</h1>
-      <ul>
-        {listings.map((listing) => (
-          <ListingBox key={listing.id} listing={listing} />
-        ))}
-      </ul>
-    </div>
+    <Container>
+      <Row>
+        <Col></Col>
+        <Col>
+          <Container>
+            {listings.map((listing) => (
+              <ListingBox key={listing.id} listing={listing} />
+            ))}
+          </Container>
+        </Col>
+
+        <Col></Col>
+      </Row>
+    </Container>
   );
 };
 
