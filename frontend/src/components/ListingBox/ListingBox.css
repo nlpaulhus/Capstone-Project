@@ -1,0 +1,16 @@
+#listing-profile-photo {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+ .circular-image {
+      width: 100px; /* Or any desired equal value */
+      height: 100px; /* Must match the width */
+      border-radius: 50%;
+      object-fit: cover; /* Prevents stretching and crops the image to fit */
+    }
+
+.nowrap-text {
+  white-space: nowrap;
+}

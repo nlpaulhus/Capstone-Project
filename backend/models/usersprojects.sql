@@ -1,4 +1,4 @@
-CREATE TABLE users_projects (
+CREATE TABLE user_projects (
    id TEXT PRIMARY KEY,
    userId uuid references users(userId),
     projectIMDB TEXT references projects(id)

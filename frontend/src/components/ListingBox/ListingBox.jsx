@@ -1,17 +1,29 @@
 import Card from "react-bootstrap/Card";
+import Stack from "react-bootstrap/Stack";
+import "./ListingBox.css";
 
 export default function ListingBox({ listing }) {
   console.log(listing);
   return (
     <Card>
-      <Card.Title>
-        {listing.firstname} {listing.lastname}
-      </Card.Title>
+      <Stack direction="horizontal" gap={3}>
+        <div className="p-2" id="listing-profile-photo">
+          <img className="circular-image" src={listing.profilephoto} />
+        </div>
+        <div className="p-2">
+          <h3 className="nowrap-text">
+            {listing.firstname} {listing.lastname[0]}.
+          </h3>
+        </div>
+        <div className="p-2">
+          <Card.Text>
+            ${listing.price}
+            <br></br>/{listing.paymenttype}
+          </Card.Text>
+        </div>
+      </Stack>
       <Card.Body>
         <Card.Text>{listing.description}</Card.Text>
-        <Card.Text>
-          ${listing.price}/{listing.paymenttype}
-        </Card.Text>
       </Card.Body>
     </Card>
   );

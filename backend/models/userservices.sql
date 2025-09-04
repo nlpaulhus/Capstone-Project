@@ -1,4 +1,4 @@
-CREATE TABLE userservices (
+CREATE TABLE user_services (
     id TEXT PRIMARY KEY,
     userId uuid references users(userId),
     serviceName TEXT NOT NULL,

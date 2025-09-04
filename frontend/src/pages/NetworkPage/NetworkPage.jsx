@@ -113,8 +113,6 @@ export async function networkLoader() {
       withCredentials: true,
     });
 
-    console.log(user);
-
     if (user.data.imdbname) {
       const imdbname = user.data.imdbname;
       const userId = user.data.userid;
@@ -151,15 +149,14 @@ export async function networkLoader() {
       }
 
       //obtain array of the user's current network based on jwt on backend
-      let currentNetworkImdbIds = await axios.get(
-        "http://localhost:3000/user/network",
-        {
+      let currentNetworkImdbIds = await axios
+        .get("http://localhost:3000/user/network", {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
-        }
-      );
-
-      currentNetworkImdbIds = currentNetworkImdbIds.data.networkArray;
+        })
+        .then(
+          (currentNetworkImdbIds) => currentNetworkImdbIds.data.networkArray
+        );
 
       //loop over each imdbId and get the project's data and add to array
 

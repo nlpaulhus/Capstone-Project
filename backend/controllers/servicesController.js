@@ -17,7 +17,7 @@ export async function userservices_get(req, res) {
     const userId = req.params.userId;
 
     const yourServices = await db.query(
-      `SELECT * FROM userservices WHERE userId = '${userId}'`
+      `SELECT * FROM user_services WHERE userId = '${userId}'`
     );
 
     res.status(200).json({ yourServices });
@@ -35,7 +35,7 @@ export async function userservices_post(req, res) {
     const promises = servicesToAdd.map(async (service) => {
       const description = service.description.replace("'", "''");
 
-      const query = `INSERT INTO userservices (id, userId, serviceName, description, price, paymentType)`;
+      const query = `INSERT INTO user_services (id, userId, serviceName, description, price, paymentType)`;
       const values = `VALUES ('${service.id}', '${userId}', '${
         service.servicename
       }', '${description}', ${parseInt(service.price)}, '${
@@ -60,7 +60,7 @@ export async function userservice_delete(req, res) {
 
   try {
     const result = await db.query(
-      `DELETE from userservices WHERE id = '${serviceId}'`
+      `DELETE from user_services WHERE id = '${serviceId}'`
     );
     res.status(200).json("deleted");
   } catch (err) {
@@ -75,7 +75,7 @@ export async function search_get(req, res) {
     console.log(servicename);
     console.log(userId);
     const listings = await db.query(
-      `SELECT userservices.description, userservices.price, userservices.paymenttype, userservices.servicename, users.firstname, users.lastname, users.userid, users.profilephoto FROM userservices INNER JOIN users ON users.userid=userservices.userid AND userservices.serviceName = '${servicename}' AND userservices.userId != '${userId}'::uuid;`
+      `SELECT user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.userid, users.profilephoto FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid;`
     );
     console.log(listings);
     res.status(200).json({ listings });

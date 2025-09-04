@@ -15,8 +15,18 @@ const createToken = (id) => {
 };
 
 export async function signup_post(req, res) {
-  let { firstName, lastName, email, password, IMDBName, profilePhoto } =
-    req.body;
+  let {
+    firstName,
+    lastName,
+    email,
+    password,
+    IMDBName,
+    street,
+    city,
+    state,
+    zip,
+    profilePhoto,
+  } = req.body;
   const userid = uuidv4();
   const salt = await genSalt();
   password = await hash(password, salt);
@@ -24,13 +34,13 @@ export async function signup_post(req, res) {
 
   try {
     const result = await db.query(
-      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${profilePhoto}')`
+      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', '${profilePhoto}')`
     );
     const token = createToken(userid);
     res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "none",
-      secure: false,
+      secure: true,
       maxAge: maxAge * 1000,
     });
     res.status(201).json({ success: "Success" });
@@ -115,7 +125,7 @@ export async function network_get(req, res) {
 
     try {
       const currentNetwork = await db.query(
-        `SELECT projectIMDB FROM users_projects WHERE userId = '${userId}'`
+        `SELECT projectIMDB FROM user_projects WHERE userId = '${userId}'`
       );
 
       const networkArray = [];

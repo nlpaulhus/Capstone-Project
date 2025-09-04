@@ -32,14 +32,14 @@ export async function imdbNetwork_post(req, res) {
 
   try {
     const deleteQuery = await db.query(
-      `DELETE FROM users_projects WHERE userId = '${userId}'`
+      `DELETE FROM user_projects WHERE userId = '${userId}'`
     );
     console.log(deleteQuery);
 
     for (let project of projectIds) {
       const id = uuidv4();
       await db.query(
-        `INSERT INTO users_projects (id, userId, projectIMDB) VALUES ('${id}'::uuid, '${userId}', '${project}') ON CONFLICT DO NOTHING;`
+        `INSERT INTO user_projects (id, userId, projectIMDB) VALUES ('${id}'::uuid, '${userId}', '${project}') ON CONFLICT DO NOTHING;`
       );
     }
   } catch (err) {
