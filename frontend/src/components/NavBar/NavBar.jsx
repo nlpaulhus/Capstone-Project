@@ -11,7 +11,7 @@ function NavBar() {
 
   const isLoggedIn = localStorage.getItem("loggedIn");
 
-  useEffect(() => console.log(isLoggedIn), []);
+
 
   const logoutHandler = async () => {
     try {

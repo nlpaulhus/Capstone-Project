@@ -3,7 +3,6 @@ import Stack from "react-bootstrap/Stack";
 import "./ListingBox.css";
 
 export default function ListingBox({ listing }) {
-  console.log(listing);
   return (
     <Card>
       <Stack direction="horizontal" gap={3}>

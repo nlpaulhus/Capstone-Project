@@ -5,6 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 import "dotenv/config";
 const sessionSecret = process.env.SECRET;
 import { genSalt, hash, compare } from "bcrypt";
+import axios from "axios";
+
+const GEOCODIO_API_KEY = process.env.GEOCODIO_API_KEY;
+
+console.log(GEOCODIO_API_KEY);
 
 const createToken = (id) => {
   let payload = { id: `${id}` };
@@ -32,9 +37,25 @@ export async function signup_post(req, res) {
   password = await hash(password, salt);
   email = email.toLowerCase();
 
+  street = street.replaceAll(" ", "+");
+  city = city.replaceAll(" ", "+");
+  let lat;
+  let lng;
+
+  try {
+    const response = await axios.get(
+      `https://api.geocod.io/v1.9/geocode?street=${street}&city=${city}&state=${state}&api_key=${GEOCODIO_API_KEY}`
+    );
+    const result = response.data.results[0].location;
+    lat = result.lat;
+    lng = result.lng;
+  } catch (err) {
+    console.log(err);
+  }
+
   try {
     const result = await db.query(
-      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', '${profilePhoto}')`
+      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, lat, lng, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ${lat}, ${lng}, '${profilePhoto}')`
     );
     const token = createToken(userid);
     res.cookie("jwt", token, {
