@@ -6,10 +6,10 @@ import "dotenv/config";
 const sessionSecret = process.env.SECRET;
 import { genSalt, hash, compare } from "bcrypt";
 import axios from "axios";
+import Geocodio from "geocodio-library-node";
 
 const GEOCODIO_API_KEY = process.env.GEOCODIO_API_KEY;
-
-console.log(GEOCODIO_API_KEY);
+const geocoder = new Geocodio(GEOCODIO_API_KEY);
 
 const createToken = (id) => {
   let payload = { id: `${id}` };
@@ -37,21 +37,12 @@ export async function signup_post(req, res) {
   password = await hash(password, salt);
   email = email.toLowerCase();
 
-  street = street.replaceAll(" ", "+");
-  city = city.replaceAll(" ", "+");
-  let lat;
-  let lng;
+  const coordinates = await geocoder
+    .geocode(zip)
+    .then((coordinates) => coordinates.results[0].location);
 
-  try {
-    const response = await axios.get(
-      `https://api.geocod.io/v1.9/geocode?street=${street}&city=${city}&state=${state}&api_key=${GEOCODIO_API_KEY}`
-    );
-    const result = response.data.results[0].location;
-    lat = result.lat;
-    lng = result.lng;
-  } catch (err) {
-    console.log(err);
-  }
+  let lat = coordinates.lat;
+  let lng = coordinates.lng;
 
   try {
     const result = await db.query(

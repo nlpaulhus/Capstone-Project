@@ -12,6 +12,7 @@ import Row from "react-bootstrap/esm/Row";
 
 export const SearchPage = () => {
   const { servicename, listings, user } = useLoaderData();
+  console.log(listings);
 
   return (
     <div>
@@ -36,9 +37,12 @@ export const SearchPage = () => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Marker position={[51.505, -0.09]}>
-                <Popup>This is a popup</Popup>
-              </Marker>
+
+              {listings.map((listing, index) => (
+                <Marker key={index} position={[listing.lat, listing.lng]}>
+                  <Popup>This is a popup</Popup>
+                </Marker>
+              ))}
             </MapContainer>
           </Col>
         </Row>
