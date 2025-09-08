@@ -71,6 +71,10 @@ export async function userservice_delete(req, res) {
 export async function search_get(req, res) {
   try {
     const servicename = req.params.servicename;
+    const sortby = req.query.sortby || "rating";
+    const innetwork = req.query.innetwork || false;
+    const hourly = req.query.hourly || false;
+    const flatrate = req.query.flatrate || false;
     const userId = req.params.userId;
     console.log(servicename);
     console.log(userId);

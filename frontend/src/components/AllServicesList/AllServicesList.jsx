@@ -5,7 +5,7 @@ const AllServicesList = ({ serviceNames, onChangeHandler, formData }) => {
     <Form.Group className="mb-3" controlId="servicename">
       <Form.Select
         onChange={onChangeHandler}
-        
+        defaultValue={formData.servicename}
         required
       >
         <option key="x">Select A Service</option>

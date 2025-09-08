@@ -23,7 +23,7 @@ export const DashboardPage = () => {
     if (formData.servicename !== "") {
       console.log(formData.servicename);
       const servicename = formData.servicename;
-      navigate(`/search/${servicename}`);
+      navigate(`/search/?search=${servicename}`);
     }
   };
 

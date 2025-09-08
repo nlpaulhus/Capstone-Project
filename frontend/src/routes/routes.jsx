@@ -46,11 +46,7 @@ const routes = createRoutesFromElements(
       element={<DashboardPage />}
       loader={dashboardLoader}
     />
-    <Route
-      path="/search/:servicename"
-      element={<SearchPage />}
-      loader={searchPageLoader}
-    />
+    <Route path="/search" element={<SearchPage />} loader={searchPageLoader} />
   </Route>
 );
 
