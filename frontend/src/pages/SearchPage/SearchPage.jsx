@@ -1,17 +1,14 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import {
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-  useParams,
-} from "react-router-dom";
+
+import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import ListingBox from "../../components/ListingBox/ListingBox";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import Form from "react-bootstrap/Form";
+import SearchMap from "../../components/SearchMap/SearchMap";
+import SearchForm from "../../components/SearchForm/SearchForm";
+
+import { useRef } from "react";
+
 import Button from "react-bootstrap/esm/Button";
 import InputGroup from "react-bootstrap/InputGroup";
-import AllServicesList from "../../components/AllServicesList/AllServicesList";
 
 import "./SearchPage.css";
 
@@ -21,113 +18,31 @@ import Row from "react-bootstrap/esm/Row";
 
 export const SearchPage = () => {
   const { listings, user, allServices } = useLoaderData();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const formData = {
-    servicename: searchParams.get("search"),
-    sort: searchParams.get("sort"),
-    innetwork: searchParams.get("innetwork"),
-    hourly: searchParams.get("hourly"),
-    flatrate: searchParams.get("flatrate"),
-  };
 
   const navigate = useNavigate();
-
-  function updateSearch(e) {
-    const next = new URLSearchParams(searchParams);
-    next.set("search", e.target.value);
-    setSearchParams(next);
-  }
-
-  // Set or update a parameter – triggers navigation
-  function updateParam(e) {
-    // clone current params (important to preserve existing values)
-    const next = new URLSearchParams(searchParams);
-    next.set(e.target.id, e.target.value);
-    setSearchParams(next);
-  }
-
-  // Remove a parameter
-  function removeParam(e) {
-    const next = new URLSearchParams(searchParams);
-    next.delete(e.target.id);
-    setSearchParams(next);
-  }
-
-  function filterClick(e) {
-    if (e.target.checked) {
-      const next = new URLSearchParams(searchParams);
-      next.set(e.target.id, true);
-      setSearchParams(next);
-    } else {
-      const next = new URLSearchParams(searchParams);
-      next.delete(e.target.id);
-      setSearchParams(next);
-    }
-  }
 
   return (
     <div>
       <Container>
         <Row>
           <Col>
-            <Form>
-              <Form.Label>Service:</Form.Label>
-              <AllServicesList
-                serviceNames={allServices}
-                formData={formData}
-                onChangeHandler={updateSearch}
-              />
-
-              <Form.Group className="mb-3" controlId="sort">
-                <Form.Label>Sort By:</Form.Label>
-                <Form.Select onChange={updateParam} defaultValue={"rating"}>
-                  <option value={"rating"}>Rating</option>
-                  <option value={"price"}>Price</option>
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="filters">
-                <Form.Label>Filters</Form.Label>
-                <Form.Check
-                  label="In My Network"
-                  id="innetwork"
-                  onChange={filterClick}
-                />
-                <Form.Check label="Hourly" id="hourly" onChange={filterClick} />
-                <Form.Check
-                  label="Flat Rate"
-                  id="flatrate"
-                  onChange={filterClick}
-                />
-              </Form.Group>
-            </Form>
+            <SearchForm allServices={allServices} />
           </Col>
           <Col>
             <Container>
               {listings.map((listing, index) => (
-                <ListingBox key={index} listing={listing} index={index} />
+                <ListingBox
+                  key={index}
+                  id={`listing${index + 1}`}
+                  listing={listing}
+                  index={index}
+                />
               ))}
             </Container>
           </Col>
 
           <Col>
-            <MapContainer
-              center={[user.lat, user.lng]}
-              zoom={11}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-
-              {listings.map((listing, index) => (
-                <Marker key={index} position={[listing.lat, listing.lng]}>
-                  <Popup>This is a popup</Popup>
-                </Marker>
-              ))}
-            </MapContainer>
+            <SearchMap listings={listings} lat={user.lat} lng={user.lng} />
           </Col>
         </Row>
       </Container>

@@ -2,16 +2,18 @@ import Card from "react-bootstrap/Card";
 import Stack from "react-bootstrap/Stack";
 import "./ListingBox.css";
 
-export default function ListingBox({ listing, index }) {
+const ListingBox = (props) => {
+  const { listing, index } = props;
+
   return (
-    <Card>
+    <Card className="listingBoxes">
       <Stack direction="horizontal" gap={3}>
         <div className="p-2" id="listing-profile-photo">
           <img className="circular-image" src={listing.profilephoto} />
         </div>
         <div className="p-2">
           <h3 className="nowrap-text">
-            {index+1}. {listing.firstname} {listing.lastname[0]}.
+            {listing.firstname} {listing.lastname[0]}.
           </h3>
         </div>
         <div className="p-2">
@@ -26,4 +28,6 @@ export default function ListingBox({ listing, index }) {
       </Card.Body>
     </Card>
   );
-}
+};
+
+export default ListingBox;
