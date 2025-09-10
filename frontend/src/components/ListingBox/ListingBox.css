@@ -12,9 +12,11 @@
     }
 
 .nowrap-text {
+  text-align:left;
   white-space: nowrap;
 }
 
-.listingBoxes:hover {
-  border: 1px solid blue;
+.description {
+  text-align: center;
 }
+

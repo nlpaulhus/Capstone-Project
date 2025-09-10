@@ -15,6 +15,10 @@ import {
   dashboardLoader,
 } from "../pages/DashboardPage/DashboardPage";
 import { SearchPage, searchPageLoader } from "../pages/SearchPage/SearchPage";
+import {
+  ProfilePage,
+  profilePageLoader,
+} from "../pages/ProfilePage/ProfilePage";
 
 const Layout = () => {
   return (
@@ -47,6 +51,11 @@ const routes = createRoutesFromElements(
       loader={dashboardLoader}
     />
     <Route path="/search" element={<SearchPage />} loader={searchPageLoader} />
+    <Route
+      path="/profile/:listingId"
+      element={<ProfilePage />}
+      loader={profilePageLoader}
+    />
   </Route>
 );
 

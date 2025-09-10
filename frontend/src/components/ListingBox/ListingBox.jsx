@@ -1,14 +1,20 @@
 import Card from "react-bootstrap/Card";
 import Stack from "react-bootstrap/Stack";
 import "./ListingBox.css";
+import { useNavigate } from "react-router-dom";
 
 const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
+  const navigate = useNavigate();
+  console.log(listing);
+
   return (
     <Card
       className="listingBoxes"
       onMouseEnter={() => onMouseEnter(listing.id)}
       onMouseLeave={onMouseLeave}
+      onClick={() => navigate(`/profile/${listing.id}`)}
       style={{
+        margin: "5px",
         border: activeItem === listing.id ? "1px solid blue" : "1px solid grey",
       }}
     >
@@ -17,19 +23,24 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
           <img className="circular-image" src={listing.profilephoto} />
         </div>
         <div className="p-2">
-          <h3 className="nowrap-text">
-            {listing.firstname} {listing.lastname[0]}.
-          </h3>
+          <Stack>
+            <h3 className="nowrap-text">
+              {listing.firstname} {listing.lastname[0]}.
+            </h3>
+            <p className="nowrap-text">
+              {listing.city}, {listing.state}
+            </p>
+          </Stack>
         </div>
         <div className="p-2">
-          <Card.Text>
+          <p>
             ${listing.price}
             <br></br>/{listing.paymenttype}
-          </Card.Text>
+          </p>
         </div>
       </Stack>
       <Card.Body>
-        <Card.Text>{listing.description}</Card.Text>
+        <p className="description">{listing.description}</p>
       </Card.Body>
     </Card>
   );
