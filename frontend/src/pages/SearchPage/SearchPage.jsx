@@ -1,14 +1,9 @@
 import axios from "axios";
-
-import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
+import { useState, useEffect, act } from "react";
+import { useLoaderData } from "react-router-dom";
 import ListingBox from "../../components/ListingBox/ListingBox";
 import SearchMap from "../../components/SearchMap/SearchMap";
 import SearchForm from "../../components/SearchForm/SearchForm";
-
-import { useRef } from "react";
-
-import Button from "react-bootstrap/esm/Button";
-import InputGroup from "react-bootstrap/InputGroup";
 
 import "./SearchPage.css";
 
@@ -18,8 +13,12 @@ import Row from "react-bootstrap/esm/Row";
 
 export const SearchPage = () => {
   const { listings, user, allServices } = useLoaderData();
+  const [activeItem, setActiveItem] = useState(null);
 
-  const navigate = useNavigate();
+  const handleMouseEnter = (id) => {
+    setActiveItem(id);
+  };
+  const handleMouseLeave = () => setActiveItem(null);
 
   return (
     <div>
@@ -30,19 +29,27 @@ export const SearchPage = () => {
           </Col>
           <Col>
             <Container>
-              {listings.map((listing, index) => (
+              {listings.map((listing) => (
                 <ListingBox
-                  key={index}
-                  id={`listing${index + 1}`}
+                  key={listing.id}
                   listing={listing}
-                  index={index}
+                  activeItem={activeItem}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 />
               ))}
             </Container>
           </Col>
 
           <Col>
-            <SearchMap listings={listings} lat={user.lat} lng={user.lng} />
+            <SearchMap
+              handleMouseEnter={handleMouseEnter}
+              handleMouseLeave={handleMouseLeave}
+              listings={listings}
+              lat={user.lat}
+              lng={user.lng}
+              activeItem={activeItem}
+            />
           </Col>
         </Row>
       </Container>

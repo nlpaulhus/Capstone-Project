@@ -79,7 +79,7 @@ export async function search_get(req, res) {
     console.log(servicename);
     console.log(userId);
     const listings = await db.query(
-      `SELECT user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.userid, users.profilephoto, users.lat, users.lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid;`
+      `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.userid, users.profilephoto, users.lat, users.lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid;`
     );
     console.log(listings);
     res.status(200).json({ listings });

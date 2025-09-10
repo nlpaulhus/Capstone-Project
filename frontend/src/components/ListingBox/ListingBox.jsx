@@ -2,11 +2,16 @@ import Card from "react-bootstrap/Card";
 import Stack from "react-bootstrap/Stack";
 import "./ListingBox.css";
 
-const ListingBox = (props) => {
-  const { listing, index } = props;
-
+const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
   return (
-    <Card className="listingBoxes">
+    <Card
+      className="listingBoxes"
+      onMouseEnter={() => onMouseEnter(listing.id)}
+      onMouseLeave={onMouseLeave}
+      style={{
+        border: activeItem === listing.id ? "1px solid blue" : "1px solid grey",
+      }}
+    >
       <Stack direction="horizontal" gap={3}>
         <div className="p-2" id="listing-profile-photo">
           <img className="circular-image" src={listing.profilephoto} />
