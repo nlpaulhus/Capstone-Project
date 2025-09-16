@@ -71,17 +71,28 @@ export async function userservice_delete(req, res) {
 export async function search_get(req, res) {
   try {
     const servicename = req.params.servicename;
-    const sortby = req.query.sortby || "rating";
+    const userId = req.params.userId;
     const innetwork = req.query.innetwork || false;
     const hourly = req.query.hourly || false;
     const flatrate = req.query.flatrate || false;
-    const userId = req.params.userId;
-    console.log(servicename);
-    console.log(userId);
-    const listings = await db.query(
-      `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, users.lat, users.lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid;`
-    );
-    console.log(listings);
+
+    const query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, users.lat, users.lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid`;
+    let listings;
+
+    if (hourly === "true") {
+      console.log("hourly path hit");
+      listings = await db.query(
+        `${query} AND user_services.paymenttype = 'hourly';`
+      );
+    } else if (flatrate === "true") {
+      console.log("hourly path hit");
+      listings = await db.query(
+        `${query} AND user_services.paymenttype = 'perProject';`
+      );
+    } else {
+      console.log("regular");
+      listings = await db.query(`${query};`);
+    }
     res.status(200).json({ listings });
   } catch (err) {
     res.status(401).json(err);

@@ -1,11 +1,19 @@
 import { useLoaderData } from "react-router-dom";
 import axios from "axios";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/esm/Col";
+import Row from "react-bootstrap/esm/Row";
 
 export const ProfilePage = () => {
   const currentUser = useLoaderData();
   console.log(currentUser);
 
-  return <h1>Profile</h1>;
+  return (
+    <Container>
+      <Col></Col>
+      <Col></Col>
+    </Container>
+  );
 };
 
 export async function profilePageLoader({ params }) {

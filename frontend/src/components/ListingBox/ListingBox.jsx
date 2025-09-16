@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
   const navigate = useNavigate();
-  console.log(listing);
 
   return (
     <Card

@@ -109,12 +109,9 @@ export async function user_get(req, res) {
       }
     });
 
-    console.log(userId);
-
     const user = await db.query(
       `SELECT * FROM users WHERE userid = '${userId}';`
     );
-    console.log(user[0]);
 
     res.status(200).json(user[0]);
   }
@@ -162,4 +159,8 @@ export function logout_get(req, res) {
 
   res.clearCookie("jwt"); // Replace 'session_id' with your actual cookie name
   res.end();
+}
+
+export function profile_get(req, res) {
+  
 }
