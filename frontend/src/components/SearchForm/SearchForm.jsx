@@ -45,7 +45,7 @@ const SearchForm = ({
           disabled={paymentType === "hourly"}
         />
         <Form.Check
-          label="Flat Rate"
+          label="Flat Rate.    "
           id="flatrate"
           onChange={paymentTypeClick}
           checked={paymentType === "flatrate"}
@@ -55,7 +55,6 @@ const SearchForm = ({
           label="All"
           id="all"
           onChange={paymentTypeClick}
-          defaultChecked
           checked={paymentType === "all"}
           disabled={paymentType === "all"}
         />

@@ -173,10 +173,23 @@ export async function searchPageLoader({ request }) {
       searchString.slice(0, -1);
     }
 
-    const listings = await axios.get(searchString);
+    let listings = await axios
+      .get(searchString)
+      .then((listings) => listings.data.listings);
+
+    if (innetwork === "true") {
+      const innetworkListings = listings.filter(
+        (listing) => listing.inNetwork === true
+      );
+      return {
+        listings: innetworkListings,
+        user: user,
+        allServices: allServices,
+      };
+    }
 
     return {
-      listings: listings.data.listings,
+      listings: listings,
       user: user,
       allServices: allServices,
     };

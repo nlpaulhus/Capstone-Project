@@ -72,7 +72,6 @@ export async function search_get(req, res) {
   try {
     const servicename = req.params.servicename;
     const userId = req.params.userId;
-    const innetwork = req.query.innetwork || false;
     const hourly = req.query.hourly || false;
     const flatrate = req.query.flatrate || false;
 
@@ -80,19 +79,47 @@ export async function search_get(req, res) {
     let listings;
 
     if (hourly === "true") {
-      console.log("hourly path hit");
       listings = await db.query(
         `${query} AND user_services.paymenttype = 'hourly';`
       );
     } else if (flatrate === "true") {
-      console.log("hourly path hit");
       listings = await db.query(
         `${query} AND user_services.paymenttype = 'flatrate';`
       );
     } else {
-      console.log("regular");
       listings = await db.query(`${query};`);
     }
+
+    const currentUserProjects = await db.query(
+      `SELECT projectimdb FROM user_projects WHERE userId='${userId}';`
+    );
+
+    const currentUserNetwork = [];
+
+    for (let project of currentUserProjects) {
+      currentUserNetwork.push(project.projectimdb);
+    }
+
+    for (let listing of listings) {
+      const userProjects = await db.query(
+        `SELECT projectimdb FROM user_projects WHERE userId='${listing.userid}';`
+      );
+
+      const projectsInBoth = [];
+      for (let project of userProjects) {
+        if (currentUserNetwork.includes(project.projectimdb))
+          projectsInBoth.push(project.projectimdb);
+      }
+
+      if (projectsInBoth.length) {
+        listing.inNetwork = true;
+      } else {
+        listing.inNetwork = false;
+      }
+    }
+
+    console.log(listings);
+
     res.status(200).json({ listings });
   } catch (err) {
     res.status(401).json(err);
