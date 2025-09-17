@@ -118,8 +118,6 @@ export async function search_get(req, res) {
       }
     }
 
-    console.log(listings);
-
     res.status(200).json({ listings });
   } catch (err) {
     res.status(401).json(err);

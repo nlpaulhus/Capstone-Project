@@ -14,6 +14,7 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
       onClick={() => navigate(`/profile/${listing.id}`)}
       style={{
         margin: "5px",
+        padding: "10px",
         border: activeItem === listing.id ? "1px solid blue" : "1px solid grey",
       }}
     >
@@ -38,9 +39,14 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
           </p>
         </div>
       </Stack>
-      <Card.Body>
-        <p className="description">{listing.description}</p>
-      </Card.Body>
+      <Stack>
+        <div>
+          {listing.inNetwork === true ? <p>🎬 In Your Network</p> : null}
+        </div>
+        <div>
+          <p className="description">{listing.description}</p>
+        </div>
+      </Stack>
     </Card>
   );
 };
