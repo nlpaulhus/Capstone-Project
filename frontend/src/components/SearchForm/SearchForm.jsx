@@ -5,8 +5,9 @@ const SearchForm = ({
   allServices,
   formData,
   updateSearch,
-  updateParam,
+  paymentTypeClick,
   filterClick,
+  paymentType,
 }) => {
   return (
     <Form>
@@ -26,14 +27,38 @@ const SearchForm = ({
       </Form.Group> */}
 
       <Form.Group className="mb-3" controlId="filters">
-        <Form.Label>Filters</Form.Label>
+        <Form.Label>Filter:</Form.Label>
         <Form.Check
           label="In My Network"
           id="innetwork"
           onChange={filterClick}
         />
-        <Form.Check label="Hourly" id="hourly" onChange={filterClick} />
-        <Form.Check label="Flat Rate" id="flatrate" onChange={filterClick} />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="filters">
+        <Form.Label>Payment Type:</Form.Label>
+        <Form.Check
+          label="Hourly"
+          id="hourly"
+          onChange={paymentTypeClick}
+          checked={paymentType === "hourly"}
+          disabled={paymentType === "hourly"}
+        />
+        <Form.Check
+          label="Flat Rate"
+          id="flatrate"
+          onChange={paymentTypeClick}
+          checked={paymentType === "flatrate"}
+          disabled={paymentType === "flatrate"}
+        />
+        <Form.Check
+          label="All"
+          id="all"
+          onChange={paymentTypeClick}
+          defaultChecked
+          checked={paymentType === "all"}
+          disabled={paymentType === "all"}
+        />
       </Form.Group>
     </Form>
   );

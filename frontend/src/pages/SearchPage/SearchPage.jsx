@@ -20,6 +20,7 @@ export const SearchPage = () => {
   const [activeItem, setActiveItem] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
+  const [paymentType, setPaymentType] = useState("all");
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
@@ -37,22 +38,22 @@ export const SearchPage = () => {
     revalidator.revalidate();
   }
 
-  // Set or update a parameter – triggers navigation
-  function updateParam(e) {
-    // clone current params (important to preserve existing values)
-    const next = new URLSearchParams(searchParams);
-    next.set(e.target.id, e.target.value);
-    setSearchParams(next, { replace: true });
-    revalidator.revalidate();
-  }
+  // // Set or update a parameter – triggers navigation
+  // function updateParam(e) {
+  //   // clone current params (important to preserve existing values)
+  //   const next = new URLSearchParams(searchParams);
+  //   next.set(e.target.id, e.target.value);
+  //   setSearchParams(next, { replace: true });
+  //   revalidator.revalidate();
+  // }
 
-  // Remove a parameter
-  function removeParam(e) {
-    const next = new URLSearchParams(searchParams);
-    next.delete(e.target.id);
-    setSearchParams(next, { replace: true });
-    revalidator.revalidate();
-  }
+  // // Remove a parameter
+  // function removeParam(e) {
+  //   const next = new URLSearchParams(searchParams);
+  //   next.delete(e.target.id);
+  //   setSearchParams(next, { replace: true });
+  //   revalidator.revalidate();
+  // }
 
   //add or remove filter
   function filterClick(e) {
@@ -69,6 +70,24 @@ export const SearchPage = () => {
     }
   }
 
+  function paymentTypeClick(e) {
+    if (e.target.id === "all") {
+      setPaymentType("all");
+      const next = new URLSearchParams(searchParams);
+      next.delete("hourly");
+      next.delete("flatrate");
+      setSearchParams(next, { replace: true });
+      revalidator.revalidate();
+    } else {
+      const next = new URLSearchParams(searchParams);
+      next.set(e.target.id, true);
+      next.delete(paymentType);
+      setSearchParams(next, { replace: true });
+      setPaymentType(e.target.id);
+      revalidator.revalidate();
+    }
+  }
+
   return (
     <div>
       <Container>
@@ -78,8 +97,9 @@ export const SearchPage = () => {
               allServices={allServices}
               formData={formData}
               updateSearch={updateSearch}
-              updateParam={updateParam}
               filterClick={filterClick}
+              paymentTypeClick={paymentTypeClick}
+              paymentType={paymentType}
             />
           </Col>
           <Col>
@@ -152,8 +172,6 @@ export async function searchPageLoader({ request }) {
     if (searchString[searchString.length - 1] === "&s") {
       searchString.slice(0, -1);
     }
-
-    console.log(searchString);
 
     const listings = await axios.get(searchString);
 

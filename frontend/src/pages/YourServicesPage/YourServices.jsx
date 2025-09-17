@@ -64,7 +64,7 @@ export const YourServicesPage = () => {
       setFormData({ ...formData, price: inputValue });
     }
 
-    if (inputId === "hourly" || inputId === "perProject") {
+    if (inputId === "hourly" || inputId === "flatrate") {
       setFormData({ ...formData, paymenttype: inputId });
     } else {
       setFormData({ ...formData, [inputId]: inputValue });

@@ -57,10 +57,10 @@ const YourServicesForm = ({
         />
         <Form.Check
           inline
-          label="Per Project"
+          label="Flat Rate"
           name="group1"
-          id="perProject"
-          checked={formData.paymenttype.includes("perProject")}
+          id="flatrate"
+          checked={formData.paymenttype.includes("flatrate")}
           onChange={onChangeHandler}
         />
       </div>

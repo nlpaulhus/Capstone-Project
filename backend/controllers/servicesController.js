@@ -87,7 +87,7 @@ export async function search_get(req, res) {
     } else if (flatrate === "true") {
       console.log("hourly path hit");
       listings = await db.query(
-        `${query} AND user_services.paymenttype = 'perProject';`
+        `${query} AND user_services.paymenttype = 'flatrate';`
       );
     } else {
       console.log("regular");
