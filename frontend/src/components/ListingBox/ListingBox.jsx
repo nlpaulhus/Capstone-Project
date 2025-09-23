@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
   const navigate = useNavigate();
 
+  const profilePhoto =
+    listing.profilephoto ||
+    "https://github.com/nlpaulhus/Capstone-Project/blob/master/frontend/src/assets/blank-profile-picture.webp"
   return (
     <Card
       className="listingBoxes"
@@ -20,7 +23,7 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
     >
       <Stack direction="horizontal" gap={3}>
         <div className="p-2" id="listing-profile-photo">
-          <img className="circular-image" src={listing.profilephoto} />
+          <img className="circular-image" src={profilePhoto} />
         </div>
         <div className="p-2">
           <Stack>
