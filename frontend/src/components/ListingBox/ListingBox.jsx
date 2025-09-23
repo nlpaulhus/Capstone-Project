@@ -7,8 +7,12 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
   const navigate = useNavigate();
 
   const profilePhoto =
-    listing.profilephoto ||
-    "https://github.com/nlpaulhus/Capstone-Project/blob/master/frontend/src/assets/blank-profile-picture.webp"
+    listing.profilephoto !== "undefined"
+      ? listing.profilephoto
+      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
+  console.log(profilePhoto);
+
   return (
     <Card
       className="listingBoxes"
