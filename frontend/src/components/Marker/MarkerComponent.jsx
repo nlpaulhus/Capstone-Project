@@ -25,6 +25,9 @@ export default function MarkerComponent({
   onMouseEnter,
   onMouseLeave,
 }) {
+  const markerLat = location.lat.toString();
+  const markerLng = location.lng.toString();
+
   const icon = useMemo(
     () => (isActive ? highlightedIcon : defaultIcon),
     [isActive]
@@ -40,7 +43,7 @@ export default function MarkerComponent({
 
   return (
     <Marker
-      position={[location.lat, location.lng]}
+      position={[markerLat, markerLng]}
       icon={icon}
       eventHandlers={eventHandlers}
     />

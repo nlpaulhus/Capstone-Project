@@ -4,6 +4,7 @@ import {
   useLoaderData,
   useSearchParams,
   useRevalidator,
+  redirect,
 } from "react-router-dom";
 import ListingBox from "../../components/ListingBox/ListingBox";
 import SearchMap from "../../components/SearchMap/SearchMap";
@@ -22,6 +23,8 @@ export const SearchPage = () => {
   const revalidator = useRevalidator();
   const [paymentType, setPaymentType] = useState("all");
 
+ 
+
   const handleMouseEnter = (id) => {
     setActiveItem(id);
   };
@@ -38,24 +41,6 @@ export const SearchPage = () => {
     revalidator.revalidate();
   }
 
-  // // Set or update a parameter – triggers navigation
-  // function updateParam(e) {
-  //   // clone current params (important to preserve existing values)
-  //   const next = new URLSearchParams(searchParams);
-  //   next.set(e.target.id, e.target.value);
-  //   setSearchParams(next, { replace: true });
-  //   revalidator.revalidate();
-  // }
-
-  // // Remove a parameter
-  // function removeParam(e) {
-  //   const next = new URLSearchParams(searchParams);
-  //   next.delete(e.target.id);
-  //   setSearchParams(next, { replace: true });
-  //   revalidator.revalidate();
-  // }
-
-  //add or remove filter
   function filterClick(e) {
     if (e.target.checked) {
       const next = new URLSearchParams(searchParams);
@@ -121,8 +106,7 @@ export const SearchPage = () => {
               handleMouseEnter={handleMouseEnter}
               handleMouseLeave={handleMouseLeave}
               listings={listings}
-              lat={user.lat}
-              lng={user.lng}
+              user={user}
               activeItem={activeItem}
             />
           </Col>
@@ -142,24 +126,31 @@ export async function searchPageLoader({ request }) {
   const flatrate = url.searchParams.get("flatrate");
 
   const queryString = url.search.split("&");
+  let userId;
+  let user;
+  let allServices;
 
   try {
-    const allServices = await axios
+    allServices = await axios
       .get(`http://localhost:3000/services`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
       .then((allServices) => allServices.data.serviceNames);
 
-    const user = await axios
+    user = await axios
       .get("http://localhost:3000/user", {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
       .then((user) => user.data);
 
-    const userId = user.userid;
+    userId = user.userid;
+  } catch {
+    return redirect("/login");
+  }
 
+  try {
     let searchString = `http://localhost:3000/search/${servicename}/${userId}`;
 
     if (queryString.length > 1) {
@@ -181,18 +172,19 @@ export async function searchPageLoader({ request }) {
       const innetworkListings = listings.filter(
         (listing) => listing.inNetwork === true
       );
+
+      console.log(listings);
       return {
         listings: innetworkListings,
         user: user,
         allServices: allServices,
       };
-    }
-
-    return {
-      listings: listings,
-      user: user,
-      allServices: allServices,
-    };
+    } else
+      return {
+        listings: listings,
+        user: user,
+        allServices: allServices,
+      };
   } catch (err) {
     console.log(err);
   }

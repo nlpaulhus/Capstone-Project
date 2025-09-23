@@ -20,6 +20,8 @@ const createToken = (id) => {
 };
 
 export async function signup_post(req, res) {
+  console.log("route hit");
+  console.log(req.body);
   let {
     firstName,
     lastName,
@@ -46,8 +48,9 @@ export async function signup_post(req, res) {
 
   try {
     const result = await db.query(
-      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, lat, lng, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ${lat}, ${lng}, '${profilePhoto}')`
+      `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, geom, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ST_GeomFromText('POINT(${lat} ${lng})', 4326), '${profilePhoto}')`
     );
+    console.log(result);
     const token = createToken(userid);
     res.cookie("jwt", token, {
       httpOnly: true,
@@ -110,7 +113,7 @@ export async function user_get(req, res) {
     });
 
     const user = await db.query(
-      `SELECT * FROM users WHERE userid = '${userId}';`
+      `SELECT city, email, firstname, imdbname, profilePhoto, userid, zip, ST_X(geom) AS lat, ST_Y(geom) as lng, geom FROM users WHERE userid = '${userId}';`
     );
 
     res.status(200).json(user[0]);
@@ -161,6 +164,4 @@ export function logout_get(req, res) {
   res.end();
 }
 
-export function profile_get(req, res) {
-  
-}
+export function profile_get(req, res) {}

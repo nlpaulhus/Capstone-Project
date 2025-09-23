@@ -1,32 +1,34 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import MarkerComponent from "../Marker/MarkerComponent";
 
 const SearchMap = ({
   listings,
-  lat,
-  lng,
+  user,
   handleMouseEnter,
   handleMouseLeave,
   activeItem,
 }) => {
+  const mapLat = user.lat.toString();
+  const mapLng = user.lng.toString();
 
-    
   return (
-    <MapContainer center={[lat, lng]} zoom={11} scrollWheelZoom={false}>
+    <MapContainer center={[mapLat, mapLng]} zoom={11} scrollWheelZoom={false}>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {listings.map((listing) => (
-        <MarkerComponent
-          key={listing.id}
-          location={listing}
-          isActive={activeItem === listing.id}
-          onMouseEnter={() => handleMouseEnter(listing.id)}
-          onMouseLeave={handleMouseLeave}
-        />
-      ))}
+      {listings.length > 0
+        ? listings.map((listing) => (
+            <MarkerComponent
+              key={listing.id}
+              location={listing}
+              isActive={activeItem === listing.id}
+              onMouseEnter={() => handleMouseEnter(listing.id)}
+              onMouseLeave={handleMouseLeave}
+            />
+          ))
+        : null}
     </MapContainer>
   );
 };

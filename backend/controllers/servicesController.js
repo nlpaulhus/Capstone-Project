@@ -69,13 +69,14 @@ export async function userservice_delete(req, res) {
 }
 
 export async function search_get(req, res) {
+  console.log("route hit");
   try {
     const servicename = req.params.servicename;
     const userId = req.params.userId;
     const hourly = req.query.hourly || false;
     const flatrate = req.query.flatrate || false;
 
-    const query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, users.lat, users.lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid`;
+    const query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid`;
     let listings;
 
     if (hourly === "true") {
@@ -89,6 +90,8 @@ export async function search_get(req, res) {
     } else {
       listings = await db.query(`${query};`);
     }
+
+    console.log(listings);
 
     const currentUserProjects = await db.query(
       `SELECT projectimdb FROM user_projects WHERE userId='${userId}';`
@@ -117,6 +120,8 @@ export async function search_get(req, res) {
         listing.inNetwork = false;
       }
     }
+
+    console.log(listings);
 
     res.status(200).json({ listings });
   } catch (err) {

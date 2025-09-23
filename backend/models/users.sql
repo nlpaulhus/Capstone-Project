@@ -10,6 +10,5 @@ CREATE TABLE users (
     city TEXT NOT NULL,
     state TEXT NOT NULL,
     zip TEXT NOT NULL,
-    lat NUMERIC(9,6) NOT NULL,
-    lng NUMERIC(9,6) NOT NULL
+    geom GEOMETRY(Point, 4326) NOT NULL
 );
