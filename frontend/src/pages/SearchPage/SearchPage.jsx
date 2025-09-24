@@ -22,8 +22,7 @@ export const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
   const [paymentType, setPaymentType] = useState("all");
-
- 
+  const [searchRadius, setSearchRadius] = useState("suggested");
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
@@ -73,6 +72,23 @@ export const SearchPage = () => {
     }
   }
 
+  function searchRadiusClick(e) {
+    if (e.target.id === "suggested") {
+      setSearchRadius("suggested");
+      const next = new URLSearchParams(searchParams);
+      next.delete("searchRadius");
+      setSearchParams(next, { replace: true });
+      revalidator.revalidate();
+    } else {
+      setSearchRadius(e.target.id);
+      const next = new URLSearchParams(searchParams);
+      next.delete("searchRadius");
+      next.set("searchRadius", e.target.id);
+      setSearchParams(next, { replace: true });
+      revalidator.revalidate();
+    }
+  }
+
   return (
     <div>
       <Container>
@@ -85,6 +101,9 @@ export const SearchPage = () => {
               filterClick={filterClick}
               paymentTypeClick={paymentTypeClick}
               paymentType={paymentType}
+              userzip={user.zip}
+              searchRadius={searchRadius}
+              searchRadiusClick={searchRadiusClick}
             />
           </Col>
           <Col>
@@ -124,8 +143,10 @@ export async function searchPageLoader({ request }) {
   const innetwork = url.searchParams.get("innetwork");
   const hourly = url.searchParams.get("hourly");
   const flatrate = url.searchParams.get("flatrate");
+  const searchRadius = url.searchParams.get("searchRadius");
 
   const queryString = url.search.split("&");
+
   let userId;
   let user;
   let allServices;
@@ -160,9 +181,11 @@ export async function searchPageLoader({ request }) {
       searchString += `${queryString[i]}&`;
     }
 
-    if (searchString[searchString.length - 1] === "&s") {
+    if (searchString[searchString.length - 1] === "&") {
       searchString.slice(0, -1);
     }
+
+    console.log(searchString);
 
     let listings = await axios
       .get(searchString)
