@@ -75,9 +75,22 @@ export async function search_get(req, res) {
     const userId = req.params.userId;
     const hourly = req.query.hourly || false;
     const flatrate = req.query.flatrate || false;
+    const searchRadius = req.query.searchRadius || 30;
 
-    const query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid`;
+    const searchMeters = searchRadius * 1609.344;
+
+    const currentUserGeom = await db
+      .query(
+        `SELECT ST_AsText(geom) FROM users WHERE userid = '${userId}'::uuid;`
+      )
+      .then((currentUserGeom) => currentUserGeom[0].st_astext);
+
+    console.log(currentUserGeom);
+
+    const query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid AND ST_DWithin(users.geom, ST_GeomFromText('${currentUserGeom}', 4326), ${searchMeters}, true)`;
     let listings;
+
+    console.log(query);
 
     if (hourly === "true") {
       listings = await db.query(
