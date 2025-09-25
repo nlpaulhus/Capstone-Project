@@ -125,7 +125,6 @@ export const SearchPage = () => {
               handleMouseEnter={handleMouseEnter}
               handleMouseLeave={handleMouseLeave}
               listings={listings}
-              user={user}
               activeItem={activeItem}
             />
           </Col>

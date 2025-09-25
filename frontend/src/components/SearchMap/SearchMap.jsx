@@ -1,22 +1,41 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { LatLngBounds } from "leaflet";
 import MarkerComponent from "../Marker/MarkerComponent";
+import { useEffect } from "react";
 
 const SearchMap = ({
   listings,
-  user,
   handleMouseEnter,
   handleMouseLeave,
   activeItem,
 }) => {
-  const mapLat = user.lat.toString();
-  const mapLng = user.lng.toString();
+  const markerPositions = [];
+
+  listings.forEach((listing) =>
+    markerPositions.push([listing.lat, listing.lng])
+  );
+
+  const bounds = new LatLngBounds(markerPositions);
+
+  function MapUpdater({ bounds }) {
+    const map = useMap();
+
+    useEffect(() => {
+      if (map && bounds) {
+        map.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }, [map, bounds]);
+
+    return null;
+  }
 
   return (
-    <MapContainer center={[mapLat, mapLng]} zoom={11} scrollWheelZoom={false}>
+    <MapContainer bounds={bounds} scrollWheelZoom={false}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
+      <MapUpdater bounds={bounds} />
 
       {listings.length > 0
         ? listings.map((listing) => (

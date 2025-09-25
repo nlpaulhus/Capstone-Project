@@ -126,14 +126,22 @@ export async function networkLoader() {
 
       //filter down to only the data needed
       const editedallCredits = allCredits.map((credit) => {
+        let titleImage = credit.title.primaryImage
+          ? credit.title.primaryImage.url
+          : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
+
+        console.log(titleImage);
+
         return {
           id: credit.title.id,
           title: credit.title.primaryTitle,
-          image: credit.title.primaryImage.url,
+          image: titleImage,
           startDate: credit.title.startYear,
           endDate: credit.title.endYear,
         };
       });
+
+      console.log(editedallCredits);
 
       //remove duplicates
       let filteredallCredits = [];
@@ -168,10 +176,14 @@ export async function networkLoader() {
         );
         titleData = titleData.data;
 
+        let titleImage = titleData.primaryImage
+          ? titleData.primaryImage.url
+          : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
+
         networkCreditsFiltered.push({
           id: titleData.id,
           title: titleData.primaryTitle,
-          image: titleData.primaryImage.url,
+          image: titleImage,
           startDate: titleData.startYear,
           endDate: titleData.endYear,
         });

@@ -36,7 +36,7 @@ export async function userservices_post(req, res) {
       const description = service.description.replace("'", "''");
 
       const query = `INSERT INTO user_services (id, userId, serviceName, description, price, paymentType)`;
-      const values = `VALUES ('${service.id}', '${userId}', '${
+      const values = `VALUES ('${service.id}', '${userId}'::uuid, '${
         service.servicename
       }', '${description}', ${parseInt(service.price)}, '${
         service.paymenttype
@@ -51,6 +51,7 @@ export async function userservices_post(req, res) {
 
     res.status(200).json("success");
   } catch (err) {
+    console.log(err);
     res.status(401).json({ err });
   }
 }

@@ -60,7 +60,7 @@ function SignupPage() {
       zip,
     } = values;
     const IMDBFirstSplit = IMDBLink.split("name/", 2);
-    const IMDBName = IMDBFirstSplit[1].split("/?ref", 1);
+    const IMDBName = IMDBFirstSplit[1].split("/", 1);
     const newUser = {
       firstName: firstName,
       lastName: lastName,
@@ -72,8 +72,6 @@ function SignupPage() {
       state: state,
       zip: zip,
     };
-
-  
 
     const data = new FormData();
     data.set("sample_file", file);
