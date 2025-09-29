@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import "dotenv/config";
 const sessionSecret = process.env.SECRET;
 import { genSalt, hash, compare } from "bcrypt";
-import axios from "axios";
 import Geocodio from "geocodio-library-node";
 
 const GEOCODIO_API_KEY = process.env.GEOCODIO_API_KEY;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useLoaderData,
   useSearchParams,
@@ -17,12 +17,13 @@ import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 
 export const SearchPage = () => {
-  const { listings, user, allServices } = useLoaderData();
+  const { listings, user, allServices, mapCenter } = useLoaderData();
   const [activeItem, setActiveItem] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
   const [paymentType, setPaymentType] = useState("all");
   const [searchRadius, setSearchRadius] = useState("suggested");
+  const [searchAddress, setSearchAddress] = useState(user.zip);
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
@@ -89,6 +90,21 @@ export const SearchPage = () => {
     }
   }
 
+  function searchAddressChange(e) {
+    setSearchAddress(e.target.value);
+  }
+
+  function searchAddressSubmit(e) {
+    e.preventDefault();
+
+    if (searchAddress.length === 5 && parseInt(searchAddress)) {
+      const next = new URLSearchParams(searchParams);
+      next.set("zipcode", searchAddress);
+      setSearchParams(next, { replace: true });
+    }
+    revalidator.revalidate();
+  }
+
   return (
     <div>
       <Container>
@@ -104,6 +120,9 @@ export const SearchPage = () => {
               userzip={user.zip}
               searchRadius={searchRadius}
               searchRadiusClick={searchRadiusClick}
+              searchAddress={searchAddress}
+              searchAddressChange={searchAddressChange}
+              searchAddressSubmit={searchAddressSubmit}
             />
           </Col>
           <Col>
@@ -126,6 +145,7 @@ export const SearchPage = () => {
               handleMouseLeave={handleMouseLeave}
               listings={listings}
               activeItem={activeItem}
+              mapCenter={mapCenter}
             />
           </Col>
         </Row>
@@ -140,15 +160,14 @@ export async function searchPageLoader({ request }) {
   const searchParams = url.searchParams;
   const servicename = url.searchParams.get("search");
   const innetwork = url.searchParams.get("innetwork");
-  const hourly = url.searchParams.get("hourly");
-  const flatrate = url.searchParams.get("flatrate");
-  const searchRadius = url.searchParams.get("searchRadius");
+  const zipcode = url.searchParams.get("zipcode");
 
   const queryString = url.search.split("&");
 
   let userId;
   let user;
   let allServices;
+  let mapCenter = { lat: null, lng: null };
 
   try {
     allServices = await axios
@@ -166,6 +185,16 @@ export async function searchPageLoader({ request }) {
       .then((user) => user.data);
 
     userId = user.userid;
+    if (zipcode) {
+      const response = await axios
+        .get(
+          `http://nominatim.openstreetmap.org/search.php?q=${zipcode}&format=json`
+        )
+        .then((response) => response.data[0]);
+      mapCenter = { lat: response.lat, lng: response.lon };
+    } else {
+      mapCenter = { lat: user.lat, lng: user.lng };
+    }
   } catch {
     return redirect("/login");
   }
@@ -184,8 +213,6 @@ export async function searchPageLoader({ request }) {
       searchString.slice(0, -1);
     }
 
-    console.log(searchString);
-
     let listings = await axios
       .get(searchString)
       .then((listings) => listings.data.listings);
@@ -195,7 +222,6 @@ export async function searchPageLoader({ request }) {
         (listing) => listing.inNetwork === true
       );
 
-      console.log(listings);
       return {
         listings: innetworkListings,
         user: user,
@@ -206,6 +232,7 @@ export async function searchPageLoader({ request }) {
         listings: listings,
         user: user,
         allServices: allServices,
+        mapCenter: mapCenter,
       };
   } catch (err) {
     console.log(err);

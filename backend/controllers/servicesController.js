@@ -1,4 +1,8 @@
 import db from "../db.js";
+import Geocodio from "geocodio-library-node";
+
+const GEOCODIO_API_KEY = process.env.GEOCODIO_API_KEY;
+const geocoder = new Geocodio(GEOCODIO_API_KEY);
 
 export async function services_get(req, res) {
   try {
@@ -28,8 +32,6 @@ export async function userservices_get(req, res) {
 
 export async function userservices_post(req, res) {
   const { servicesToAdd, userId } = req.body;
-  console.log(servicesToAdd);
-  console.log(userId);
 
   try {
     const promises = servicesToAdd.map(async (service) => {
@@ -42,7 +44,7 @@ export async function userservices_post(req, res) {
         service.paymenttype
       }')`;
       const onConflict = `ON CONFLICT(id) DO UPDATE SET serviceName = EXCLUDED.serviceName, description = EXCLUDED.description, price = EXCLUDED.price, paymentType = EXCLUDED.paymentType;`;
-      console.log(`${query} ${values} ${onConflict}`);
+
       const newService = await db.query(`${query} ${values} ${onConflict}`);
       return newService;
     });
@@ -70,14 +72,14 @@ export async function userservice_delete(req, res) {
 }
 
 export async function search_get(req, res) {
-  console.log("route hit");
-  try {
-    const servicename = req.params.servicename;
-    const userId = req.params.userId;
-    const hourly = req.query.hourly || false;
-    const flatrate = req.query.flatrate || false;
-    const searchRadius = req.query.searchRadius;
+  const servicename = req.params.servicename;
+  const userId = req.params.userId;
+  const hourly = req.query.hourly || false;
+  const flatrate = req.query.flatrate || false;
+  const searchRadius = req.query.searchRadius;
+  const zipcode = req.query.zipcode;
 
+  try {
     let query;
 
     if (searchRadius === "none") {
@@ -86,18 +88,27 @@ export async function search_get(req, res) {
       let searchMeters;
 
       if (!searchRadius) {
-        searchMeters = 40 * 1609.34;
+        searchMeters = 30 * 1609.34;
       } else {
         searchMeters = searchRadius * 1609.34;
       }
 
-      const currentUserGeom = await db
-        .query(
-          `SELECT ST_AsText(geom) FROM users WHERE userid = '${userId}'::uuid;`
-        )
-        .then((currentUserGeom) => currentUserGeom[0].st_astext);
+      if (zipcode === undefined) {
+        const currentUserGeom = await db
+          .query(
+            `SELECT ST_AsText(geom) FROM users WHERE userid = '${userId}'::uuid;`
+          )
+          .then((currentUserGeom) => currentUserGeom[0].st_astext);
 
-      query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid AND ST_DWithin(users.geom, ST_GeomFromText('${currentUserGeom}', 4326), ${searchMeters}, true)`;
+        query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid AND ST_DWithin(users.geom, ST_GeomFromText('${currentUserGeom}', 4326), ${searchMeters}, true)`;
+      } else {
+        const coordinates = await geocoder
+          .geocode(zipcode)
+          .then((coordinates) => coordinates.results[0].location);
+
+        query =
+          query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid AND ST_DWithin(users.geom, ST_GeomFromText('POINT(${coordinates.lat} ${coordinates.lng})', 4326), ${searchMeters}, true)`;
+      }
     }
 
     let listings;
@@ -113,8 +124,6 @@ export async function search_get(req, res) {
     } else {
       listings = await db.query(`${query};`);
     }
-
-    console.log(listings);
 
     const currentUserProjects = await db.query(
       `SELECT projectimdb FROM user_projects WHERE userId='${userId}';`
@@ -143,8 +152,6 @@ export async function search_get(req, res) {
         listing.inNetwork = false;
       }
     }
-
-    console.log(listings);
 
     res.status(200).json({ listings });
   } catch (err) {

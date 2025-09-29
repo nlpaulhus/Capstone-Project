@@ -8,47 +8,73 @@ const SearchMap = ({
   handleMouseEnter,
   handleMouseLeave,
   activeItem,
+  mapCenter,
 }) => {
   const markerPositions = [];
+  console.log(mapCenter);
+  let newCenter = [Number(mapCenter.lat), Number(mapCenter.lng)];
 
   listings.forEach((listing) =>
     markerPositions.push([listing.lat, listing.lng])
   );
 
   const bounds = new LatLngBounds(markerPositions);
+  const boundsValid = bounds.isValid();
 
   function MapUpdater({ bounds }) {
-    const map = useMap();
+    const mapOne = useMap();
 
     useEffect(() => {
-      if (map && bounds) {
-        map.fitBounds(bounds, { padding: [50, 50] });
+      if (mapOne && bounds) {
+        mapOne.fitBounds(bounds, { padding: [50, 50] });
       }
-    }, [map, bounds]);
+    }, [mapOne, bounds]);
 
     return null;
   }
 
-  return (
-    <MapContainer bounds={bounds} scrollWheelZoom={false}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <MapUpdater bounds={bounds} />
+  function EmptyMapUpdater({ newCenter }) {
+    const mapTwo = useMap();
 
-      {listings.length > 0
-        ? listings.map((listing) => (
-            <MarkerComponent
-              key={listing.id}
-              location={listing}
-              isActive={activeItem === listing.id}
-              onMouseEnter={() => handleMouseEnter(listing.id)}
-              onMouseLeave={handleMouseLeave}
-            />
-          ))
-        : null}
-    </MapContainer>
+    useEffect(() => {
+      if (newCenter) {
+        mapTwo.setView(newCenter, mapTwo.getZoom());
+      }
+    }, [newCenter, mapTwo]);
+  }
+
+  return (
+    <div>
+      {boundsValid ? (
+        <MapContainer bounds={bounds} scrollWheelZoom={false}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <MapUpdater bounds={bounds} />
+
+          {listings.length > 0
+            ? listings.map((listing) => (
+                <MarkerComponent
+                  key={listing.id}
+                  location={listing}
+                  isActive={activeItem === listing.id}
+                  onMouseEnter={() => handleMouseEnter(listing.id)}
+                  onMouseLeave={handleMouseLeave}
+                />
+              ))
+            : null}
+        </MapContainer>
+      ) : (
+        <MapContainer center={newCenter} zoom={11}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <EmptyMapUpdater newCenter={newCenter} />
+        </MapContainer>
+      )}
+    </div>
   );
 };
 
