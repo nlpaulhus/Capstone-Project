@@ -14,6 +14,8 @@ const SearchMap = ({
   console.log(mapCenter);
   let newCenter = [Number(mapCenter.lat), Number(mapCenter.lng)];
 
+  console.log(newCenter);
+
   listings.forEach((listing) =>
     markerPositions.push([listing.lat, listing.lng])
   );
@@ -38,7 +40,7 @@ const SearchMap = ({
 
     useEffect(() => {
       if (newCenter) {
-        mapTwo.setView(newCenter, mapTwo.getZoom());
+        mapTwo.setView(newCenter, 11);
       }
     }, [newCenter, mapTwo]);
   }
@@ -66,7 +68,7 @@ const SearchMap = ({
             : null}
         </MapContainer>
       ) : (
-        <MapContainer center={newCenter} zoom={11}>
+        <MapContainer center={newCenter} zoom={13} scrollWheelZoom={false}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

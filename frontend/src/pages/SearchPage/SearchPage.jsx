@@ -23,7 +23,9 @@ export const SearchPage = () => {
   const revalidator = useRevalidator();
   const [paymentType, setPaymentType] = useState("all");
   const [searchRadius, setSearchRadius] = useState("suggested");
-  const [searchAddress, setSearchAddress] = useState(user.zip);
+  const [searchAddress, setSearchAddress] = useState(
+    searchParams.get("zipcode") || user.zip
+  );
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
