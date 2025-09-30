@@ -5,8 +5,11 @@ import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 
 export const ProfilePage = () => {
-  const currentUser = useLoaderData();
-  console.log(currentUser);
+  const { profile, listings, listerNetwork } = useLoaderData();
+
+  console.log(profile);
+  console.log(listings);
+  console.log(listerNetwork);
 
   return (
     <Container>
@@ -27,7 +30,15 @@ export async function profilePageLoader({ params }) {
       })
       .then((currentUser) => currentUser.data);
 
-    return { currentUser };
+    const listingUser = await axios
+      .get(`http://localhost:3000/profile/${listingId}/${currentUser.userid}`)
+      .then((listingUser) => listingUser.data);
+
+    const profile = listingUser.profile;
+    const listings = listingUser.listings;
+    const listerNetwork = listingUser.listerNetwork;
+
+    return { profile, listings, listerNetwork };
   } catch (err) {
     console.log(err);
   }

@@ -163,4 +163,51 @@ export function logout_get(req, res) {
   res.end();
 }
 
-export function profile_get(req, res) {}
+export async function profile_get(req, res) {
+  try {
+    const listingid = req.params.listingid;
+    const currentuserid = req.params.currentuserid;
+
+    console.log(currentuserid);
+
+    const userId = await db
+      .query(`SELECT userId FROM user_services WHERE id = '${listingid}';`)
+      .then((userId) => userId[0].userid);
+
+    const profile = await db
+      .query(
+        `SELECT firstName, lastName, email, profilePhoto, city, state FROM users WHERE userId = '${userId}';`
+      )
+      .then((profile) => profile[0]);
+
+    const listings = await db.query(
+      `SELECT * FROM user_services WHERE userId = '${userId}';`
+    );
+
+    const listerNetwork = await db.query(
+      `SELECT projects.id, projects.title, projects.image FROM user_projects JOIN projects ON user_projects.projectimdb = projects.id AND user_projects.userId = '${userId}';`
+    );
+
+    const userNetwork = await db.query(
+      `SELECT projectimdb FROM user_projects WHERE userid = '${currentuserid}';`
+    );
+
+    let userNetworkArray = [];
+
+    for (let project of userNetwork) {
+      userNetworkArray.push(project.projectimdb);
+    }
+
+    for (let project of listerNetwork) {
+      if (userNetworkArray.includes(project.id)) {
+        project.inNetwork = true;
+      } else {
+        project.inNetwork = false;
+      }
+    }
+
+    res.status(200).json({ profile, listings, listerNetwork });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+}
