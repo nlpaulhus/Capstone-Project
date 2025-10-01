@@ -1,10 +1,11 @@
 import Card from "react-bootstrap/Card";
+import Image from "react-bootstrap/Image";
 
 const ProfileCreditBox = ({ credit }) => {
   return (
     <div>
       <Card>
-        <Card.Img src={credit.image}></Card.Img>
+        <Image src={credit.image} thumbnail></Image>
         <Card.Body>
           <Card.Title>
             {" "}
