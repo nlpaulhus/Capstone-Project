@@ -1,9 +1,11 @@
 import { useNavigate, useLoaderData } from "react-router-dom";
 import { useEffect } from "react";
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
 import Stack from "react-bootstrap/Stack";
+import Button from "react-bootstrap/Button";
+import Carousel from "react-bootstrap/Carousel";
+import Card from "react-bootstrap/Card";
 import axios from "axios";
+import "./LandingPage.css";
 
 export const LandingPage = () => {
   const navigate = useNavigate();
@@ -18,49 +20,55 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <Container>
-      <Stack gap={3}>
-        <Card>
-          <h1 style={{ textAlign: "center" }}>Hollywood Hires Hollywood</h1>
-          <p style={{ textAlign: "center" }}>
-            Get a Grip is a platform built by Hollywood for Hollywood. We've
-            weathered pandemic shutdowns, labor union strikes and production
-            cutbacks by taking care of one another and Get a Grip hopes to
-            provide another means to do so.
-          </p>
-        </Card>
-        <Card>
-          <h1 style={{ textAlign: "center" }}>Who Is It For?</h1>
-          <p style={{ textAlign: "center" }}>
-            Anyone with an IMDb page! Whether you're a 2nd AD looking to hire a
-            dog sitter to cover you on a Fraturday or a script coordinator with
-            a proofreading side hustle, Get a Grip is for you.
-          </p>
-        </Card>
-        <Card>
-          <h1 style={{ textAlign: "center" }}>How Does It Work?</h1>
-          <p style={{ textAlign: "center" }}>
-            Signup using your IMDb page, create your network, list your services
-            and/or connect with those offering theirs, with ability to search
-            within your network and by location.
-          </p>
-        </Card>
-        <Card>
-          <h1 style={{ textAlign: "center" }}>Current Services Offered</h1>
-          <ul>
-            {currentServices.map((service) => (
-              <li>{service}</li>
-            ))}
-          </ul>
-        </Card>
-
-        <p style={{ textAlign: "center" }}>
-          Is your service not listed? Having an issue with your account? Have an
-          idea on how we can build upon this platform? <br></br>Reach out at{" "}
-          <a href={`mailto:contactagrip@gmail.com`}>contactagrip@gmail.com</a>
-        </p>
+    <div id="landingPage">
+      <Stack className="col-md-9 mx-auto">
+        <div id="headerImage">
+          <div id="landingCarousel">
+            <Carousel fade>
+              <Carousel.Item>
+                <img
+                  className="carouselImage"
+                  src="../../public/assets/slide1.svg"
+                ></img>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="carouselImage"
+                  src="../../public/assets/slide2.svg"
+                ></img>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="carouselImage"
+                  src="../../public/assets/slide3.svg"
+                ></img>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="carouselImage"
+                  src="../../public/assets/slide4.svg"
+                ></img>
+              </Carousel.Item>
+            </Carousel>
+          </div>
+        </div>
+        <div id="signupButton" className="d-grid gap-2">
+          <Button as="a" href="/login" size="lg">
+            Sign Up or Login
+          </Button>
+        </div>
+        <div id="currentServicesCard">
+          <Card>
+            <h1 style={{ textAlign: "center" }}>Current Services Offered</h1>
+            <ul>
+              {currentServices.map((service) => (
+                <li>{service}</li>
+              ))}
+            </ul>
+          </Card>
+        </div>
       </Stack>
-    </Container>
+    </div>
   );
 };
 

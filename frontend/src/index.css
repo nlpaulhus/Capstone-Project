@@ -1,0 +1,29 @@
+   @font-face {
+      font-family: 'GlacialIndifference'; /* Give your font a descriptive name */
+      src: url('../public/fonts/GlacialIndifference-Regular.otf') format('opentype'); /* Path to your font file */
+      font-weight: normal; /* Define the weight (e.g., normal, bold) */
+      font-style: normal; /* Define the style (e.g., normal, italic) */
+      font-display: swap; /* Optional: Controls how the font is loaded and displayed */
+    }
+
+     @font-face {
+      font-family: 'GlacialIndifference'; /* Give your font a descriptive name */
+      src: url('../public/fonts/GlacialIndifference-Bold.otf') format('opentype'); /* Path to your font file */
+      font-weight: bold; /* Define the weight (e.g., normal, bold) */
+      font-style: bold; /* Define the style (e.g., normal, italic) */
+      font-display: swap; /* Optional: Controls how the font is loaded and displayed */
+    }
+
+  html, body {
+    font-family: 'GlacialIndifference';
+ background-size: cover;
+background-position: center center;
+background-repeat: no-repeat;
+margin: 0;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}

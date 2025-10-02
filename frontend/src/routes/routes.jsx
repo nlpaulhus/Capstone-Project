@@ -22,12 +22,14 @@ import {
   ProfilePage,
   profilePageLoader,
 } from "../pages/ProfilePage/ProfilePage";
+import Footer from "../components/Footer/Footer";
 
 const Layout = () => {
   return (
     <>
       <NavBar />
       <Outlet />
+      <Footer />
     </>
   );
 };

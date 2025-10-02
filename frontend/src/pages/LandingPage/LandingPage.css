@@ -1,0 +1,45 @@
+
+#landingCarousel {
+  width: 100%;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+}
+
+.carouselImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#headerImage {
+    width: 100%;
+    align-items: center;
+}
+
+#landingPage {
+background-image: url("../../public/assets/headerimage.svg");
+background-repeat: no-repeat;
+background-size: auto;
+}
+
+#signupButton {
+    margin-bottom: 25px;
+}
+
+#landingPage ul {
+
+    -moz-column-count: 4;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 4;
+    -webkit-column-gap: 20px;
+    column-count: 4;
+    column-gap: 20px;
+
+}
+
+#currentServicesCard {
+    margin-bottom: 25px;
+}
