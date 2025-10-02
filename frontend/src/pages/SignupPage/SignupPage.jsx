@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import Stack from "react-bootstrap/Stack";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -119,157 +120,156 @@ function SignupPage() {
   };
 
   return (
-    <div id="signupPage">
-      <div>
-        <h1>Signup</h1>
-      </div>
-      <div>
-        <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            IMDBLink: "",
-            street: "",
-            city: "",
-            state: "",
-            zip: "",
-          }}
-          validationSchema={SignupSchema}
-          onSubmit={onSubmit}
-        >
-          {({ errors, touched }) => (
-            <Form>
-              <label htmlFor="firstName">First Name:</label>
-              <Field name="firstName" />
-              {errors.firstName && touched.firstName ? (
-                <span>{errors.firstName}</span>
-              ) : null}
-              <label htmlFor="lastName">Last Name:</label>
-              <Field name="lastName" />
-              {errors.lastName && touched.lastName ? (
-                <span>{errors.lastName}</span>
-              ) : null}
-              <label htmlFor="email">Email:</label>
-              <Field name="email" type="email" />
-              {errors.email && touched.email ? (
-                <span>{errors.email}</span>
-              ) : null}
-              <label htmlFor="password">Password:</label>
-              <Field name="password" type="password" />
-              {errors.password && touched.password ? (
-                <span>{errors.password}</span>
-              ) : null}
-              <label htmlFor="confirmPassword">Re-Enter Password:</label>
-              <Field name="confirmPassword" type="password" />
-              {errors.confirmPassword && touched.confirmPassword ? (
-                <span>{errors.confirmPassword}</span>
-              ) : null}
-              <label htmlFor="IMDBLink">Link to Your IMDB Page:</label>
-              <Field name="IMDBLink" />
-              {errors.IMDBLink && touched.IMDBLink ? (
-                <span>{errors.IMDBLink}</span>
-              ) : null}
-              <label htmlFor="street">Address (street):</label>
-              <Field name="street" />
-              {errors.street && touched.street ? (
-                <span>{errors.street}</span>
-              ) : null}
+    <Stack className="col-md-5 mx-auto" id="signupPage" gap={3}>
+      <h1 style={{textAlign: "center"}}>Signup</h1>
 
-              <Row>
-                <Col>
-                  <label htmlFor="city">City:</label>
-                  <Field name="city" />
-                  {errors.city && touched.city ? (
-                    <span>{errors.city}</span>
-                  ) : null}
-                </Col>
-                <Col>
-                  <label htmlFor="state">State:</label>
-                  <Field name="state" as="select">
-                    <option value="AL">Alabama</option>
-                    <option value="AK">Alaska</option>
-                    <option value="AZ">Arizona</option>
-                    <option value="AR">Arkansas</option>
-                    <option value="CA">California</option>
-                    <option value="CO">Colorado</option>
-                    <option value="CT">Connecticut</option>
-                    <option value="DE">Delaware</option>
-                    <option value="DC">District Of Columbia</option>
-                    <option value="FL">Florida</option>
-                    <option value="GA">Georgia</option>
-                    <option value="HI">Hawaii</option>
-                    <option value="ID">Idaho</option>
-                    <option value="IL">Illinois</option>
-                    <option value="IN">Indiana</option>
-                    <option value="IA">Iowa</option>
-                    <option value="KS">Kansas</option>
-                    <option value="KY">Kentucky</option>
-                    <option value="LA">Louisiana</option>
-                    <option value="ME">Maine</option>
-                    <option value="MD">Maryland</option>
-                    <option value="MA">Massachusetts</option>
-                    <option value="MI">Michigan</option>
-                    <option value="MN">Minnesota</option>
-                    <option value="MS">Mississippi</option>
-                    <option value="MO">Missouri</option>
-                    <option value="MT">Montana</option>
-                    <option value="NE">Nebraska</option>
-                    <option value="NV">Nevada</option>
-                    <option value="NH">New Hampshire</option>
-                    <option value="NJ">New Jersey</option>
-                    <option value="NM">New Mexico</option>
-                    <option value="NY">New York</option>
-                    <option value="NC">North Carolina</option>
-                    <option value="ND">North Dakota</option>
-                    <option value="OH">Ohio</option>
-                    <option value="OK">Oklahoma</option>
-                    <option value="OR">Oregon</option>
-                    <option value="PA">Pennsylvania</option>
-                    <option value="RI">Rhode Island</option>
-                    <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
-                    <option value="TN">Tennessee</option>
-                    <option value="TX">Texas</option>
-                    <option value="UT">Utah</option>
-                    <option value="VT">Vermont</option>
-                    <option value="VA">Virginia</option>
-                    <option value="WA">Washington</option>
-                    <option value="WV">West Virginia</option>
-                    <option value="WI">Wisconsin</option>
-                    <option value="WY">Wyoming</option>
-                  </Field>
+      <Formik
+        initialValues={{
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          IMDBLink: "",
+          street: "",
+          city: "",
+          state: "",
+          zip: "",
+        }}
+        validationSchema={SignupSchema}
+        onSubmit={onSubmit}
+      >
+        {({ errors, touched }) => (
+          <Form>
+            <label htmlFor="firstName">First Name:</label>
+            <Field name="firstName" />
+            {errors.firstName && touched.firstName ? (
+              <span>{errors.firstName}</span>
+            ) : null}
+            <label htmlFor="lastName">Last Name:</label>
+            <Field name="lastName" />
+            {errors.lastName && touched.lastName ? (
+              <span>{errors.lastName}</span>
+            ) : null}
+            <label htmlFor="email">Email:</label>
+            <Field name="email" type="email" />
+            {errors.email && touched.email ? <span>{errors.email}</span> : null}
+            <label htmlFor="password">Password:</label>
+            <Field name="password" type="password" />
+            {errors.password && touched.password ? (
+              <span>{errors.password}</span>
+            ) : null}
+            <label htmlFor="confirmPassword">Re-Enter Password:</label>
+            <Field name="confirmPassword" type="password" />
+            {errors.confirmPassword && touched.confirmPassword ? (
+              <span>{errors.confirmPassword}</span>
+            ) : null}
+            <label htmlFor="IMDBLink">Link to Your IMDB Page:</label>
+            <Field name="IMDBLink" />
+            {errors.IMDBLink && touched.IMDBLink ? (
+              <span>{errors.IMDBLink}</span>
+            ) : null}
+            <label htmlFor="street">Address (street):</label>
+            <Field name="street" />
+            {errors.street && touched.street ? (
+              <span>{errors.street}</span>
+            ) : null}
 
-                  {errors.state && touched.state ? (
-                    <span>{errors.state}</span>
-                  ) : null}
-                </Col>
-                <Col>
-                  <label htmlFor="zip">Zip Code:</label>
-                  <Field name="zip" />
-                  {errors.zip && touched.zip ? <span>{errors.zip}</span> : null}
-                </Col>
-              </Row>
+            <Row>
+              <Col>
+                <label htmlFor="city">City:</label>
+                <Field name="city" />
+                {errors.city && touched.city ? (
+                  <span>{errors.city}</span>
+                ) : null}
+              </Col>
+              <Col>
+                <label htmlFor="state">State:</label>
+                <Field name="state" as="select">
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </Field>
 
-              <Row>
-                <label htmlFor="file">Upload a profile picture:</label>
-                <input
-                  name="file"
-                  id="file"
-                  type="file"
-                  onChange={handleFileChange}
-                />
-              </Row>
+                {errors.state && touched.state ? (
+                  <span>{errors.state}</span>
+                ) : null}
+              </Col>
+              <Col>
+                <label htmlFor="zip">Zip Code:</label>
+                <Field name="zip" />
+                {errors.zip && touched.zip ? <span>{errors.zip}</span> : null}
+              </Col>
+            </Row>
 
-              <Button type="submit">Submit</Button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+            <Row>
+              <label htmlFor="file">Upload a profile picture (optional):</label>
+              <input
+                name="file"
+                id="file"
+                type="file"
+                onChange={handleFileChange}
+              />
+            </Row>
+            <Stack className="col-md-5 mx-auto" id="signupButton">
+              <Button type="submit">
+                Submit
+              </Button>
+            </Stack>
+          </Form>
+        )}
+      </Formik>
+
       <span>{serverError}</span>
-    </div>
+    </Stack>
   );
 }
 

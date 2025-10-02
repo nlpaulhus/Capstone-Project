@@ -2,11 +2,11 @@ import { useLoaderData, redirect, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import AllServicesList from "../../components/AllServicesList/AllServicesList";
+import "./DashboardPage.css";
 
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import Stack from "react-bootstrap/Stack";
 import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 
 export const DashboardPage = () => {
@@ -28,48 +28,37 @@ export const DashboardPage = () => {
   };
 
   return (
-    <Container>
-      <h1>Welcome, {user.firstname}!</h1>
+    <Stack className="col-md-9 mx-auto" id="dashboardPageStack" gap={3}>
+      <h1 style={{ textAlign: "center" }}>Welcome, {user.firstname}!</h1>
 
-      <Container>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Title> Hire a Crewmember</Card.Title>
-              <AllServicesList
-                serviceNames={allServices}
-                onChangeHandler={onChangeHandler}
-                formData={formData}
-              />
-              <Button onClick={onSearchHandler}>Search</Button>
-            </Card>
-          </Col>
+      <Stack
+        className="col-md-9 mx-auto "
+        direction="horizontal"
+        alignItems="start"
+        gap={3}
+      >
+        <Card id="dashSearchCard">
+          <Card.Title className="cardTitle" style={{ textAlign: "center" }}>
+            Hire a Crewmember
+          </Card.Title>
+          <AllServicesList
+            serviceNames={allServices}
+            onChangeHandler={onChangeHandler}
+            formData={formData}
+          />
+          <Button onClick={onSearchHandler}>Search</Button>
+        </Card>
 
-          <Col>
-            <Card>
-              <Card.Title> Your Account</Card.Title>
-              <Card.Body>
-                <Card.Link href="/account">Edit Account Info</Card.Link>
-                <Card.Link href="/yourNetwork">Edit Your Network</Card.Link>
-                <Card.Link href="/yourServices">Edit Your Services</Card.Link>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Card>
-              <Card.Title>Explore Your Network</Card.Title>
-            </Card>
-          </Col>
-          <Col>
-            <Card>
-              <Card.Title> Rebook a previous crewmember</Card.Title>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-    </Container>
+        <Card id="dashAccountCard" className="text-center">
+          <Card.Title className="cardTitle"> Your Account</Card.Title>
+          <Card.Body className="d-flex flex-column">
+            <a href="/yourNetwork">Edit Your Network</a>
+            <a href="/yourServices">Edit Your Services</a>
+            <a href="/account">Edit Account Info</a>
+          </Card.Body>
+        </Card>
+      </Stack>
+    </Stack>
   );
 };
 

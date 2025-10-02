@@ -1,8 +1,10 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Stack from "react-bootstrap/Stack";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import "./LoginPage.css";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -35,7 +37,8 @@ function LoginPage() {
   };
 
   return (
-    <div className="col-md-5 mx-auto">
+    <Stack className="col-md-5 mx-auto" id="loginPageStack">
+      <h1 style={{ textAlign: "center" }}>Login</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email address</Form.Label>
@@ -56,15 +59,21 @@ function LoginPage() {
             value={loginData.password}
           />
         </Form.Group>
-        <Button type="submit" onClick={handleSubmit}>
-          Login
-        </Button>
-        <Button type="button" onClick={() => navigate("/signup")}>
-          Signup
-        </Button>
+        <Stack direction="horizontal" className="col-md-5 mx-auto" gap={3}>
+          <Button type="submit" onClick={handleSubmit}>
+            Login
+          </Button>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={() => navigate("/signup")}
+          >
+            Signup
+          </Button>
+        </Stack>
       </Form>
       <span style={{ color: "red" }}>{formError}</span>
-    </div>
+    </Stack>
   );
 }
 

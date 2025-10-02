@@ -1,0 +1,14 @@
+#dashboardPageStack {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#dashSearchCard, #dashAccountCard {
+    width: 50%;
+    padding: 10px;
+    height: 20vh;
+}
+
+#dashboardPageStack .cardTitle {
+    padding: 5px;
+}
