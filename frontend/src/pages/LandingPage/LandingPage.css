@@ -2,7 +2,7 @@
 #landingCarousel {
   width: 100%;
   margin-top: 25px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   display: flex;
   justify-content:center;
   align-items: center;
@@ -22,7 +22,8 @@
 #landingPage {
 background-image: url("../../public/assets/headerimage.svg");
 background-repeat: no-repeat;
-background-size: auto;
+background-size:cover;
+min-height: 85vh;
 }
 
 #signupButton {

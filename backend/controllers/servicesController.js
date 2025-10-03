@@ -78,12 +78,15 @@ export async function search_get(req, res) {
   const flatrate = req.query.flatrate || false;
   const searchRadius = req.query.searchRadius;
   const zipcode = req.query.zipcode;
+  const page = req.query.p || 0;
 
   try {
     let query;
+    const offsetAmount = parseInt(page) * 10;
+    const pagination = `LIMIT 10 OFFSET ${offsetAmount}`;
 
     if (searchRadius === "none") {
-      query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid`;
+      query = `SELECT user_services.id, user_services.description, user_services.price, user_services.paymenttype, user_services.servicename, users.firstname, users.lastname, users.city, users.state, users.userid, users.profilephoto, ST_X(users.geom) AS lat, ST_Y(users.geom) as lng, COUNT(*) OVER () AS total_count FROM user_services INNER JOIN users ON users.userid=user_services.userid AND user_services.serviceName = '${servicename}' AND user_services.userId != '${userId}'::uuid`;
     } else {
       let searchMeters;
 
@@ -115,15 +118,17 @@ export async function search_get(req, res) {
 
     if (hourly === "true") {
       listings = await db.query(
-        `${query} AND user_services.paymenttype = 'hourly';`
+        `${query} AND user_services.paymenttype = 'hourly' ${pagination};`
       );
     } else if (flatrate === "true") {
       listings = await db.query(
-        `${query} AND user_services.paymenttype = 'flatrate';`
+        `${query} AND user_services.paymenttype = 'flatrate' ${pagination};`
       );
     } else {
-      listings = await db.query(`${query};`);
+      listings = await db.query(`${query} ${pagination};`);
     }
+
+    console.log(listings);
 
     const currentUserProjects = await db.query(
       `SELECT projectimdb FROM user_projects WHERE userId='${userId}';`

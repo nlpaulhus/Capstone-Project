@@ -3,3 +3,26 @@
   height: 100vh;
 }
 
+#searchPage {
+  margin-top: 25px;
+  min-height: 80vh;
+}
+
+#searchPage form button {
+  margin-top: 10px;
+}
+
+#collapseDiv {
+  text-align: right;
+}
+
+#listingsContainer {
+  min-height: 80vh;
+}
+
+#prevNextButtonStack {
+ margin-bottom: 20px;
+ margin-left: 20px;
+ margin-right: 20px;
+ justify-content: center;
+}

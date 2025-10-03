@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { LatLngBounds } from "leaflet";
 import MarkerComponent from "../Marker/MarkerComponent";
 import { useEffect } from "react";
+import "./SearchMap.css";
 
 const SearchMap = ({
   listings,
@@ -11,10 +12,8 @@ const SearchMap = ({
   mapCenter,
 }) => {
   const markerPositions = [];
-  console.log(mapCenter);
-  let newCenter = [Number(mapCenter.lat), Number(mapCenter.lng)];
 
-  console.log(newCenter);
+  let newCenter = [Number(mapCenter.lat), Number(mapCenter.lng)];
 
   listings.forEach((listing) =>
     markerPositions.push([listing.lat, listing.lng])
@@ -46,7 +45,7 @@ const SearchMap = ({
   }
 
   return (
-    <div>
+    <div className="sticky">
       {boundsValid ? (
         <MapContainer bounds={bounds} scrollWheelZoom={false}>
           <TileLayer

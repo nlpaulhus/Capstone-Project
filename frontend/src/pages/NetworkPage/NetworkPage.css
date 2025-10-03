@@ -10,7 +10,7 @@
 }
 
 #networkPage {
-    height: 100vh;
+    min-height: 100vh;
 }
 
 #credits {
@@ -25,4 +25,12 @@
 
 #network {
     text-align: left;
+}
+
+#allCredits {
+    max-height: 80vh;
+    padding: 25px;
+    border-top: 1px lightgrey solid;
+    border-left: 1px lightgrey solid;
+    border-bottom: 1px lightgrey solid;
 }

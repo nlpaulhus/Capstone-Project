@@ -15,6 +15,9 @@ import "./SearchPage.css";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
+import Stack from "react-bootstrap/Stack";
+import Button from "react-bootstrap/Button";
+import Collapse from "react-bootstrap/Collapse";
 
 export const SearchPage = () => {
   const { listings, user, allServices, mapCenter } = useLoaderData();
@@ -26,6 +29,10 @@ export const SearchPage = () => {
   const [searchAddress, setSearchAddress] = useState(
     searchParams.get("zipcode") || user.zip
   );
+
+  const [page, setPage] = useState(0);
+
+  console.log(listings);
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
@@ -107,41 +114,120 @@ export const SearchPage = () => {
     revalidator.revalidate();
   }
 
+  function paginationClick(e) {
+    if (e.target.innerText === "Previous") {
+      const newPage = page - 1;
+      setPage(newPage);
+      const next = new URLSearchParams(searchParams);
+      next.set("p", newPage);
+      setSearchParams(next, { replace: true });
+      revalidator.revalidate();
+    }
+
+    if (e.target.innerText === "Next") {
+      const newPage = page + 1;
+      setPage(newPage);
+      console.log(page);
+      const next = new URLSearchParams(searchParams);
+      next.set("p", newPage);
+      setSearchParams(next, { replace: true });
+      revalidator.revalidate();
+    }
+  }
+
+  const [open, setOpen] = useState(false);
+
   return (
-    <div>
+    <div id="searchPage">
       <Container>
         <Row>
-          <Col>
-            <SearchForm
-              allServices={allServices}
-              formData={formData}
-              updateSearch={updateSearch}
-              filterClick={filterClick}
-              paymentTypeClick={paymentTypeClick}
-              paymentType={paymentType}
-              userzip={user.zip}
-              searchRadius={searchRadius}
-              searchRadiusClick={searchRadiusClick}
-              searchAddress={searchAddress}
-              searchAddressChange={searchAddressChange}
-              searchAddressSubmit={searchAddressSubmit}
-            />
-          </Col>
-          <Col>
-            <Container>
-              {listings.map((listing) => (
-                <ListingBox
-                  key={listing.id}
-                  listing={listing}
-                  activeItem={activeItem}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
+          <div className="d-md-none">
+            <div id="collapseDiv">
+              <Button
+                variant="outline-primary"
+                id="collapseButton"
+                onClick={() => setOpen(!open)}
+                aria-controls="example-collapse-text"
+                aria-expanded={open}
+              >
+                {open ? "Close" : "Change Search"}
+              </Button>
+            </div>
+            <Collapse in={open}>
+              <div>
+                <SearchForm
+                  allServices={allServices}
+                  formData={formData}
+                  updateSearch={updateSearch}
+                  filterClick={filterClick}
+                  paymentTypeClick={paymentTypeClick}
+                  paymentType={paymentType}
+                  userzip={user.zip}
+                  searchRadius={searchRadius}
+                  searchRadiusClick={searchRadiusClick}
+                  searchAddress={searchAddress}
+                  searchAddressChange={searchAddressChange}
+                  searchAddressSubmit={searchAddressSubmit}
                 />
-              ))}
-            </Container>
+              </div>
+            </Collapse>
+          </div>
+          <Col md={3} className="d-none d-md-block">
+            <div className="sticky">
+              <SearchForm
+                allServices={allServices}
+                formData={formData}
+                updateSearch={updateSearch}
+                filterClick={filterClick}
+                paymentTypeClick={paymentTypeClick}
+                paymentType={paymentType}
+                userzip={user.zip}
+                searchRadius={searchRadius}
+                searchRadiusClick={searchRadiusClick}
+                searchAddress={searchAddress}
+                searchAddressChange={searchAddressChange}
+                searchAddressSubmit={searchAddressSubmit}
+              />
+            </div>
           </Col>
 
           <Col>
+            <Stack id="listingsColumn" gap={3}>
+              <Container id="listingsContainer" className="p-2">
+                {listings.map((listing) => (
+                  <ListingBox
+                    key={listing.id}
+                    listing={listing}
+                    activeItem={activeItem}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                ))}
+              </Container>
+
+              <Stack id="prevNextButtonStack" direction="horizontal" gap={3}>
+                <Button
+                  className="p-2"
+                  onClick={paginationClick}
+                  variant="link"
+                  disabled={page > 0 ? false : true}
+                >
+                  Previous
+                </Button>
+                <div className="vr" />
+                <Button
+                  className="p-2"
+                  onClick={paginationClick}
+                  variant="link"
+                  disabled={listings.length === 10 ? false : true}
+                >
+                  Next
+                </Button>
+              </Stack>
+            </Stack>
+          </Col>
+
+          <Col className="d-none d-md-block">
             <SearchMap
               handleMouseEnter={handleMouseEnter}
               handleMouseLeave={handleMouseLeave}
@@ -158,7 +244,7 @@ export const SearchPage = () => {
 
 export async function searchPageLoader({ request }) {
   const url = new URL(request.url);
-  // const sort = url.searchParams.get("sort") || "rating";
+
   const searchParams = url.searchParams;
   const servicename = url.searchParams.get("search");
   const innetwork = url.searchParams.get("innetwork");

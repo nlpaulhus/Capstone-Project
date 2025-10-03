@@ -1,22 +1,25 @@
-#listing-profile-photo {
-    height: 100%;
-    width: 100%;
+/* #listing-profile-photo {
+    height: 10vh;
+    width: 10vw;
     overflow: hidden;
-}
+} */
 
  .circular-image {
-      width: 100px; /* Or any desired equal value */
-      height: 100px; /* Must match the width */
+      width: 10vh; /* Or any desired equal value */
+      height: 10vh; /* Must match the width */
       border-radius: 50%;
       object-fit: cover; /* Prevents stretching and crops the image to fit */
-    }
+      margin: 1vh;
+      }
 
 .nowrap-text {
-  text-align:left;
   white-space: nowrap;
 }
 
-.description {
+#listingContent {
   text-align: center;
 }
 
+#topRow{
+  margin-bottom: 5px;
+}

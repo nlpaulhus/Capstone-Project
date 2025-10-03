@@ -1,7 +1,7 @@
 #yourServicesPage {
     text-align: center;
     margin: 3%;
-
+    min-height: 79vh;
 }
 
 #yourServicesActiveArea {

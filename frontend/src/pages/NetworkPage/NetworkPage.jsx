@@ -75,7 +75,7 @@ export const NetworkPage = () => {
           Select the projects from your IMDB Page that you'd like added to your
           network.<br></br>If there's a project missing from your IMDB page that
           you'd like to add to your network, please contact{" "}
-          <a href="temp">temp@gmail.com</a>
+          <a href="mailto:contactagrip@gmail.com">contactagrip@gmail.com</a>
         </p>
       </div>
       <div id="networkPageCards">
