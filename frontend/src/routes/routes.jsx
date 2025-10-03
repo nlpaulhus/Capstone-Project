@@ -23,6 +23,10 @@ import {
   profilePageLoader,
 } from "../pages/ProfilePage/ProfilePage";
 import Footer from "../components/Footer/Footer";
+import {
+  EditAccountPage,
+  EditAccountLoader,
+} from "../pages/EditAccountPage/EditAccountPage";
 
 const Layout = () => {
   return (
@@ -60,6 +64,11 @@ const routes = createRoutesFromElements(
       path="/profile/:listingId"
       element={<ProfilePage />}
       loader={profilePageLoader}
+    />
+    <Route
+      path="/account"
+      element={<EditAccountPage />}
+      loader={EditAccountLoader}
     />
   </Route>
 );

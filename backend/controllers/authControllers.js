@@ -45,6 +45,10 @@ export async function signup_post(req, res) {
   let lat = coordinates.lat;
   let lng = coordinates.lng;
 
+  console.log(
+    `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, geom, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ST_GeomFromText('POINT(${lat} ${lng})', 4326), '${profilePhoto}') ON CONFLICT(userId, email, imdbname) DO UPDATE SET firstname = EXCLUDED.firstname, lastname = EXCLUDED.lastname, email = EXCLUDED.email, password = EXCLUDED.password, profilephoto = EXCLUDED.profilephoto, street = EXCLUDED.street, city = EXCLUDED.city, state = EXCLUDED.state, zip = EXCLUDED.zip, geom = EXCLUDED.geom;`
+  );
+
   try {
     const result = await db.query(
       `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, geom, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ST_GeomFromText('POINT(${lat} ${lng})', 4326), '${profilePhoto}')`
@@ -59,7 +63,49 @@ export async function signup_post(req, res) {
     });
     res.status(201).json({ success: "Success" });
   } catch (error) {
+    console.log(error);
     res.status(400).json(error.detail);
+  }
+}
+
+export async function edituser_post(req, res) {
+  console.log("route hit");
+  console.log(req.body);
+
+  const token = req.cookies.jwt;
+  let userId;
+
+  if (!token) {
+    res.status(401).json("Need to login first");
+  } else {
+    jwt.verify(token, sessionSecret, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json("Need to login first");
+      } else {
+        userId = decodedToken.id;
+      }
+    });
+
+    let { firstName, lastName, street, city, state, zip, profilePhoto } =
+      req.body;
+
+    const coordinates = await geocoder
+      .geocode(zip)
+      .then((coordinates) => coordinates.results[0].location);
+
+    let lat = coordinates.lat;
+    let lng = coordinates.lng;
+
+    try {
+      const result = await db.query(
+        `UPDATE users SET firstname = '${firstName}', lastname = '${lastName}', street = '${street}', city = '${city}', state = '${state}', zip = '${zip}', geom = ST_GeomFromText('POINT(${lat} ${lng})', 4326), profilephoto = '${profilePhoto}' WHERE userid = '${userId}'::uuid;`
+      );
+      console.log(result);
+      res.status(201).json({ success: "Success" });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json(error.detail);
+    }
   }
 }
 
@@ -116,6 +162,29 @@ export async function user_get(req, res) {
     );
 
     res.status(200).json(user[0]);
+  }
+}
+
+export async function useredit_get(req, res) {
+  const token = req.cookies.jwt;
+  let userId;
+
+  if (!token) {
+    res.status(401).json("Need to login first");
+  } else {
+    jwt.verify(token, sessionSecret, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json("Need to login first");
+      } else {
+        userId = decodedToken.id;
+      }
+    });
+
+    const user = await db
+      .query(`SELECT * FROM users WHERE userid = '${userId}';`)
+      .then((user) => user[0]);
+
+    user.password = res.status(200).json(user);
   }
 }
 

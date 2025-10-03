@@ -36,7 +36,7 @@ export const ProfilePage = () => {
   const profilePhoto =
     profile.profilephoto !== "undefined"
       ? profile.profilephoto
-      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+      : "../../../public/assets/noprofilepicture.png";
 
   const otherServiceClick = (e) => {
     const newCurrentListing = otherListings.filter(

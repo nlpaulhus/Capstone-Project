@@ -6,7 +6,9 @@ const geocoder = new Geocodio(GEOCODIO_API_KEY);
 
 export async function services_get(req, res) {
   try {
-    const allServices = await db.query("SELECT serviceName FROM services");
+    const allServices = await db.query(
+      "SELECT serviceName FROM services ORDER BY serviceName;"
+    );
 
     const serviceNames = allServices.map((service) => service.servicename);
 

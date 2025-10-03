@@ -23,3 +23,9 @@
 #topRow{
   margin-bottom: 5px;
 }
+
+.inNetworkBadge {
+    position: absolute;
+    top: 10px;
+    right: 8px;
+}
