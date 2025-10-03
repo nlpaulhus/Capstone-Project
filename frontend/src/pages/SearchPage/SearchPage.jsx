@@ -310,10 +310,13 @@ export async function searchPageLoader({ request }) {
         (listing) => listing.inNetwork === true
       );
 
+      
+
       return {
         listings: innetworkListings,
         user: user,
         allServices: allServices,
+        mapCenter: mapCenter,
       };
     } else
       return {
