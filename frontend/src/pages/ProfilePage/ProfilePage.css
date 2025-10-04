@@ -1,6 +1,7 @@
 #profilePageContainer {
         min-height: 85vh;
         text-align: center;
+        margin: 25px;
 }
 
 #profilePhotoImage {
@@ -10,13 +11,9 @@
 
 #profileInfoandCarousel {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: stretch;
     align-content: flex-start;
-    height: 20%;
-    margin: 25px;
 }
 
 #profileInfoCard {
@@ -26,7 +23,6 @@
 
 #networkCarouselCard {
     width: 65%;
-
 }
 
 .profileCreditBox {
@@ -37,6 +33,31 @@
 }
 
 .profileCreditImage {
+    display: block;
 max-width: 100%;
 height: auto;
 }
+
+.selectedImage {
+    filter: brightness(50%);
+}
+
+.overlay {
+position: absolute;
+  bottom: 0;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  color: #f1f1f1;
+  width: 100%;
+  transition: .5s ease;
+  opacity:0;
+  color: white;
+  font-size: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+.profileCreditBox:hover .overlay {
+  opacity: 1;
+}
+
