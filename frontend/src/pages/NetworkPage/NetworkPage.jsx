@@ -128,7 +128,7 @@ export async function networkLoader() {
       const editedallCredits = allCredits.map((credit) => {
         let titleImage = credit.title.primaryImage
           ? credit.title.primaryImage.url
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
+          : "../../../../public/assets/notitleimage.png";
 
         console.log(titleImage);
 

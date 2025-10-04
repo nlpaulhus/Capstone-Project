@@ -1,0 +1,42 @@
+#profilePageContainer {
+        min-height: 85vh;
+        text-align: center;
+}
+
+#profilePhotoImage {
+    align-self: center;
+}
+
+
+#profileInfoandCarousel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+    align-content: flex-start;
+    height: 20%;
+    margin: 25px;
+}
+
+#profileInfoCard {
+    width: 30%;
+    height: auto;
+}
+
+#networkCarouselCard {
+    width: 65%;
+
+}
+
+.profileCreditBox {
+    display: flex;
+    align-items: flex-start;
+    align-items: stretch;
+    height: 100%;
+}
+
+.profileCreditImage {
+max-width: 100%;
+height: auto;
+}

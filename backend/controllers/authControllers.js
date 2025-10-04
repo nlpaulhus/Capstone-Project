@@ -181,7 +181,9 @@ export async function useredit_get(req, res) {
     });
 
     const user = await db
-      .query(`SELECT * FROM users WHERE userid = '${userId}';`)
+      .query(
+        `SELECT firstname, lastname, street, city, zip, profilephoto  FROM users WHERE userid = '${userId}';`
+      )
       .then((user) => user[0]);
 
     user.password = res.status(200).json(user);
