@@ -15,11 +15,11 @@ const responsive = {
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 2,
+    items: 3,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 1,
+    items: 3,
   },
 };
 
@@ -28,11 +28,11 @@ const NetworkCarousel = ({ items }) => {
     <Carousel
       responsive={responsive}
       infinite={true} // Optional: for endless loop
-      autoPlay={true} // Optional: for autoplay
+      autoPlay={false} // Optional: for autoplay
       autoPlaySpeed={3000} // Optional: autoplay speed
       keyBoardControl={true} // Optional: keyboard navigation
-      containerClass="carousel-container" // Optional: custom class for container
-      itemClass="carousel-item-padding-40-px" // Optional: custom class for items
+      // containerClass="carousel-container" // Optional: custom class for container
+      // itemClass="carousel-item-padding-40-px" // Optional: custom class for items
     >
       {items.map((item, index) => (
         <ProfileCreditBox

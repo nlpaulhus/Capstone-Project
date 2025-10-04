@@ -247,7 +247,7 @@ export async function profile_get(req, res) {
 
     const profile = await db
       .query(
-        `SELECT firstName, lastName, email, profilePhoto, city, state FROM users WHERE userId = '${userId}';`
+        `SELECT firstName, lastName, email, profilePhoto, city, state, imdbname FROM users WHERE userId = '${userId}';`
       )
       .then((profile) => profile[0]);
 

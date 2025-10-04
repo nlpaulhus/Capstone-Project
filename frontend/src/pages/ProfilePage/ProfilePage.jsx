@@ -3,9 +3,10 @@ import { useState } from "react";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
 
-import Stack from "react-bootstrap/esm/Stack";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
+import Badge from "react-bootstrap/esm/Badge";
 import NetworkCarousel from "../../components/NetworkCarousel/NetworkCarousel";
 import "./ProfilePage.css";
 
@@ -47,9 +48,9 @@ export const ProfilePage = () => {
   };
 
   return (
-    <Container id="profilePageContainer">
+    <div id="profilePageContainer">
       <div id="profileInfoandCarousel">
-        <Card id="profileInfoCard">
+        <div id="profileInfoCard">
           <img
             className="circular-image"
             id="profilePhotoImage"
@@ -59,30 +60,62 @@ export const ProfilePage = () => {
           <h1 className="nowrap-text">
             {profile.firstname} {profile.lastname[0]}.
           </h1>
-          <p className="nowrap-text">
-            {profile.city}, {profile.state}
-          </p>
-
-          <Button href={`mailto:${profile.email}`}>
+          {inNetworkCredits.length > 0 ? <Badge className="profileBadge" pill bg="secondary">In Your Network</Badge> : null}
+          <div>
+            <p className="nowrap-text">
+              {profile.city}, {profile.state}
+            </p>
+            <a
+              href={`http://imdb.com/name/${profile.imdbname}`}
+              target="_blank"
+            >
+              IMDb Page
+            </a>
+          </div>
+          <Button className="contactButton" href={`mailto:${profile.email}`}>
             Contact {profile.firstname}
           </Button>
-        </Card>
+        </div>
 
         <div id="networkCarouselCard">
           <NetworkCarousel items={creditsOrdered} />
         </div>
       </div>
 
-      {/* <Stack>
-        <Card>
-          <h1>{currentListing.servicename}</h1>
-          <h3>
-            ${currentListing.price}/{currentListing.paymenttype}
-          </h3>
-          <Card.Text>{currentListing.description}</Card.Text>
+      <div id="selectedServiceCard">
+        <h1>{currentListing.servicename}</h1>
+        <h3>
+          ${currentListing.price}/{currentListing.paymenttype}
+        </h3>
+        <p>{currentListing.description}</p>
+        <Button
+          href={`mailto:${profile.email}?subject=${currentListing.servicename}%20Inquiry`}
+        >
+          Contact About {currentListing.servicename}
+        </Button>
+      </div>
+      {otherListings.length > 0 ? (
+        <Card id="otherServices">
+          <Card.Title>{profile.firstname}'s Other Services</Card.Title>
+          <ListGroup as="ul" id="otherServicesList">
+            {otherListings.map((listing, index) => (
+              <ListGroup.Item
+                key={index}
+                action
+                onClick={otherServiceClick}
+                id={listing.id}
+                as="li"
+                className="d-flex justify-content-between align-items-center"
+              >
+                <div id={listing.id} className="ms-2">
+                  {listing.servicename}
+                </div>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
         </Card>
-      </Stack> */}
-    </Container>
+      ) : null}
+    </div>
   );
 };
 
