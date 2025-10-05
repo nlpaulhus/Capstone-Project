@@ -1,7 +1,11 @@
-import { useLoaderData, useParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useParams,
+  redirect,
+  useNavigate,
+} from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import Container from "react-bootstrap/Container";
 
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -11,6 +15,7 @@ import NetworkCarousel from "../../components/NetworkCarousel/NetworkCarousel";
 import "./ProfilePage.css";
 
 export const ProfilePage = () => {
+  const navigate = useNavigate();
   const { profile, listings, listerNetwork } = useLoaderData();
   const { listingId } = useParams();
   const startListing = listings.filter((listing) => listing.id === listingId);
@@ -47,8 +52,15 @@ export const ProfilePage = () => {
     setOtherListings(newOtherListings);
   };
 
+  function pageBack() {
+    navigate(-1);
+  }
+
   return (
     <div id="profilePageContainer">
+      <Button id="backButton" onClick={pageBack} variant="link">
+        Back
+      </Button>
       <div id="profileInfoandCarousel">
         <div id="profileInfoCard">
           <img
@@ -60,7 +72,11 @@ export const ProfilePage = () => {
           <h1 className="nowrap-text">
             {profile.firstname} {profile.lastname[0]}.
           </h1>
-          {inNetworkCredits.length > 0 ? <Badge className="profileBadge" pill bg="secondary">In Your Network</Badge> : null}
+          {inNetworkCredits.length > 0 ? (
+            <Badge className="profileBadge" pill bg="secondary">
+              In Your Network
+            </Badge>
+          ) : null}
           <div>
             <p className="nowrap-text">
               {profile.city}, {profile.state}
@@ -122,14 +138,20 @@ export const ProfilePage = () => {
 export async function profilePageLoader({ params }) {
   const listingId = params.listingId;
 
+  let currentUser;
+
   try {
-    const currentUser = await axios
+    currentUser = await axios
       .get("http://localhost:3000/user", {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
       .then((currentUser) => currentUser.data);
+  } catch (err) {
+    return redirect("/login");
+  }
 
+  try {
     const listingUser = await axios
       .get(`http://localhost:3000/profile/${listingId}/${currentUser.userid}`)
       .then((listingUser) => listingUser.data);

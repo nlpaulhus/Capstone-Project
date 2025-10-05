@@ -115,3 +115,7 @@ position: absolute;
     align-self: center;
     margin-bottom: 10px;
 }
+
+#backButton {
+    text-align: left;
+}

@@ -1,7 +1,5 @@
 import Carousel from "react-multi-carousel";
-import Image from "react-bootstrap/esm/Image";
 import "react-multi-carousel/lib/styles.css"; // Import the default styles
-import Badge from "react-bootstrap/esm/Badge";
 import ProfileCreditBox from "../CreditBox/ProfileCreditBox";
 
 const responsive = {

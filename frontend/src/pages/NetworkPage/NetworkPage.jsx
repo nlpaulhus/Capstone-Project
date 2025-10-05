@@ -5,7 +5,7 @@ import {
   redirect,
 } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreditBox from "../../components/CreditBox/CreditBox";
 import NetworkBox from "../../components/NetworkBox/NetworkBox";
 import "./NetworkPage.css";
@@ -14,6 +14,17 @@ import Button from "react-bootstrap/Button";
 export const NetworkPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  let nextpage;
+
+  useEffect(() => {
+    const referrer = document.referrer;
+    if (referrer.includes("signup")) {
+      nextpage = "/yourServices";
+    } else {
+      nextpage = "/dashboard";
+    }
+  }, []);
 
   const { userId, allCredits, networkCredits } = useLoaderData();
   console.log(userId);
@@ -62,7 +73,7 @@ export const NetworkPage = () => {
         }
       );
 
-      navigate(`/yourservices`);
+      navigate(nextpage);
     } catch (err) {
       console.log(err);
     }
