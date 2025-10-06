@@ -138,22 +138,12 @@ export const ProfilePage = () => {
 export async function profilePageLoader({ params }) {
   const listingId = params.listingId;
 
-  let currentUser;
-
   try {
-    currentUser = await axios
-      .get("http://localhost:3000/user", {
+    const listingUser = await axios
+      .get(`http://localhost:3000/profile/${listingId}`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
-      .then((currentUser) => currentUser.data);
-  } catch (err) {
-    return redirect("/login");
-  }
-
-  try {
-    const listingUser = await axios
-      .get(`http://localhost:3000/profile/${listingId}/${currentUser.userid}`)
       .then((listingUser) => listingUser.data);
 
     const profile = listingUser.profile;

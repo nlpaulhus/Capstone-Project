@@ -1,26 +1,16 @@
-import jwt from "jsonwebtoken";
-const maxAge = 24 * 60 * 60;
 import db from "../db.js";
 import { v4 as uuidv4 } from "uuid";
-import "dotenv/config";
-const sessionSecret = process.env.SECRET;
 import { genSalt, hash, compare } from "bcrypt";
-import Geocodio from "geocodio-library-node";
 
-const GEOCODIO_API_KEY = process.env.GEOCODIO_API_KEY;
-const geocoder = new Geocodio(GEOCODIO_API_KEY);
-
-const createToken = (id) => {
-  let payload = { id: `${id}` };
-  return jwt.sign(payload, sessionSecret, {
-    noTimestamp: true,
-    expiresIn: maxAge,
-  });
-};
+import {
+  createToken,
+  getCoordinatesFromZip,
+  getUserIdFromToken,
+  maxAge,
+  sessionSecret,
+} from "../helpers/authHelpers.js";
 
 export async function signup_post(req, res) {
-  console.log("route hit");
-  console.log(req.body);
   let {
     firstName,
     lastName,
@@ -38,22 +28,15 @@ export async function signup_post(req, res) {
   password = await hash(password, salt);
   email = email.toLowerCase();
 
-  const coordinates = await geocoder
-    .geocode(zip)
-    .then((coordinates) => coordinates.results[0].location);
+  const coordinates = await getCoordinatesFromZip(zip);
 
   let lat = coordinates.lat;
   let lng = coordinates.lng;
-
-  console.log(
-    `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, geom, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ST_GeomFromText('POINT(${lat} ${lng})', 4326), '${profilePhoto}') ON CONFLICT(userId, email, imdbname) DO UPDATE SET firstname = EXCLUDED.firstname, lastname = EXCLUDED.lastname, email = EXCLUDED.email, password = EXCLUDED.password, profilephoto = EXCLUDED.profilephoto, street = EXCLUDED.street, city = EXCLUDED.city, state = EXCLUDED.state, zip = EXCLUDED.zip, geom = EXCLUDED.geom;`
-  );
 
   try {
     const result = await db.query(
       `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, geom, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ST_GeomFromText('POINT(${lat} ${lng})', 4326), '${profilePhoto}')`
     );
-    console.log(result);
     const token = createToken(userid);
     res.cookie("jwt", token, {
       httpOnly: true,
@@ -69,43 +52,31 @@ export async function signup_post(req, res) {
 }
 
 export async function edituser_post(req, res) {
-  console.log("route hit");
-  console.log(req.body);
-
+  let { firstName, lastName, street, city, state, zip, profilePhoto } =
+    req.body;
   const token = req.cookies.jwt;
   let userId;
 
   if (!token) {
     res.status(401).json("Need to login first");
   } else {
-    jwt.verify(token, sessionSecret, (err, decodedToken) => {
-      if (err) {
-        res.status(401).json("Need to login first");
-      } else {
-        userId = decodedToken.id;
-      }
-    });
+    userId = getUserIdFromToken(token);
+  }
 
-    let { firstName, lastName, street, city, state, zip, profilePhoto } =
-      req.body;
+  const coordinates = await getCoordinatesFromZip(zip);
 
-    const coordinates = await geocoder
-      .geocode(zip)
-      .then((coordinates) => coordinates.results[0].location);
+  let lat = coordinates.lat;
+  let lng = coordinates.lng;
 
-    let lat = coordinates.lat;
-    let lng = coordinates.lng;
-
-    try {
-      const result = await db.query(
-        `UPDATE users SET firstname = '${firstName}', lastname = '${lastName}', street = '${street}', city = '${city}', state = '${state}', zip = '${zip}', geom = ST_GeomFromText('POINT(${lat} ${lng})', 4326), profilephoto = '${profilePhoto}' WHERE userid = '${userId}'::uuid;`
-      );
-      console.log(result);
-      res.status(201).json({ success: "Success" });
-    } catch (error) {
-      console.log(error);
-      res.status(400).json(error.detail);
-    }
+  try {
+    const result = await db.query(
+      `UPDATE users SET firstname = '${firstName}', lastname = '${lastName}', street = '${street}', city = '${city}', state = '${state}', zip = '${zip}', geom = ST_GeomFromText('POINT(${lat} ${lng})', 4326), profilephoto = '${profilePhoto}' WHERE userid = '${userId}'::uuid;`
+    );
+    console.log(result);
+    res.status(201).json({ success: "Success" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json(error.detail);
   }
 }
 
@@ -149,20 +120,14 @@ export async function user_get(req, res) {
   if (!token) {
     res.status(401).json("Need to login first");
   } else {
-    jwt.verify(token, sessionSecret, (err, decodedToken) => {
-      if (err) {
-        res.status(401).json("Need to login first");
-      } else {
-        userId = decodedToken.id;
-      }
-    });
-
-    const user = await db.query(
-      `SELECT city, email, firstname, imdbname, profilePhoto, userid, zip, ST_X(geom) AS lat, ST_Y(geom) as lng, geom FROM users WHERE userid = '${userId}';`
-    );
-
-    res.status(200).json(user[0]);
+    userId = getUserIdFromToken(token);
   }
+
+  const user = await db.query(
+    `SELECT city, email, firstname, imdbname, profilePhoto, userid, zip, ST_X(geom) AS lat, ST_Y(geom) as lng, geom FROM users WHERE userid = '${userId}';`
+  );
+
+  res.status(200).json(user[0]);
 }
 
 export async function useredit_get(req, res) {
@@ -172,22 +137,16 @@ export async function useredit_get(req, res) {
   if (!token) {
     res.status(401).json("Need to login first");
   } else {
-    jwt.verify(token, sessionSecret, (err, decodedToken) => {
-      if (err) {
-        res.status(401).json("Need to login first");
-      } else {
-        userId = decodedToken.id;
-      }
-    });
-
-    const user = await db
-      .query(
-        `SELECT firstname, lastname, street, city, zip, profilephoto  FROM users WHERE userid = '${userId}';`
-      )
-      .then((user) => user[0]);
-
-    user.password = res.status(200).json(user);
+    userId = getUserIdFromToken(token);
   }
+
+  const user = await db
+    .query(
+      `SELECT firstname, lastname, street, city, state, zip, profilephoto  FROM users WHERE userid = '${userId}';`
+    )
+    .then((user) => user[0]);
+
+  res.status(200).json(user);
 }
 
 export async function network_get(req, res) {
@@ -197,27 +156,21 @@ export async function network_get(req, res) {
   if (!token) {
     res.status(401).json("Need to login first");
   } else {
-    jwt.verify(token, sessionSecret, (err, decodedToken) => {
-      if (err) {
-        res.status(401).json("Need to login first");
-      } else {
-        userId = decodedToken.id;
-      }
-    });
+    userId = getUserIdFromToken(token);
+  }
 
-    try {
-      const currentNetwork = await db.query(
-        `SELECT projectIMDB FROM user_projects WHERE userId = '${userId}'`
-      );
+  try {
+    const currentNetwork = await db.query(
+      `SELECT projectIMDB FROM user_projects WHERE userId = '${userId}'`
+    );
 
-      const networkArray = [];
+    const networkArray = [];
 
-      currentNetwork.map((credit) => networkArray.push(credit.projectimdb));
+    currentNetwork.map((credit) => networkArray.push(credit.projectimdb));
 
-      res.status(200).json({ networkArray });
-    } catch {
-      res.status(400).json("error");
-    }
+    res.status(200).json({ networkArray });
+  } catch {
+    res.status(400).json("error");
   }
 }
 
@@ -237,9 +190,16 @@ export function logout_get(req, res) {
 export async function profile_get(req, res) {
   try {
     const listingid = req.params.listingid;
-    const currentuserid = req.params.currentuserid;
+    const token = req.cookies.jwt;
+    let currentuserId;
 
-    console.log(currentuserid);
+    console.log(token);
+
+    if (!token) {
+      return res.status(401).json("Need to login first");
+    } else {
+      currentuserId = getUserIdFromToken(token);
+    }
 
     const userId = await db
       .query(`SELECT userId FROM user_services WHERE id = '${listingid}';`)
@@ -260,7 +220,7 @@ export async function profile_get(req, res) {
     );
 
     const userNetwork = await db.query(
-      `SELECT projectimdb FROM user_projects WHERE userid = '${currentuserid}';`
+      `SELECT projectimdb FROM user_projects WHERE userid = '${currentuserId}';`
     );
 
     let userNetworkArray = [];
