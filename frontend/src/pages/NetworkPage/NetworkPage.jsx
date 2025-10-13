@@ -59,23 +59,17 @@ export const NetworkPage = () => {
   };
 
   const nextButtonHandler = async () => {
-    const newCredits = network.filter(
-      (credit) => !networkCreditIds.includes(credit.id)
-    );
-
     try {
       let result = await axios
         .post(
           "http://localhost:3000/network",
-          { newCredits },
+          { newCredits: network },
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
           }
         )
         .then((result) => {
-          console.log("going to next page");
-          console.log(nextpage);
           navigate(nextpage);
         });
     } catch (err) {
@@ -172,8 +166,6 @@ export async function networkLoader() {
         .then(
           (currentNetworkImdbIds) => currentNetworkImdbIds.data.networkArray
         );
-
-      console.log(currentNetworkImdbIds);
 
       // loop over each imdbId and get the project's data and add to array
 
