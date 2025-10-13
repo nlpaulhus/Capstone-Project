@@ -1,4 +1,5 @@
 import db from "../db.js";
+import { getUserIdFromToken } from "../helpers/authHelpers.js";
 import Geocodio from "geocodio-library-node";
 
 const GEOCODIO_API_KEY = process.env.GEOCODIO_API_KEY;
@@ -20,11 +21,16 @@ export async function services_get(req, res) {
 
 export async function userservices_get(req, res) {
   try {
-    const userId = req.params.userId;
+    const token = req.cookies.jwt;
+    console.log(token);
+    const userId = getUserIdFromToken(token);
+    console.log(userId);
 
     const yourServices = await db.query(
-      `SELECT * FROM user_services WHERE userId = '${userId}'`
+      `SELECT * FROM user_services WHERE userId = '${userId}';`
     );
+
+    console.log(yourServices);
 
     res.status(200).json({ yourServices });
   } catch (err) {
@@ -33,7 +39,9 @@ export async function userservices_get(req, res) {
 }
 
 export async function userservices_post(req, res) {
-  const { servicesToAdd, userId } = req.body;
+  const { servicesToAdd } = req.body;
+  const token = req.cookies.jwt;
+  const userId = getUserIdFromToken(token);
 
   try {
     const promises = servicesToAdd.map(async (service) => {

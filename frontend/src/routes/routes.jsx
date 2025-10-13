@@ -38,8 +38,12 @@ const Layout = () => {
   );
 };
 
+export function HydrateFallback() {
+  return <p>Loading...</p>;
+}
+
 const routes = createRoutesFromElements(
-  <Route path="/" element={<Layout />}>
+  <Route path="/" element={<Layout />} HydrateFallback={HydrateFallback}>
     <Route index element={<LandingPage />} loader={LandingPageLoader} />
     <Route path="/login" element={<LoginLandingPage />} />
     <Route path="/login/email" element={<LoginPage />} />

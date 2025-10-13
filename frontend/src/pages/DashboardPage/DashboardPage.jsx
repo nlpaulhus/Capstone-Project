@@ -31,12 +31,7 @@ export const DashboardPage = () => {
     <Stack className="col-md-9 mx-auto" id="dashboardPageStack" gap={3}>
       <h1 style={{ textAlign: "center" }}>Welcome, {user.firstname}!</h1>
 
-      <Stack
-        className="col-md-9 mx-auto "
-        direction="horizontal"
-        alignItems="start"
-        gap={3}
-      >
+      <Stack className="col-md-9 mx-auto " direction="horizontal" gap={3}>
         <Card id="dashSearchCard">
           <Card.Title className="cardTitle" style={{ textAlign: "center" }}>
             Hire a Crewmember

@@ -6,7 +6,7 @@ import {
   userservice_delete,
 } from "../controllers/servicesController.js";
 
-router.get("/:userId", (req, res) => userservices_get(req, res));
+router.get("/", (req, res) => userservices_get(req, res));
 router.post("/", (req, res) => userservices_post(req, res));
 router.get("/delete/:serviceId", (req, res) => userservice_delete(req, res));
 

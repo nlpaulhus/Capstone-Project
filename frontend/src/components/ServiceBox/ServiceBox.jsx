@@ -2,7 +2,6 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
 const ServiceBox = ({ service, removeButtonHandler }) => {
-  console.log(service);
   return (
     <div>
       <Card>

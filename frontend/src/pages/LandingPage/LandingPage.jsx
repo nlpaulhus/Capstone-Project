@@ -61,8 +61,8 @@ export const LandingPage = () => {
           <Card>
             <h1 style={{ textAlign: "center" }}>Current Services Offered</h1>
             <ul>
-              {currentServices.map((service) => (
-                <li>{service}</li>
+              {currentServices.map((service, index) => (
+                <li key={index}>{service}</li>
               ))}
             </ul>
           </Card>
