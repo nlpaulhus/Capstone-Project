@@ -149,30 +149,7 @@ export async function useredit_get(req, res) {
   res.status(200).json(user);
 }
 
-export async function network_get(req, res) {
-  const token = req.cookies.jwt;
-  let userId;
 
-  if (!token) {
-    res.status(401).json("Need to login first");
-  } else {
-    userId = getUserIdFromToken(token);
-  }
-
-  try {
-    const currentNetwork = await db.query(
-      `SELECT projectIMDB FROM user_projects WHERE userId = '${userId}'`
-    );
-
-    const networkArray = [];
-
-    currentNetwork.map((credit) => networkArray.push(credit.projectimdb));
-
-    res.status(200).json({ networkArray });
-  } catch {
-    res.status(400).json("error");
-  }
-}
 
 export function logout_get(req, res) {
   req.session.destroy((err) => {

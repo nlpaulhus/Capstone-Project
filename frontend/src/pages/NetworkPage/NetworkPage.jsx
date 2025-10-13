@@ -10,24 +10,24 @@ import CreditBox from "../../components/CreditBox/CreditBox";
 import NetworkBox from "../../components/NetworkBox/NetworkBox";
 import "./NetworkPage.css";
 import Button from "react-bootstrap/Button";
+import { getLoggedInUser } from "../../helpers/helperFunctions";
 
 export const NetworkPage = () => {
+  const { allCredits, networkCredits } = useLoaderData();
+  const [nextpage, SetNextpage] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  let nextpage;
-
   useEffect(() => {
     const referrer = document.referrer;
+
     if (referrer.includes("signup")) {
-      nextpage = "/yourServices";
+      SetNextpage("/yourServices");
     } else {
-      nextpage = "/dashboard";
+      SetNextpage("/");
     }
   }, []);
-
-  const { userId, allCredits, networkCredits } = useLoaderData();
-  console.log(userId);
 
   let networkCreditIds = networkCredits.map((credit) => credit.id);
 
@@ -64,16 +64,20 @@ export const NetworkPage = () => {
     );
 
     try {
-      let result = await axios.post(
-        "http://localhost:3000/imdbnetwork",
-        { userId, newCredits },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      navigate(nextpage);
+      let result = await axios
+        .post(
+          "http://localhost:3000/network",
+          { newCredits },
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        )
+        .then((result) => {
+          console.log("going to next page");
+          console.log(nextpage);
+          navigate(nextpage);
+        });
     } catch (err) {
       console.log(err);
     }
@@ -119,14 +123,10 @@ export const NetworkPage = () => {
 export async function networkLoader() {
   try {
     //get user from jwt token on backend
-    const user = await axios.get("http://localhost:3000/user", {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
+    const user = await getLoggedInUser();
 
-    if (user.data.imdbname) {
-      const imdbname = user.data.imdbname;
-      const userId = user.data.userid;
+    if (user.imdbname) {
+      const imdbname = user.imdbname;
 
       //get user's imdb credits from their imdbname
       let allCredits = await axios.get(
@@ -141,8 +141,6 @@ export async function networkLoader() {
           ? credit.title.primaryImage.url
           : "../../../../public/assets/notitleimage.png";
 
-        console.log(titleImage);
-
         return {
           id: credit.title.id,
           title: credit.title.primaryTitle,
@@ -151,8 +149,6 @@ export async function networkLoader() {
           endDate: credit.title.endYear,
         };
       });
-
-      console.log(editedallCredits);
 
       //remove duplicates
       let filteredallCredits = [];
@@ -169,7 +165,7 @@ export async function networkLoader() {
 
       //obtain array of the user's current network based on jwt on backend
       let currentNetworkImdbIds = await axios
-        .get("http://localhost:3000/user/network", {
+        .get("http://localhost:3000/network/user", {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         })
@@ -177,7 +173,9 @@ export async function networkLoader() {
           (currentNetworkImdbIds) => currentNetworkImdbIds.data.networkArray
         );
 
-      //loop over each imdbId and get the project's data and add to array
+      console.log(currentNetworkImdbIds);
+
+      // loop over each imdbId and get the project's data and add to array
 
       let networkCreditsFiltered = [];
 
@@ -201,7 +199,6 @@ export async function networkLoader() {
       }
 
       return {
-        userId: userId,
         allCredits: filteredallCredits,
         networkCredits: networkCreditsFiltered,
       };

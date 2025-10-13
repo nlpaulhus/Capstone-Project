@@ -39,7 +39,7 @@ app.use(
 );
 
 import signup from "./routes/signup.js";
-import imdbNetwork from "./routes/imdbNetwork.js";
+import network from "./routes/network.js";
 import services from "./routes/services.js";
 import userServices from "./routes/userServices.js";
 import login from "./routes/login.js";
@@ -50,7 +50,7 @@ import search from "./routes/search.js";
 import profile from "./routes/profile.js";
 
 app.use("/signup", signup);
-app.use("/imdbNetwork", imdbNetwork);
+app.use("/network", network);
 app.use("/services", services);
 app.use("/userServices", userServices);
 app.use("/login", login);
