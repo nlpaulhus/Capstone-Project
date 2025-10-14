@@ -90,7 +90,7 @@ export function EditAccountPage() {
         {({ errors, touched }) => (
           <Form>
             <label htmlFor="firstName">First Name:</label>
-            <Field name="firstName" />
+            <Field id="firstName" name="firstName" />
             {errors.firstName && touched.firstName ? (
               <span>{errors.firstName}</span>
             ) : null}
@@ -108,7 +108,7 @@ export function EditAccountPage() {
 
             <Row>
               <Col>
-                <label htmlFor="city">City:</label>
+                <label for="city" htmlFor="city">City:</label>
                 <Field name="city" />
                 {errors.city && touched.city ? (
                   <span>{errors.city}</span>

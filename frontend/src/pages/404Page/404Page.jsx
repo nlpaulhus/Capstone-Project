@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const NotFoundPage = () => {
   const navigate = useNavigate();
 
+
   return (
     <Stack gap={3} className="col-md-5 mx-auto" id="loginLandingStack">
       <h1 style={{ textAlign: "center" }}>Oops! That page can't be found!</h1>

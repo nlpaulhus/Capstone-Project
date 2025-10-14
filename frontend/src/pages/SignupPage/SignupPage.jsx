@@ -142,7 +142,7 @@ function SignupPage() {
         {({ errors, touched }) => (
           <Form>
             <label htmlFor="firstName">First Name:</label>
-            <Field name="firstName" />
+            <Field id="firstName" name="firstName" />
             {errors.firstName && touched.firstName ? (
               <span>{errors.firstName}</span>
             ) : null}
