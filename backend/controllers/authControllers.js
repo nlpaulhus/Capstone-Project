@@ -161,7 +161,7 @@ export function logout_get(req, res) {
   });
 
   res.clearCookie("jwt");
-  res.end();
+  res.status(200).json("Logged out");
 }
 
 export async function profile_get(req, res) {

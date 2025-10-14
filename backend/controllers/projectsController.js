@@ -49,9 +49,6 @@ export async function network_post(req, res) {
     //map over all the project ids and insert the projects into the user_projects table for that user
     for (let project of projectIds) {
       const id = uuidv4();
-      console.log(
-        `INSERT INTO user_projects (id, userId, projectIMDB) VALUES ('${id}'::uuid, '${userId}', '${project}') ON CONFLICT DO NOTHING;`
-      );
       await db.query(
         `INSERT INTO user_projects (id, userId, projectIMDB) VALUES ('${id}'::uuid, '${userId}', '${project}') ON CONFLICT DO NOTHING;`
       );

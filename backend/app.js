@@ -10,6 +10,7 @@ import express, { json, urlencoded } from "express";
 const app = express();
 import session from "express-session";
 
+
 //Import & apply cors:
 import cors from "cors";
 app.use(
@@ -68,3 +69,5 @@ app.post("/api/upload", (req, res) => handler(req, res));
 app.listen(3000, () => {
   console.log("Listening on port 3000");
 });
+
+export default app;
