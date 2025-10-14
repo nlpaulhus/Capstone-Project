@@ -60,12 +60,7 @@ export const DashboardPage = () => {
 
 export async function dashboardLoader() {
   try {
-    const user = await axios
-      .get("http://localhost:3000/user", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((user) => user.data);
+    const user = await getLoggedInUser();
 
     const allServices = await axios
       .get(`http://localhost:3000/services`, {

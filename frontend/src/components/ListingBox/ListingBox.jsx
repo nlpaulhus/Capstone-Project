@@ -30,7 +30,7 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
           padding: "10px",
           border:
             activeItem === listing.id ? "1px solid blue" : "1px solid grey",
-          "box-shadow":
+          boxShadow:
             activeItem === listing.id ? "#1b548d 0px 5px 15px" : "none",
         }}
       >

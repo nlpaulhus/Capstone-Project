@@ -247,6 +247,7 @@ export async function searchPageLoader({ request }) {
   try {
     let searchString = `http://localhost:3000/search/${servicename}`;
 
+    //if there are search params, add queries to the search string
     if (queryString.length > 1) {
       searchString += "?";
     }

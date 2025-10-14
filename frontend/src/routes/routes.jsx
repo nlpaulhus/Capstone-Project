@@ -1,6 +1,8 @@
 import { Route, createRoutesFromElements, Outlet } from "react-router-dom";
 
 import NavBar from "../components/NavBar/NavBar";
+import Footer from "../components/Footer/Footer";
+
 import {
   LandingPage,
   LandingPageLoader,
@@ -22,7 +24,7 @@ import {
   ProfilePage,
   profilePageLoader,
 } from "../pages/ProfilePage/ProfilePage";
-import Footer from "../components/Footer/Footer";
+
 import {
   EditAccountPage,
   EditAccountLoader,
