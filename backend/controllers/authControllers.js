@@ -7,7 +7,6 @@ import {
   getCoordinatesFromZip,
   getUserIdFromToken,
   maxAge,
-  sessionSecret,
 } from "../helpers/authHelpers.js";
 
 export async function signup_post(req, res) {
@@ -34,9 +33,12 @@ export async function signup_post(req, res) {
   let lng = coordinates.lng;
 
   try {
+    //insert into database
     const result = await db.query(
       `INSERT INTO users (userid, firstname, lastname, email, password, imdbname, street, city, state, zip, geom, profilephoto) VALUES('${userid}', '${firstName}', '${lastName}', '${email}', '${password}', '${IMDBName}', '${street}', '${city}', '${state}', '${zip}', ST_GeomFromText('POINT(${lat} ${lng})', 4326), '${profilePhoto}')`
     );
+
+    //create and set token as a cookie on browser
     const token = createToken(userid);
     res.cookie("jwt", token, {
       httpOnly: true,
@@ -72,7 +74,7 @@ export async function edituser_post(req, res) {
     const result = await db.query(
       `UPDATE users SET firstname = '${firstName}', lastname = '${lastName}', street = '${street}', city = '${city}', state = '${state}', zip = '${zip}', geom = ST_GeomFromText('POINT(${lat} ${lng})', 4326), profilephoto = '${profilePhoto}' WHERE userid = '${userId}'::uuid;`
     );
-    console.log(result);
+
     res.status(201).json({ success: "Success" });
   } catch (error) {
     console.log(error);
@@ -142,14 +144,12 @@ export async function useredit_get(req, res) {
 
   const user = await db
     .query(
-      `SELECT firstname, lastname, street, city, state, zip, profilephoto  FROM users WHERE userid = '${userId}';`
+      `SELECT firstname, lastname, street, city, state, zip, profilephoto FROM users WHERE userid = '${userId}';`
     )
     .then((user) => user[0]);
 
   res.status(200).json(user);
 }
-
-
 
 export function logout_get(req, res) {
   req.session.destroy((err) => {
@@ -160,7 +160,7 @@ export function logout_get(req, res) {
     // Clear the session cookie on the client by setting its expiration
   });
 
-  res.clearCookie("jwt"); // Replace 'session_id' with your actual cookie name
+  res.clearCookie("jwt");
   res.end();
 }
 
@@ -176,24 +176,29 @@ export async function profile_get(req, res) {
       currentuserId = getUserIdFromToken(token);
     }
 
+    //get the listed userid based on the listingid
     const userId = await db
       .query(`SELECT userId FROM user_services WHERE id = '${listingid}';`)
       .then((userId) => userId[0].userid);
 
+    //get the user profile based on userid
     const profile = await db
       .query(
         `SELECT firstName, lastName, email, profilePhoto, city, state, imdbname FROM users WHERE userId = '${userId}';`
       )
       .then((profile) => profile[0]);
 
+    //get all of the user's listings
     const listings = await db.query(
       `SELECT * FROM user_services WHERE userId = '${userId}';`
     );
 
+    //get the user's network
     const listerNetwork = await db.query(
       `SELECT projects.id, projects.title, projects.image FROM user_projects JOIN projects ON user_projects.projectimdb = projects.id AND user_projects.userId = '${userId}';`
     );
 
+    //get the logged in user's network to sort projects by in network first and show an in network badge
     const userNetwork = await db.query(
       `SELECT projectimdb FROM user_projects WHERE userid = '${currentuserId}';`
     );

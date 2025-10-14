@@ -2,6 +2,7 @@ import { useLoaderData, redirect, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import AllServicesList from "../../components/AllServicesList/AllServicesList";
+import { getLoggedInUser } from "../../helpers/helperFunctions";
 import "./DashboardPage.css";
 
 import Stack from "react-bootstrap/Stack";

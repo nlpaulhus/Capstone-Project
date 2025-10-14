@@ -2,7 +2,6 @@ import { Router } from "express";
 let router = Router();
 import {
   user_get,
-
   useredit_get,
   edituser_post,
 } from "../controllers/authControllers.js";

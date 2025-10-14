@@ -21,15 +21,11 @@ export async function services_get(req, res) {
 export async function userservices_get(req, res) {
   try {
     const token = req.cookies.jwt;
-    console.log(token);
     const userId = getUserIdFromToken(token);
-    console.log(userId);
 
     const yourServices = await db.query(
       `SELECT * FROM user_services WHERE userId = '${userId}';`
     );
-
-    console.log(yourServices);
 
     res.status(200).json({ yourServices });
   } catch (err) {
@@ -44,6 +40,7 @@ export async function userservices_post(req, res) {
 
   try {
     const promises = servicesToAdd.map(async (service) => {
+      //edit text format before submitting to database
       const description = service.description.replace("'", "''");
 
       const query = `INSERT INTO user_services (id, userId, serviceName, description, price, paymentType)`;
@@ -110,8 +107,6 @@ export async function search_get(req, res) {
         .query(`SELECT zip FROM users WHERE userid = '${userId}'::uuid;`)
         .then((userzip) => userzip[0].zip);
     }
-
-    console.log(userzip);
 
     let mapCoordinates;
 
