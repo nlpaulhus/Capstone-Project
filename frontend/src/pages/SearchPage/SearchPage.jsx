@@ -29,7 +29,7 @@ export const SearchPage = () => {
   const [searchAddress, setSearchAddress] = useState(
     searchParams.get("zipcode") || userzip
   );
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(searchParams.get("p") || 0);
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);

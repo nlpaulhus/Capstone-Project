@@ -1,9 +1,4 @@
-import {
-  useLoaderData,
-  useParams,
-  redirect,
-  useNavigate,
-} from "react-router-dom";
+import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -146,11 +141,11 @@ export async function profilePageLoader({ params }) {
       })
       .then((listingUser) => listingUser.data);
 
-    const profile = listingUser.profile;
-    const listings = listingUser.listings;
-    const listerNetwork = listingUser.listerNetwork;
-
-    return { profile, listings, listerNetwork };
+    return {
+      profile: listingUser.profile,
+      listings: listingUser.listings,
+      listerNetwork: listingUser.listerNetwork,
+    };
   } catch (err) {
     console.log(err);
   }

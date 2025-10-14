@@ -170,8 +170,6 @@ export async function profile_get(req, res) {
     const token = req.cookies.jwt;
     let currentuserId;
 
-    console.log(token);
-
     if (!token) {
       return res.status(401).json("Need to login first");
     } else {
