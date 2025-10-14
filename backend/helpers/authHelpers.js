@@ -22,22 +22,29 @@ const getCoordinatesFromZip = async (zipcode) => {
     const coordinates = await geocoder
       .geocode(zipcode)
       .then((coordinates) => coordinates.results[0].location);
-      return coordinates
+    return coordinates;
   } catch (error) {
     console.log(error);
   }
 };
 
 const getUserIdFromToken = (token) => {
-    let userId;
-     jwt.verify(token, sessionSecret, (err, decodedToken) => {
-      if (err) {
-        res.status(401).json("Need to login first");
-      } else {
-        userId = decodedToken.id;
-      }})
+  let userId;
+  jwt.verify(token, sessionSecret, (err, decodedToken) => {
+    if (err) {
+      return err;
+    } else {
+      userId = decodedToken.id;
+    }
+  });
 
-      return userId;
-}
+  return userId;
+};
 
-export { createToken, getCoordinatesFromZip, maxAge, sessionSecret, getUserIdFromToken };
+export {
+  createToken,
+  getCoordinatesFromZip,
+  maxAge,
+  sessionSecret,
+  getUserIdFromToken,
+};

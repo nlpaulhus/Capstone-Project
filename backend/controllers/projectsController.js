@@ -9,8 +9,7 @@ export async function network_post(req, res) {
   let userId;
   const projectIds = [];
 
-  console.log(newCredits);
-  console.log(token);
+
 
   try {
     if (!token) {
@@ -18,7 +17,7 @@ export async function network_post(req, res) {
     } else {
       userId = getUserIdFromToken(token);
     }
-    console.log(userId);
+  
 
     const promises = newCredits.map(async (project) => {
       console.log(project);

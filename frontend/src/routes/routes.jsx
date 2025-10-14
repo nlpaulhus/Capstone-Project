@@ -39,7 +39,11 @@ const Layout = () => {
 };
 
 export function HydrateFallback() {
-  return <p>Loading...</p>;
+  return (
+    <div style={{ margin: "25px" }}>
+      <p style={{ textAlign: "center" }}>Loading...</p>
+    </div>
+  );
 }
 
 const routes = createRoutesFromElements(

@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 
 const ServiceBox = ({ service, removeButtonHandler }) => {
   return (
-    <div>
+    <div className="currentServiceBox">
       <Card>
         <Card.Body>
           <Card.Title> {service.servicename}</Card.Title>

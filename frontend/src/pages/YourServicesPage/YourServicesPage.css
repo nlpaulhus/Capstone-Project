@@ -32,3 +32,14 @@
     gap: 12%;
 }
 
+.currentServiceBox {
+    margin: 5px;
+}
+
+.currentServiceBox:hover {
+    box-shadow: #1b548d 0px 5px 15px;
+}
+
+#yourServicesNextButton {
+    margin-top: 5px;
+}

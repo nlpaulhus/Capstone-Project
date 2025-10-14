@@ -20,19 +20,16 @@ import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 
 export const SearchPage = () => {
-  const { listings, user, allServices, mapCenter } = useLoaderData();
+  const { listings, allServices, mapCoordinates, userzip } = useLoaderData();
   const [activeItem, setActiveItem] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
   const [paymentType, setPaymentType] = useState("all");
   const [searchRadius, setSearchRadius] = useState("suggested");
   const [searchAddress, setSearchAddress] = useState(
-    searchParams.get("zipcode") || user.zip
+    searchParams.get("zipcode") || userzip
   );
-
   const [page, setPage] = useState(0);
-
-  console.log(listings);
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
@@ -162,7 +159,7 @@ export const SearchPage = () => {
                   filterClick={filterClick}
                   paymentTypeClick={paymentTypeClick}
                   paymentType={paymentType}
-                  userzip={user.zip}
+                  userzip={userzip}
                   searchRadius={searchRadius}
                   searchRadiusClick={searchRadiusClick}
                   searchAddress={searchAddress}
@@ -181,7 +178,7 @@ export const SearchPage = () => {
                 filterClick={filterClick}
                 paymentTypeClick={paymentTypeClick}
                 paymentType={paymentType}
-                userzip={user.zip}
+                userzip={userzip}
                 searchRadius={searchRadius}
                 searchRadiusClick={searchRadiusClick}
                 searchAddress={searchAddress}
@@ -233,7 +230,7 @@ export const SearchPage = () => {
               handleMouseLeave={handleMouseLeave}
               listings={listings}
               activeItem={activeItem}
-              mapCenter={mapCenter}
+              mapCenter={mapCoordinates}
             />
           </Col>
         </Row>
@@ -245,50 +242,11 @@ export const SearchPage = () => {
 export async function searchPageLoader({ request }) {
   const url = new URL(request.url);
 
-  const searchParams = url.searchParams;
   const servicename = url.searchParams.get("search");
-  const innetwork = url.searchParams.get("innetwork");
-  const zipcode = url.searchParams.get("zipcode");
-
   const queryString = url.search.split("&");
 
-  let userId;
-  let user;
-  let allServices;
-  let mapCenter = { lat: null, lng: null };
-
   try {
-    allServices = await axios
-      .get(`http://localhost:3000/services`, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((allServices) => allServices.data.serviceNames);
-
-    user = await axios
-      .get("http://localhost:3000/user", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((user) => user.data);
-
-    userId = user.userid;
-    if (zipcode) {
-      const response = await axios
-        .get(
-          `http://nominatim.openstreetmap.org/search.php?q=${zipcode}&format=json`
-        )
-        .then((response) => response.data[0]);
-      mapCenter = { lat: response.lat, lng: response.lon };
-    } else {
-      mapCenter = { lat: user.lat, lng: user.lng };
-    }
-  } catch {
-    return redirect("/login");
-  }
-
-  try {
-    let searchString = `http://localhost:3000/search/${servicename}/${userId}`;
+    let searchString = `http://localhost:3000/search/${servicename}`;
 
     if (queryString.length > 1) {
       searchString += "?";
@@ -297,35 +255,29 @@ export async function searchPageLoader({ request }) {
       searchString += `${queryString[i]}&`;
     }
 
-    if (searchString[searchString.length - 1] === "&") {
-      searchString.slice(0, -1);
+    const lastChar = searchString[searchString.length - 1];
+
+    if (lastChar === "&") {
+      searchString = searchString.slice(0, -1);
     }
 
-    let listings = await axios
-      .get(searchString)
-      .then((listings) => listings.data.listings);
+    console.log(searchString);
 
-    if (innetwork === "true") {
-      const innetworkListings = listings.filter(
-        (listing) => listing.inNetwork === true
-      );
+    let response = await axios
+      .get(searchString, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      .then((response) => response.data);
 
-      
-
-      return {
-        listings: innetworkListings,
-        user: user,
-        allServices: allServices,
-        mapCenter: mapCenter,
-      };
-    } else
-      return {
-        listings: listings,
-        user: user,
-        allServices: allServices,
-        mapCenter: mapCenter,
-      };
+    return {
+      listings: response.listings,
+      allServices: response.allServices,
+      mapCoordinates: response.mapCoordinates,
+      userzip: response.userzip,
+    };
   } catch (err) {
     console.log(err);
+    return redirect("/login");
   }
 }

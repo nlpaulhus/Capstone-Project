@@ -162,7 +162,11 @@ export const YourServicesPage = () => {
               />
             ))}
           </div>
-          <Button onClick={nextButtonHandler}>Next</Button>
+          <div>
+            <Button id="yourServicesNextButton" onClick={nextButtonHandler}>
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>
