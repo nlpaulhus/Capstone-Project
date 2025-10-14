@@ -124,7 +124,6 @@ export const SearchPage = () => {
     if (e.target.innerText === "Next") {
       const newPage = page + 1;
       setPage(newPage);
-      console.log(page);
       const next = new URLSearchParams(searchParams);
       next.set("p", newPage);
       setSearchParams(next, { replace: true });
@@ -260,8 +259,6 @@ export async function searchPageLoader({ request }) {
     if (lastChar === "&") {
       searchString = searchString.slice(0, -1);
     }
-
-    console.log(searchString);
 
     let response = await axios
       .get(searchString, {

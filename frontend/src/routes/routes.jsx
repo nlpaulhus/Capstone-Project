@@ -27,6 +27,7 @@ import {
   EditAccountPage,
   EditAccountLoader,
 } from "../pages/EditAccountPage/EditAccountPage";
+import NotFoundPage from "../pages/404Page/404Page";
 
 const Layout = () => {
   return (
@@ -78,6 +79,7 @@ const routes = createRoutesFromElements(
       element={<EditAccountPage />}
       loader={EditAccountLoader}
     />
+    <Route path="*" element={<NotFoundPage />} />
   </Route>
 );
 
