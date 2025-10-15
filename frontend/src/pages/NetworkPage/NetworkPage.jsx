@@ -60,6 +60,7 @@ export const NetworkPage = () => {
 
   const nextButtonHandler = async () => {
     try {
+      console.log(network);
       let result = await axios
         .post(
           "http://localhost:3000/network",

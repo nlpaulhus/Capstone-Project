@@ -16,31 +16,23 @@ export async function network_post(req, res) {
     }
 
     //map over each credit, add the ids to the projectIds array, insert into projects and update image and enddate if they've changed
-    const promises = newCredits.map(async (project) => {
+    newCredits.map(async (project) => {
       projectIds.push(project.id);
+      const title = project.title.replace("'", "''");
 
       if (project.endDate !== undefined) {
         const query = `INSERT INTO projects (id, title, image, startDate, endDate)`;
-        const values = `VALUES ('${project.id}', '${project.title}', '${project.image}', ${project.startDate}, ${project.endDate})`;
+        const values = `VALUES ('${project.id}', '${title}', '${project.image}', ${project.startDate}, ${project.endDate})`;
         const onConflict = `ON CONFLICT(id) DO UPDATE SET image = EXCLUDED.image, endDate = EXCLUDED.endDate;`;
         const newPromise = await db.query(`${query} ${values} ${onConflict}`);
-
-        return newPromise;
       } else {
         const query = `INSERT INTO projects (id, title, image, startDate)`;
-        const values = `VALUES('${project.id}', '${project.title}', '${project.image}', ${project.startDate})`;
+        const values = `VALUES('${project.id}', '${title}', '${project.image}', ${project.startDate})`;
         const onConflict = `ON CONFLICT(id) DO UPDATE SET image = EXCLUDED.image;`;
         const newPromise = await db.query(`${query} ${values} ${onConflict}`);
-        return newPromise;
       }
     });
 
-    const result = await Promise.all(promises);
-  } catch (err) {
-    res.status(400).json({ error: err });
-  }
-
-  try {
     //delete all projects from the user's network to start clean
     const deleteQuery = await db.query(
       `DELETE FROM user_projects WHERE userId = '${userId}';`
@@ -53,11 +45,11 @@ export async function network_post(req, res) {
         `INSERT INTO user_projects (id, userId, projectIMDB) VALUES ('${id}'::uuid, '${userId}', '${project}') ON CONFLICT DO NOTHING;`
       );
     }
+
+    res.status(200).json("success");
   } catch (err) {
     res.status(400).json({ error: err });
   }
-
-  res.status(200).json("success");
 }
 
 export async function network_get(req, res) {
