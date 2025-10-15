@@ -1,7 +1,8 @@
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getLoggedInUser = async () => {
-  const user = await axios.get("http://localhost:3000/user", {
+  const user = await axios.get(`${API_URL}/user`, {
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
   });

@@ -6,6 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function NavBar() {
   const navigate = useNavigate();
 
@@ -13,7 +15,7 @@ function NavBar() {
 
   const logoutHandler = async () => {
     try {
-      const result = await axios.get("http://localhost:3000/logout", {
+      const result = await axios.get(`${API_URL}/logout`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
