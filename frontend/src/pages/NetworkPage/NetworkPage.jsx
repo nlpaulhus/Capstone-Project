@@ -68,10 +68,7 @@ export const NetworkPage = () => {
         .post(
           `${API_URL}/network`,
           { newCredits: network },
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
+         
         )
         .then((result) => {
           navigate(nextpage);

@@ -56,7 +56,10 @@ export const LandingPage = () => {
 
 export async function LandingPageLoader() {
   try {
-    const data = await axios.get(`${API_URL}/services`);
+    const data = await axios.get(`${API_URL}/services`, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
     const currentServices = data.data.serviceNames;
     return { currentServices };
   } catch (error) {

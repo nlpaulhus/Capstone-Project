@@ -14,7 +14,7 @@ import session from "express-session";
 import cors from "cors";
 app.use(
   cors({
-    origin: "https://get-a-grip-frontend.onrender.com/",
+    origin: "https://get-a-grip-frontend.onrender.com",
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
