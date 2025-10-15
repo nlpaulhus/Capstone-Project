@@ -10,12 +10,11 @@ import express, { json, urlencoded } from "express";
 const app = express();
 import session from "express-session";
 
-
 //Import & apply cors:
 import cors from "cors";
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://get-a-grip-frontend.onrender.com/",
     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
     credentials: true,
   })
