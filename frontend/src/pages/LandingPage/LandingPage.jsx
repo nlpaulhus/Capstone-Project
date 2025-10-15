@@ -5,7 +5,10 @@ import Button from "react-bootstrap/Button";
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
+import https from "https";
 import "./LandingPage.css";
+
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -57,7 +60,7 @@ export const LandingPage = () => {
 export async function LandingPageLoader() {
   try {
     const data = await axios.get(`${API_URL}/services`, {
-      headers: { "Content-Type": "application/json" },
+      httpsAgent,
       withCredentials: true,
     });
     const currentServices = data.data.serviceNames;
