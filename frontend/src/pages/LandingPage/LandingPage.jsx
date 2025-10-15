@@ -58,6 +58,7 @@ export const LandingPage = () => {
 export async function LandingPageLoader() {
   try {
     const data = await fetch(`${API_URL}/services`);
+    console.log(data);
     const currentServices = data.data.serviceNames;
     return { currentServices };
   } catch (error) {
