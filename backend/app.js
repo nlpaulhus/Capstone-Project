@@ -12,13 +12,20 @@ import session from "express-session";
 
 //Import & apply cors:
 import cors from "cors";
-app.use(
-  cors({
-    origin: "https://get-a-grip-frontend.onrender.com",
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
-    credentials: true,
-  })
-);
+
+var corsOptions = {
+  origin: "https://get-a-grip-frontend.onrender.com",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
+// app.use(
+//   cors({
+//     origin: "https://get-a-grip-frontend.onrender.com",
+//     methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+//     credentials: true,
+//   })
+// );
 
 //Middleware:
 app.use(json());
