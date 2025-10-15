@@ -10,6 +10,8 @@ import Badge from "react-bootstrap/esm/Badge";
 import NetworkCarousel from "../../components/NetworkCarousel/NetworkCarousel";
 import "./ProfilePage.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { profile, listings, listerNetwork } = useLoaderData();
@@ -137,7 +139,7 @@ export async function profilePageLoader({ params }) {
 
   try {
     const listingUser = await axios
-      .get(`http://localhost:3000/profile/${listingId}`, {
+      .get(`${API_URL}/profile/${listingId}`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })

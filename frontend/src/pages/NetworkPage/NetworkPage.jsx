@@ -12,6 +12,8 @@ import "./NetworkPage.css";
 import Button from "react-bootstrap/Button";
 import { getLoggedInUser } from "../../helpers/helperFunctions";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const NetworkPage = () => {
   const { allCredits, networkCredits } = useLoaderData();
   const [nextpage, SetNextpage] = useState("");
@@ -64,7 +66,7 @@ export const NetworkPage = () => {
       console.log(network);
       let result = await axios
         .post(
-          "http://localhost:3000/network",
+          `${API_URL}/network`,
           { newCredits: network },
           {
             headers: { "Content-Type": "application/json" },
@@ -161,7 +163,7 @@ export async function networkLoader() {
 
       //obtain array of the user's current network based on jwt on backend
       let currentNetworkImdbIds = await axios
-        .get("http://localhost:3000/network/user", {
+        .get(`${API_URL}/network/user`, {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         })

@@ -7,6 +7,8 @@ import Card from "react-bootstrap/Card";
 import axios from "axios";
 import "./LandingPage.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const LandingPage = () => {
   const navigate = useNavigate();
   const { currentServices } = useLoaderData();
@@ -54,7 +56,7 @@ export const LandingPage = () => {
 
 export async function LandingPageLoader() {
   try {
-    const data = await axios.get(`http://localhost:3000/services`);
+    const data = await axios.get(`${API_URL}/services`);
     const currentServices = data.data.serviceNames;
     return { currentServices };
   } catch (error) {

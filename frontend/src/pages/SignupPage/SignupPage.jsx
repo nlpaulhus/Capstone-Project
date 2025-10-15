@@ -10,6 +10,8 @@ import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 import { setLoggedIn } from "../../helpers/helperFunctions";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
     .min(2, "Too Short!")
@@ -80,12 +82,12 @@ function SignupPage() {
 
     try {
       if (file) {
-        const res = await axios.post("http://localhost:3000/api/upload", data);
+        const res = await axios.post(`${API_URL}/api/upload`, data);
         newUser.profilePhoto = res.data.imageUrl;
       }
 
       const resultTwo = await axios.post(
-        "http://localhost:3000/signup",
+        `${API_URL}/signup`,
         newUser,
         {
           headers: { "Content-Type": "application/json" },

@@ -19,6 +19,8 @@ import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const SearchPage = () => {
   const { listings, allServices, mapCoordinates, userzip } = useLoaderData();
   const [activeItem, setActiveItem] = useState(null);
@@ -245,7 +247,7 @@ export async function searchPageLoader({ request }) {
   const queryString = url.search.split("&");
 
   try {
-    let searchString = `http://localhost:3000/search/${servicename}`;
+    let searchString = `${API_URL}/search/${servicename}`;
 
     //if there are search params, add queries to the search string
     if (queryString.length > 1) {

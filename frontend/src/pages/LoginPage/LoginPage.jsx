@@ -7,6 +7,8 @@ import axios from "axios";
 import "./LoginPage.css";
 import { setLoggedIn } from "../../helpers/helperFunctions";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,7 +24,7 @@ function LoginPage() {
 
     try {
       const result = await axios.post(
-        "http://localhost:3000/login",
+        `${API_URL}/login`,
         loginData,
         {
           headers: { "Content-Type": "application/json" },

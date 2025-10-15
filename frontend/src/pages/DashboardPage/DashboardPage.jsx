@@ -9,6 +9,8 @@ import Stack from "react-bootstrap/Stack";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const DashboardPage = () => {
   const { user, allServices } = useLoaderData();
   const INITIAL_STATE = { servicename: "" };
@@ -60,9 +62,10 @@ export const DashboardPage = () => {
 export async function dashboardLoader() {
   try {
     const user = await getLoggedInUser();
+    console.log(API_URL);
 
     const allServices = await axios
-      .get(`http://localhost:3000/services`, {
+      .get(`${API_URL}/services`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })

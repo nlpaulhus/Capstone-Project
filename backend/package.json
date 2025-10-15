@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "mocha",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "build": "react-scripts build"
   },
   "keywords": [],
   "author": "",

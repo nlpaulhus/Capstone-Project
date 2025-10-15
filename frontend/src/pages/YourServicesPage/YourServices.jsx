@@ -7,6 +7,8 @@ import ServiceBox from "../../components/ServiceBox/ServiceBox";
 import Button from "react-bootstrap/Button";
 import { v4 as uuidv4 } from "uuid";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const YourServicesPage = () => {
   const loaderData = useLoaderData();
   const allServices = loaderData.allServices;
@@ -96,7 +98,7 @@ export const YourServicesPage = () => {
     }
 
     const result = await axios.post(
-      `http://localhost:3000/userServices`,
+      `${API_URL}/userServices`,
       { servicesToAdd },
       {
         headers: { "Content-Type": "application/json" },
@@ -116,7 +118,7 @@ export const YourServicesPage = () => {
     if (isInDatabase) {
       try {
         const result = await axios.get(
-          `http://localhost:3000/userServices/delete/${serviceId}`,
+          `${API_URL}/userServices/delete/${serviceId}`,
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
@@ -176,11 +178,11 @@ export const YourServicesPage = () => {
 export async function yourServicesLoader() {
   try {
     const [response1, response2] = await Promise.all([
-      axios.get(`http://localhost:3000/services`, {
+      axios.get(`${API_URL}/services`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }),
-      axios.get(`http://localhost:3000/userServices`, {
+      axios.get(`${API_URL}/userServices`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }),
