@@ -103,7 +103,7 @@ export const YourServicesPage = () => {
         withCredentials: true,
       }
     );
-    return navigate(`/dashboard`);
+    return navigate(`/`);
   };
 
   const removeButtonHandler = async (e) => {

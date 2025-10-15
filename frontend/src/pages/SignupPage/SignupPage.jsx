@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
+import { setLoggedIn } from "../../helpers/helperFunctions";
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -114,7 +115,7 @@ function SignupPage() {
         }
       }
     } finally {
-      localStorage.setItem("loggedIn", true);
+      await setLoggedIn();
       navigate(`/yournetwork`);
     }
   };

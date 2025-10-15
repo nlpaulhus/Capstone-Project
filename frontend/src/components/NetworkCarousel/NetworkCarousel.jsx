@@ -2,26 +2,29 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css"; // Import the default styles
 import ProfileCreditBox from "../CreditBox/ProfileCreditBox";
 
-const responsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 5,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 3,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 3,
-  },
-};
-
 const NetworkCarousel = ({ items }) => {
+  const itemcount = items.length;
+  console.log(itemcount);
+
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: itemcount < 5 ? itemcount : 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: itemcount < 3 ? itemcount : 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: itemcount < 3 ? itemcount : 3,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: itemcount < 3 ? itemcount : 3,
+    },
+  };
+
   return (
     <Carousel
       responsive={responsive}
@@ -33,11 +36,7 @@ const NetworkCarousel = ({ items }) => {
       // itemClass="carousel-item-padding-40-px" // Optional: custom class for items
     >
       {items.map((item, index) => (
-        <ProfileCreditBox
-          key={index}
-          credit={item}
-          inNetwork={item.inNetwork}
-        />
+        <ProfileCreditBox key={index} credit={item} />
       ))}
     </Carousel>
   );

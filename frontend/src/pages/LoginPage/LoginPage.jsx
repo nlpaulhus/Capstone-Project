@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./LoginPage.css";
+import { setLoggedIn } from "../../helpers/helperFunctions";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -28,9 +29,11 @@ function LoginPage() {
           withCredentials: true,
         }
       );
-      localStorage.setItem("loggedIn", true);
-      const from = location.state?.from?.pathname || "/dashboard";
-      navigate(from, { replace: true });
+
+      const login = await setLoggedIn().then((login) => {
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
+      });
     } catch (err) {
       setFormError(err.response.data.error);
     }

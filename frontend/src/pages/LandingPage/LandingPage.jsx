@@ -11,14 +11,6 @@ export const LandingPage = () => {
   const navigate = useNavigate();
   const { currentServices } = useLoaderData();
 
-  const isLoggedIn = localStorage.getItem("loggedIn");
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/dashboard");
-    }
-  }, []);
-
   return (
     <div id="landingPage">
       <Stack className="col-md-9 mx-auto">
@@ -26,28 +18,16 @@ export const LandingPage = () => {
           <div id="landingCarousel">
             <Carousel fade>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide1.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide1.svg"></img>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide2.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide2.svg"></img>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide3.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide3.svg"></img>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide4.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide4.svg"></img>
               </Carousel.Item>
             </Carousel>
           </div>

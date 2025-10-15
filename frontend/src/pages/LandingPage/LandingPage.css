@@ -20,7 +20,7 @@
 }
 
 #landingPage {
-background-image: url("../../public/assets/headerimage.svg");
+background-image: url("/assets/headerimage.svg");
 background-repeat: no-repeat;
 background-size:cover;
 min-height: 85vh;

@@ -11,7 +11,7 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
   const profilePhoto =
     listing.profilephoto !== "undefined"
       ? listing.profilephoto
-      : "../../../public/assets/noprofilepicture.png";
+      : "/assets/noprofilepicture.png";
 
   if (listing.description.length > 200) {
     const newlistingdescription = listing.description.slice(0, 200) + "...";

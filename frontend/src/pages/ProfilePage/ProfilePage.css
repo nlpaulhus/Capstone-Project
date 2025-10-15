@@ -13,18 +13,17 @@
     align-self: center;
 }
 
-
 #profileInfoandCarousel {
+    margin-top: 25px;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
-    align-items: stretch;
     gap: 10px;
     align-content: center;
 }
 
 #profileInfoCard {
-    width: 30%;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -52,8 +51,8 @@
 
 .profileCreditImage {
     display: block;
-max-width: 100%;
-height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 .overlay {

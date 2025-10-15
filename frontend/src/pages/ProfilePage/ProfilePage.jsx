@@ -2,6 +2,7 @@ import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
+import Stack from "react-bootstrap/Stack"
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -13,6 +14,7 @@ export const ProfilePage = () => {
   const navigate = useNavigate();
   const { profile, listings, listerNetwork } = useLoaderData();
   const { listingId } = useParams();
+  console.log(listerNetwork);
   const startListing = listings.filter((listing) => listing.id === listingId);
   const startOtherListings = listings.filter(
     (listing) => listing.id !== listingId

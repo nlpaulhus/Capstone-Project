@@ -28,12 +28,12 @@ function NavBar() {
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/">
-          <img className="logo" src="../../public/assets/logonobg.png"></img>
+          <img className="logo" src="/assets/logonobg.png"></img>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href={isLoggedIn ? "/dashboard" : "/"}>Home</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
             {isLoggedIn ? <Nav.Link href="/search">Search</Nav.Link> : null}
             {isLoggedIn ? (
               <NavDropdown title="Account" id="basic-nav-dropdown">

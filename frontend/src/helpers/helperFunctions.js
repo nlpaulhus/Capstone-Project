@@ -7,3 +7,12 @@ export const getLoggedInUser = async () => {
   });
   return user.data;
 };
+
+export const setLoggedIn = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      localStorage.setItem("loggedIn", true);
+      resolve();
+    }, 0);
+  });
+};

@@ -3,20 +3,12 @@ import Image from "react-bootstrap/Image";
 
 const ProfileCreditBox = ({ credit }) => {
   return (
-    <div>
-      <Card>
-        <Image src={credit.image} thumbnail></Image>
-        <Card.Body>
-          <Card.Title>
-            {" "}
-            <a href={`http://imdb.com/title/${credit.id}`} target="_blank">
-              {credit.title}
-            </a>
-          </Card.Title>
-          <Card.Text></Card.Text>
-        </Card.Body>
-      </Card>
-    </div>
+    <a href={`http://imdb.com/title/${credit.id}`} target="_blank">
+      <div className="profileCreditBox">
+        <img className="profileCreditImage" src={credit.image} />
+        <div className="overlay">{credit.title}</div>
+      </div>
+    </a>
   );
 };
 
