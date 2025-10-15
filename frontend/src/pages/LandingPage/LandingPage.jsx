@@ -61,6 +61,7 @@ export async function LandingPageLoader() {
   try {
     const data = await axios.get(`${API_URL}/services`, {
       httpsAgent,
+      headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
     const currentServices = data.data.serviceNames;
