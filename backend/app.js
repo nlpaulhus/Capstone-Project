@@ -15,7 +15,7 @@ import cors from "cors";
 
 app.use(
   cors({
-    origin: "https://get-a-grip-rij7.onrender.com",
+    origin: "*",
     credentials: true,
   })
 );
