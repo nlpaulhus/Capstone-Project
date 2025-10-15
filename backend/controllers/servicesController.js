@@ -80,7 +80,7 @@ export async function userservice_delete(req, res) {
 export async function search_get(req, res) {
   //Get all possible search params and querys from request
   const servicename = req.params.servicename;
-  const innetwork = req.query.innetwork;
+  const innetwork = req.query.innetwork || false;
   const hourly = req.query.hourly || false;
   const flatrate = req.query.flatrate || false;
   const searchRadius = req.query.searchRadius;
@@ -184,8 +184,14 @@ export async function search_get(req, res) {
       }
     }
 
-    if (innetwork === true) {
-      listings = listings.filter((listing) => listing.inNetwork === true);
+    let filteredListings;
+
+    if (innetwork === "true") {
+      filteredListings = listings.filter(
+        (listing) => listing.inNetwork === true
+      );
+    } else {
+      filteredListings = listings;
     }
 
     let allServices = await db.query(
@@ -194,7 +200,9 @@ export async function search_get(req, res) {
 
     allServices = allServices.map((service) => service.servicename);
 
-    res.status(200).json({ listings, allServices, mapCoordinates, userzip });
+    res
+      .status(200)
+      .json({ filteredListings, allServices, mapCoordinates, userzip });
   } catch (err) {
     res.status(401).json(err);
   }

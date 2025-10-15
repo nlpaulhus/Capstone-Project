@@ -269,7 +269,7 @@ export async function searchPageLoader({ request }) {
       .then((response) => response.data);
 
     return {
-      listings: response.listings,
+      listings: response.filteredListings,
       allServices: response.allServices,
       mapCoordinates: response.mapCoordinates,
       userzip: response.userzip,
