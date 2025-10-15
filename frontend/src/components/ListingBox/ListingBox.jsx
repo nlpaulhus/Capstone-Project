@@ -13,8 +13,9 @@ const ListingBox = ({ listing, activeItem, onMouseEnter, onMouseLeave }) => {
       ? listing.profilephoto
       : "/assets/noprofilepicture.png";
 
-  if (listing.description.length > 200) {
-    const newlistingdescription = listing.description.slice(0, 200) + "...";
+  if (listing.description.length > 150) {
+    const newlistingdescription =
+      listing.description.slice(0, 150) + "... (read more)";
     listing.description = newlistingdescription;
   }
 

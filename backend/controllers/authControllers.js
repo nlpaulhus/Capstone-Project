@@ -59,6 +59,8 @@ export async function edituser_post(req, res) {
   const token = req.cookies.jwt;
   let userId;
 
+  console.log(userId);
+
   if (!token) {
     res.status(401).json("Need to login first");
   } else {

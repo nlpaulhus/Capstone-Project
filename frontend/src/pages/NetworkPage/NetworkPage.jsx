@@ -21,8 +21,9 @@ export const NetworkPage = () => {
 
   useEffect(() => {
     const referrer = document.referrer;
+    console.log(referrer);
 
-    if (referrer.includes("signup")) {
+    if (referrer.includes("signup") || referrer.includes("login")) {
       SetNextpage("/yourServices");
     } else {
       SetNextpage("/");

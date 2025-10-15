@@ -18,7 +18,7 @@ export async function network_post(req, res) {
     //map over each credit, add the ids to the projectIds array, insert into projects and update image and enddate if they've changed
     newCredits.map(async (project) => {
       projectIds.push(project.id);
-      const title = project.title.replace("'", "''");
+      const title = project.title.replaceAll("'", "''");
 
       if (project.endDate !== undefined) {
         const query = `INSERT INTO projects (id, title, image, startDate, endDate)`;

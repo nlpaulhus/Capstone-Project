@@ -41,7 +41,7 @@ export async function userservices_post(req, res) {
   try {
     const promises = servicesToAdd.map(async (service) => {
       //edit text format before submitting to database
-      const description = service.description.replace("'", "''");
+      const description = service.description.replaceAll("'", "''");
 
       const query = `INSERT INTO user_services (id, userId, serviceName, description, price, paymentType)`;
       const values = `VALUES ('${service.id}', '${userId}'::uuid, '${
@@ -88,8 +88,8 @@ export async function search_get(req, res) {
   const page = req.query.p || 0;
 
   //set pagination
-  const offsetAmount = parseInt(page) * 10;
-  const pagination = `LIMIT 10 OFFSET ${offsetAmount}`;
+  const offsetAmount = parseInt(page) * 5;
+  const pagination = `LIMIT 5 OFFSET ${offsetAmount}`;
 
   //get current logged in user Id from request token
   const token = req.cookies.jwt;

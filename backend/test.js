@@ -3,14 +3,14 @@ import { default as chaiHttp, request } from "chai-http";
 import { faker } from "@faker-js/faker";
 import app from "./app.js";
 import db from "./db.js";
+import { createToken } from "./helpers/authHelpers.js";
 
 chai.use(chaiHttp);
 
 const expect = chai.expect;
 const should = chai.should();
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdkZDgwMGY5LTZkYjktNDYxMS05ZTMyLTFmYTkyYWM2MWNkZSIsImV4cCI6MTc2MDQ5MTc1OX0.xvkotAClZNQLfmhCFFWKvkLFvyaQ8NV4wXymHoS5mbw";
+const token = createToken("c532004f-9c51-4628-98e1-f7edda7767b5");
 
 describe("API Route Tests", function () {
   it("Tests welcome route", (done) => {
@@ -247,7 +247,7 @@ describe("API Route Tests", function () {
       .set("Cookie", `jwt=${token}`)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body).to.have.property("listings");
+        expect(res.body).to.have.property("filteredListings");
         expect(res.body).to.have.property("allServices");
         expect(res.body).to.have.property("mapCoordinates");
         expect(res.body).to.have.property("userzip");

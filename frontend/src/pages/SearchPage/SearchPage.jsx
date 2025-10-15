@@ -215,7 +215,7 @@ export const SearchPage = () => {
                   className="p-2"
                   onClick={paginationClick}
                   variant="link"
-                  disabled={listings.length === 10 ? false : true}
+                  disabled={listings.length === 5 ? false : true}
                 >
                   Next
                 </Button>
