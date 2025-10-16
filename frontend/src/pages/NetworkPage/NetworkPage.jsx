@@ -28,7 +28,7 @@ export const NetworkPage = () => {
     if (referrer.includes("signup") || referrer.includes("login")) {
       SetNextpage("/yourServices");
     } else {
-      SetNextpage("/");
+      SetNextpage("/dashboard");
     }
   }, []);
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("loggedIn");
 
 
   return (
@@ -14,7 +15,7 @@ const NotFoundPage = () => {
         Return To Previous Page
       </Button>
 
-      <Button variant="primary" size="md" href="/">
+      <Button variant="primary" size="md" href={isLoggedIn ? "/dashboard" : "/"}>
         Home
       </Button>
     </Stack>

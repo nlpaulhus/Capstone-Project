@@ -70,7 +70,7 @@ export function EditAccountPage() {
       console.log(error);
     } finally {
       localStorage.setItem("loggedIn", true);
-      navigate(`/`);
+      navigate(`/dashboard`);
     }
   };
 
