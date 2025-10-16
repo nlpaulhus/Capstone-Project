@@ -129,12 +129,7 @@ export async function networkLoader() {
 
       //get user's imdb credits from their imdbname
       let allCredits = await axios.get(
-        `https://api.imdbapi.dev/names/${imdbname}/filmography`,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-          withXSRFToken: true,
-        }
+        `https://api.imdbapi.dev/names/${imdbname}/filmography`
       );
 
       allCredits = allCredits.data.credits;
