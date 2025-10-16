@@ -19,20 +19,19 @@ import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const SearchPage = () => {
-  const { listings, user, allServices, mapCenter } = useLoaderData();
+  const { listings, allServices, mapCoordinates, userzip } = useLoaderData();
   const [activeItem, setActiveItem] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const revalidator = useRevalidator();
   const [paymentType, setPaymentType] = useState("all");
   const [searchRadius, setSearchRadius] = useState("suggested");
   const [searchAddress, setSearchAddress] = useState(
-    searchParams.get("zipcode") || user.zip
+    searchParams.get("zipcode") || userzip
   );
-
-  const [page, setPage] = useState(0);
-
-  console.log(listings);
+  const [page, setPage] = useState(searchParams.get("p") || 0);
 
   const handleMouseEnter = (id) => {
     setActiveItem(id);
@@ -127,7 +126,6 @@ export const SearchPage = () => {
     if (e.target.innerText === "Next") {
       const newPage = page + 1;
       setPage(newPage);
-      console.log(page);
       const next = new URLSearchParams(searchParams);
       next.set("p", newPage);
       setSearchParams(next, { replace: true });
@@ -162,7 +160,7 @@ export const SearchPage = () => {
                   filterClick={filterClick}
                   paymentTypeClick={paymentTypeClick}
                   paymentType={paymentType}
-                  userzip={user.zip}
+                  userzip={userzip}
                   searchRadius={searchRadius}
                   searchRadiusClick={searchRadiusClick}
                   searchAddress={searchAddress}
@@ -181,7 +179,7 @@ export const SearchPage = () => {
                 filterClick={filterClick}
                 paymentTypeClick={paymentTypeClick}
                 paymentType={paymentType}
-                userzip={user.zip}
+                userzip={userzip}
                 searchRadius={searchRadius}
                 searchRadiusClick={searchRadiusClick}
                 searchAddress={searchAddress}
@@ -219,7 +217,7 @@ export const SearchPage = () => {
                   className="p-2"
                   onClick={paginationClick}
                   variant="link"
-                  disabled={listings.length === 10 ? false : true}
+                  disabled={listings.length === 5 ? false : true}
                 >
                   Next
                 </Button>
@@ -233,7 +231,7 @@ export const SearchPage = () => {
               handleMouseLeave={handleMouseLeave}
               listings={listings}
               activeItem={activeItem}
-              mapCenter={mapCenter}
+              mapCenter={mapCoordinates}
             />
           </Col>
         </Row>
@@ -245,51 +243,13 @@ export const SearchPage = () => {
 export async function searchPageLoader({ request }) {
   const url = new URL(request.url);
 
-  const searchParams = url.searchParams;
   const servicename = url.searchParams.get("search");
-  const innetwork = url.searchParams.get("innetwork");
-  const zipcode = url.searchParams.get("zipcode");
-
   const queryString = url.search.split("&");
 
-  let userId;
-  let user;
-  let allServices;
-  let mapCenter = { lat: null, lng: null };
-
   try {
-    allServices = await axios
-      .get(`http://localhost:3000/services`, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((allServices) => allServices.data.serviceNames);
+    let searchString = `${API_URL}/search/${servicename}`;
 
-    user = await axios
-      .get("http://localhost:3000/user", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((user) => user.data);
-
-    userId = user.userid;
-    if (zipcode) {
-      const response = await axios
-        .get(
-          `http://nominatim.openstreetmap.org/search.php?q=${zipcode}&format=json`
-        )
-        .then((response) => response.data[0]);
-      mapCenter = { lat: response.lat, lng: response.lon };
-    } else {
-      mapCenter = { lat: user.lat, lng: user.lng };
-    }
-  } catch {
-    return redirect("/login");
-  }
-
-  try {
-    let searchString = `http://localhost:3000/search/${servicename}/${userId}`;
-
+    //if there are search params, add queries to the search string
     if (queryString.length > 1) {
       searchString += "?";
     }
@@ -297,35 +257,28 @@ export async function searchPageLoader({ request }) {
       searchString += `${queryString[i]}&`;
     }
 
-    if (searchString[searchString.length - 1] === "&") {
-      searchString.slice(0, -1);
+    const lastChar = searchString[searchString.length - 1];
+
+    if (lastChar === "&") {
+      searchString = searchString.slice(0, -1);
     }
 
-    let listings = await axios
-      .get(searchString)
-      .then((listings) => listings.data.listings);
+    let response = await axios
+      .get(searchString,   {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+            withXSRFToken: true,
+          })
+      .then((response) => response.data);
 
-    if (innetwork === "true") {
-      const innetworkListings = listings.filter(
-        (listing) => listing.inNetwork === true
-      );
-
-      
-
-      return {
-        listings: innetworkListings,
-        user: user,
-        allServices: allServices,
-        mapCenter: mapCenter,
-      };
-    } else
-      return {
-        listings: listings,
-        user: user,
-        allServices: allServices,
-        mapCenter: mapCenter,
-      };
+    return {
+      listings: response.filteredListings,
+      allServices: response.allServices,
+      mapCoordinates: response.mapCoordinates,
+      userzip: response.userzip,
+    };
   } catch (err) {
     console.log(err);
+    return redirect("/login");
   }
 }

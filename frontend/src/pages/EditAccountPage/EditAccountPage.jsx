@@ -8,6 +8,8 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const EditSchema = Yup.object().shape({
   firstName: Yup.string()
     .min(2, "Too Short!")
@@ -51,23 +53,24 @@ export function EditAccountPage() {
 
     try {
       if (file) {
-        const res = await axios.post("http://localhost:3000/api/upload", data);
+        const res = await axios.post(`${API_URL}/api/upload`, data, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+          withXSRFToken: true,
+        });
         newUser.profilePhoto = res.data.imageUrl;
       }
 
-      const resultTwo = await axios.post(
-        "http://localhost:3000/user/edit",
-        newUser,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const resultTwo = await axios.post(`${API_URL}/user/edit`, newUser, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        withXSRFToken: true,
+      });
     } catch (error) {
       console.log(error);
     } finally {
       localStorage.setItem("loggedIn", true);
-      navigate(`/`);
+      navigate(`/dashboard`);
     }
   };
 
@@ -90,7 +93,7 @@ export function EditAccountPage() {
         {({ errors, touched }) => (
           <Form>
             <label htmlFor="firstName">First Name:</label>
-            <Field name="firstName" />
+            <Field id="firstName" name="firstName" />
             {errors.firstName && touched.firstName ? (
               <span>{errors.firstName}</span>
             ) : null}
@@ -108,7 +111,9 @@ export function EditAccountPage() {
 
             <Row>
               <Col>
-                <label htmlFor="city">City:</label>
+                <label for="city" htmlFor="city">
+                  City:
+                </label>
                 <Field name="city" />
                 {errors.city && touched.city ? (
                   <span>{errors.city}</span>
@@ -203,9 +208,10 @@ export function EditAccountPage() {
 export async function EditAccountLoader() {
   try {
     const currentUserData = await axios
-      .get("http://localhost:3000/user/edit", {
+      .get(`${API_URL}/user/edit`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
+        withXSRFToken: true,
       })
       .then((currentUserData) => currentUserData.data);
 

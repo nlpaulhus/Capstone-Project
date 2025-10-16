@@ -2,12 +2,14 @@ import { useLoaderData, redirect, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import AllServicesList from "../../components/AllServicesList/AllServicesList";
+import { getLoggedInUser } from "../../helpers/helperFunctions";
 import "./DashboardPage.css";
 
 import Stack from "react-bootstrap/Stack";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const DashboardPage = () => {
   const { user, allServices } = useLoaderData();
@@ -31,12 +33,7 @@ export const DashboardPage = () => {
     <Stack className="col-md-9 mx-auto" id="dashboardPageStack" gap={3}>
       <h1 style={{ textAlign: "center" }}>Welcome, {user.firstname}!</h1>
 
-      <Stack
-        className="col-md-9 mx-auto "
-        direction="horizontal"
-        alignItems="start"
-        gap={3}
-      >
+      <Stack className="col-md-9 mx-auto " direction="horizontal" gap={3}>
         <Card id="dashSearchCard">
           <Card.Title className="cardTitle" style={{ textAlign: "center" }}>
             Hire a Crewmember
@@ -64,17 +61,14 @@ export const DashboardPage = () => {
 
 export async function dashboardLoader() {
   try {
-    const user = await axios
-      .get("http://localhost:3000/user", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((user) => user.data);
+    const user = await getLoggedInUser();
+    console.log(API_URL);
 
     const allServices = await axios
-      .get(`http://localhost:3000/services`, {
+      .get(`${API_URL}/services`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
+        withXSRFToken: true,
       })
       .then((allServices) => allServices.data.serviceNames);
 

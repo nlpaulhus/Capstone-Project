@@ -2,9 +2,8 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
 const ServiceBox = ({ service, removeButtonHandler }) => {
-  console.log(service);
   return (
-    <div>
+    <div className="currentServiceBox">
       <Card>
         <Card.Body>
           <Card.Title> {service.servicename}</Card.Title>

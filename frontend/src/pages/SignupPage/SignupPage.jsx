@@ -8,6 +8,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
+import { setLoggedIn } from "../../helpers/helperFunctions";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -79,18 +82,15 @@ function SignupPage() {
 
     try {
       if (file) {
-        const res = await axios.post("http://localhost:3000/api/upload", data);
+        const res = await axios.post(`${API_URL}/api/upload`, data);
         newUser.profilePhoto = res.data.imageUrl;
       }
 
-      const resultTwo = await axios.post(
-        "http://localhost:3000/signup",
-        newUser,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const resultTwo = await axios.post(`${API_URL}/signup`, newUser, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        withXSRFToken: true,
+      });
     } catch (error) {
       console.log(error);
       if (error.response.data) {
@@ -114,7 +114,7 @@ function SignupPage() {
         }
       }
     } finally {
-      localStorage.setItem("loggedIn", true);
+      await setLoggedIn();
       navigate(`/yournetwork`);
     }
   };
@@ -142,7 +142,7 @@ function SignupPage() {
         {({ errors, touched }) => (
           <Form>
             <label htmlFor="firstName">First Name:</label>
-            <Field name="firstName" />
+            <Field id="firstName" name="firstName" />
             {errors.firstName && touched.firstName ? (
               <span>{errors.firstName}</span>
             ) : null}

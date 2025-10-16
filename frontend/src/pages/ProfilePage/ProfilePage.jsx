@@ -1,12 +1,8 @@
-import {
-  useLoaderData,
-  useParams,
-  redirect,
-  useNavigate,
-} from "react-router-dom";
+import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
+import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -14,10 +10,13 @@ import Badge from "react-bootstrap/esm/Badge";
 import NetworkCarousel from "../../components/NetworkCarousel/NetworkCarousel";
 import "./ProfilePage.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { profile, listings, listerNetwork } = useLoaderData();
   const { listingId } = useParams();
+  console.log(listerNetwork);
   const startListing = listings.filter((listing) => listing.id === listingId);
   const startOtherListings = listings.filter(
     (listing) => listing.id !== listingId
@@ -138,29 +137,20 @@ export const ProfilePage = () => {
 export async function profilePageLoader({ params }) {
   const listingId = params.listingId;
 
-  let currentUser;
-
-  try {
-    currentUser = await axios
-      .get("http://localhost:3000/user", {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
-      .then((currentUser) => currentUser.data);
-  } catch (err) {
-    return redirect("/login");
-  }
-
   try {
     const listingUser = await axios
-      .get(`http://localhost:3000/profile/${listingId}/${currentUser.userid}`)
+      .get(`${API_URL}/profile/${listingId}`, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        withXSRFToken: true,
+      })
       .then((listingUser) => listingUser.data);
 
-    const profile = listingUser.profile;
-    const listings = listingUser.listings;
-    const listerNetwork = listingUser.listerNetwork;
-
-    return { profile, listings, listerNetwork };
+    return {
+      profile: listingUser.profile,
+      listings: listingUser.listings,
+      listerNetwork: listingUser.listerNetwork,
+    };
   } catch (err) {
     console.log(err);
   }

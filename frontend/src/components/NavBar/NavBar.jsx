@@ -6,6 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function NavBar() {
   const navigate = useNavigate();
 
@@ -13,7 +15,7 @@ function NavBar() {
 
   const logoutHandler = async () => {
     try {
-      const result = await axios.get("http://localhost:3000/logout", {
+      const result = await axios.get(`${API_URL}/logout`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
@@ -27,13 +29,13 @@ function NavBar() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="/">
-          <img className="logo" src="../../public/assets/logonobg.png"></img>
+        <Navbar.Brand>
+          <img className="logo" src="/assets/logonobg.png"></img>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href={isLoggedIn ? "/dashboard" : "/"}>Home</Nav.Link>
             {isLoggedIn ? <Nav.Link href="/search">Search</Nav.Link> : null}
             {isLoggedIn ? (
               <NavDropdown title="Account" id="basic-nav-dropdown">

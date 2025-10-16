@@ -11,14 +11,42 @@ const app = express();
 import session from "express-session";
 
 //Import & apply cors:
-import cors from "cors";
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
-    credentials: true,
-  })
-);
+// import cors from "cors";
+
+// app.use(
+//   cors({
+//     origin: /.*\.get-a-grip-rij7.onrender\.com$/,
+//     credentials: true,
+//   })
+// );
+
+// Add headers before the routes are defined
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://get-a-grip-rij7.onrender.com"
+  );
+
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+
+  // Request headers you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
+  // Pass to next layer of middleware
+  next();
+});
 
 //Middleware:
 app.use(json());
@@ -39,7 +67,7 @@ app.use(
 );
 
 import signup from "./routes/signup.js";
-import imdbNetwork from "./routes/imdbNetwork.js";
+import network from "./routes/network.js";
 import services from "./routes/services.js";
 import userServices from "./routes/userServices.js";
 import login from "./routes/login.js";
@@ -50,7 +78,7 @@ import search from "./routes/search.js";
 import profile from "./routes/profile.js";
 
 app.use("/signup", signup);
-app.use("/imdbNetwork", imdbNetwork);
+app.use("/network", network);
 app.use("/services", services);
 app.use("/userServices", userServices);
 app.use("/login", login);
@@ -68,3 +96,5 @@ app.post("/api/upload", (req, res) => handler(req, res));
 app.listen(3000, () => {
   console.log("Listening on port 3000");
 });
+
+export default app;

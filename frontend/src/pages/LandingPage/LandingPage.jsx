@@ -5,19 +5,14 @@ import Button from "react-bootstrap/Button";
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
+
 import "./LandingPage.css";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const LandingPage = () => {
   const navigate = useNavigate();
   const { currentServices } = useLoaderData();
-
-  const isLoggedIn = localStorage.getItem("loggedIn");
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/dashboard");
-    }
-  }, []);
 
   return (
     <div id="landingPage">
@@ -26,28 +21,16 @@ export const LandingPage = () => {
           <div id="landingCarousel">
             <Carousel fade>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide1.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide1.svg"></img>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide2.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide2.svg"></img>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide3.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide3.svg"></img>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-                  className="carouselImage"
-                  src="../../public/assets/slide4.svg"
-                ></img>
+                <img className="carouselImage" src="/assets/slide4.svg"></img>
               </Carousel.Item>
             </Carousel>
           </div>
@@ -61,8 +44,8 @@ export const LandingPage = () => {
           <Card>
             <h1 style={{ textAlign: "center" }}>Current Services Offered</h1>
             <ul>
-              {currentServices.map((service) => (
-                <li>{service}</li>
+              {currentServices.map((service, index) => (
+                <li key={index}>{service}</li>
               ))}
             </ul>
           </Card>
@@ -74,7 +57,12 @@ export const LandingPage = () => {
 
 export async function LandingPageLoader() {
   try {
-    const data = await axios.get(`http://localhost:3000/services`);
+    const data = await axios.get(`${API_URL}/services`, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+      withXSRFToken: true,
+    });
+    console.log(data);
     const currentServices = data.data.serviceNames;
     return { currentServices };
   } catch (error) {

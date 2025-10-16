@@ -1,6 +1,8 @@
 import { Route, createRoutesFromElements, Outlet } from "react-router-dom";
 
 import NavBar from "../components/NavBar/NavBar";
+import Footer from "../components/Footer/Footer";
+
 import {
   LandingPage,
   LandingPageLoader,
@@ -22,11 +24,12 @@ import {
   ProfilePage,
   profilePageLoader,
 } from "../pages/ProfilePage/ProfilePage";
-import Footer from "../components/Footer/Footer";
+
 import {
   EditAccountPage,
   EditAccountLoader,
 } from "../pages/EditAccountPage/EditAccountPage";
+import NotFoundPage from "../pages/404Page/404Page";
 
 const Layout = () => {
   return (
@@ -38,8 +41,18 @@ const Layout = () => {
   );
 };
 
+export function HydrateFallback() {
+  return (
+    <div style={{ margin: "25px" }}>
+      <p style={{ textAlign: "center" }}>Loading...</p>
+    </div>
+  );
+}
+
+const isLoggedIn = localStorage.getItem("loggedIn");
+
 const routes = createRoutesFromElements(
-  <Route path="/" element={<Layout />}>
+  <Route path="/" element={<Layout />} HydrateFallback={HydrateFallback}>
     <Route index element={<LandingPage />} loader={LandingPageLoader} />
     <Route path="/login" element={<LoginLandingPage />} />
     <Route path="/login/email" element={<LoginPage />} />
@@ -70,6 +83,7 @@ const routes = createRoutesFromElements(
       element={<EditAccountPage />}
       loader={EditAccountLoader}
     />
+    <Route path="*" element={<NotFoundPage />} />
   </Route>
 );
 

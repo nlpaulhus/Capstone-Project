@@ -5,6 +5,9 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./LoginPage.css";
+import { setLoggedIn } from "../../helpers/helperFunctions";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -20,17 +23,16 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      const result = await axios.post(
-        "http://localhost:3000/login",
-        loginData,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      localStorage.setItem("loggedIn", true);
-      const from = location.state?.from?.pathname || "/dashboard";
-      navigate(from, { replace: true });
+      const result = await axios.post(`${API_URL}/login`, loginData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        withXSRFToken: true,
+      });
+
+      const login = await setLoggedIn().then((login) => {
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
+      });
     } catch (err) {
       setFormError(err.response.data.error);
     }

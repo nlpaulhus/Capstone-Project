@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./YourServicesPage.css";
 import YourServicesForm from "../../components/YourServicesForm/YourServicesForm";
@@ -7,20 +7,13 @@ import ServiceBox from "../../components/ServiceBox/ServiceBox";
 import Button from "react-bootstrap/Button";
 import { v4 as uuidv4 } from "uuid";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const YourServicesPage = () => {
   const loaderData = useLoaderData();
   const allServices = loaderData.allServices;
   const originalServices = loaderData.yourServices;
-  const userId = loaderData.userId;
   const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (userId === null) {
-      navigate("/login/email", { state: { from: location } });
-      return null;
-    }
-  }, []);
 
   const INITIALSTATE = {
     id: "",
@@ -105,8 +98,8 @@ export const YourServicesPage = () => {
     }
 
     const result = await axios.post(
-      `http://localhost:3000/userServices`,
-      { servicesToAdd, userId },
+      `${API_URL}/userServices`,
+      { servicesToAdd },
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
@@ -125,7 +118,7 @@ export const YourServicesPage = () => {
     if (isInDatabase) {
       try {
         const result = await axios.get(
-          `http://localhost:3000/userServices/delete/${serviceId}`,
+          `${API_URL}/userServices/delete/${serviceId}`,
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
@@ -171,7 +164,11 @@ export const YourServicesPage = () => {
               />
             ))}
           </div>
-          <Button onClick={nextButtonHandler}>Next</Button>
+          <div>
+            <Button id="yourServicesNextButton" onClick={nextButtonHandler}>
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -180,19 +177,12 @@ export const YourServicesPage = () => {
 
 export async function yourServicesLoader() {
   try {
-    const user = await axios.get("http://localhost:3000/user", {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-
-    const userId = user.data.userid;
-
     const [response1, response2] = await Promise.all([
-      axios.get(`http://localhost:3000/services`, {
+      axios.get(`${API_URL}/services`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }),
-      axios.get(`http://localhost:3000/userServices/${userId}`, {
+      axios.get(`${API_URL}/userServices`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }),
@@ -204,14 +194,9 @@ export async function yourServicesLoader() {
     return {
       allServices: allServices,
       yourServices: yourServices,
-      userId: userId,
     };
   } catch (err) {
     console.log(err);
-    return {
-      allServices: [],
-      yourServices: [],
-      userId: null,
-    };
+    return redirect("/login/email");
   }
 }
