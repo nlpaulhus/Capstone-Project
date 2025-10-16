@@ -53,11 +53,7 @@ const isLoggedIn = localStorage.getItem("loggedIn");
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />} HydrateFallback={HydrateFallback}>
-    <Route
-      index
-      element={isLoggedIn ? <DashboardPage /> : <LandingPage />}
-      loader={isLoggedIn ? dashboardLoader : LandingPageLoader}
-    />
+    <Route index element={<LandingPage />} loader={LandingPageLoader} />
     <Route path="/login" element={<LoginLandingPage />} />
     <Route path="/login/email" element={<LoginPage />} />
     <Route path="/signup" element={<SignupPage />} />
