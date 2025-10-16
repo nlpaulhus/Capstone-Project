@@ -71,6 +71,7 @@ export const NetworkPage = () => {
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
+            withXSRFToken: true,
           }
         )
         .then((result) => {
