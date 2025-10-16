@@ -31,6 +31,10 @@ To fully explore the search page, mock listings have been created for Dog Walkin
 
 Kim N is a good profile page to view, as her account has added additional services.
 
+https://get-a-grip-rij7.onrender.com/profile/6c617cec-d0c2-4422-8d61-9bf225f4a719
+
+(must be logged in)
+
 
 ## Tech Stack
 
