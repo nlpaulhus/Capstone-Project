@@ -2,7 +2,7 @@ import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
-import Stack from "react-bootstrap/Stack"
+import Stack from "react-bootstrap/Stack";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -142,6 +142,7 @@ export async function profilePageLoader({ params }) {
       .get(`${API_URL}/profile/${listingId}`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
+        withXSRFToken: true,
       })
       .then((listingUser) => listingUser.data);
 

@@ -86,14 +86,11 @@ function SignupPage() {
         newUser.profilePhoto = res.data.imageUrl;
       }
 
-      const resultTwo = await axios.post(
-        `${API_URL}/signup`,
-        newUser,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const resultTwo = await axios.post(`${API_URL}/signup`, newUser, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        withXSRFToken: true,
+      });
     } catch (error) {
       console.log(error);
       if (error.response.data) {

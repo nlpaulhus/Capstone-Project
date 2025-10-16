@@ -68,6 +68,7 @@ export async function dashboardLoader() {
       .get(`${API_URL}/services`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
+        withXSRFToken: true,
       })
       .then((allServices) => allServices.data.serviceNames);
 

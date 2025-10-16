@@ -53,13 +53,18 @@ export function EditAccountPage() {
 
     try {
       if (file) {
-        const res = await axios.post(`${API_URL}/api/upload`, data);
+        const res = await axios.post(`${API_URL}/api/upload`, data, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+          withXSRFToken: true,
+        });
         newUser.profilePhoto = res.data.imageUrl;
       }
 
       const resultTwo = await axios.post(`${API_URL}/user/edit`, newUser, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
+        withXSRFToken: true,
       });
     } catch (error) {
       console.log(error);
@@ -206,6 +211,7 @@ export async function EditAccountLoader() {
       .get(`${API_URL}/user/edit`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
+        withXSRFToken: true,
       })
       .then((currentUserData) => currentUserData.data);
 

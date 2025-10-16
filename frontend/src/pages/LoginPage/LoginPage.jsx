@@ -23,14 +23,11 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      const result = await axios.post(
-        `${API_URL}/login`,
-        loginData,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const result = await axios.post(`${API_URL}/login`, loginData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        withXSRFToken: true,
+      });
 
       const login = await setLoggedIn().then((login) => {
         const from = location.state?.from?.pathname || "/dashboard";

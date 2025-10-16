@@ -264,10 +264,11 @@ export async function searchPageLoader({ request }) {
     }
 
     let response = await axios
-      .get(searchString, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      })
+      .get(searchString,   {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+            withXSRFToken: true,
+          })
       .then((response) => response.data);
 
     return {
