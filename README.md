@@ -1,7 +1,7 @@
 
 ![Logo](https://res.cloudinary.com/dl0vxq8rj/image/upload/v1760549467/logonobg_rcass6.png)
 
-
+NOTE: Site is currently down, in need of a database update.
 
 
 After pandemic production shutdowns, strikes, production cuts and catastrophic fires… the Hollywood production community is struggling, with many out of work and looking to make ends meet. Get a Grip connects talented and hardworking creatives and craftspeople looking for non-production work, with other members of the entertainment community looking to hire, with a feature to connect to the IMDB database and search by credits. Need a hairstylist for an event? Need a TV mounted? Need your files organized? Furniture moved? Why not hire the out of work crew from the last show you worked on! Or even just your favorite show.
